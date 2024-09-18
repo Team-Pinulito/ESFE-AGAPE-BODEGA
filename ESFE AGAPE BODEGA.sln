@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESFE AGAPE BODEGA.API", "ES
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFE AGAPE BODEGA.DTOs", "ESFE AGAPE BODEGA.DTOs\ESFE AGAPE BODEGA.DTOs.csproj", "{A52FC6BB-A7C3-4A3F-80B3-EF0D3252CB75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFE AGAPE BODEGA.AppWebBlazor", "ESFE AGAPE BODEGA.AppWebBlazor\ESFE AGAPE BODEGA.AppWebBlazor.csproj", "{429C065C-2D29-41B5-9154-CB4EECB6112B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{A52FC6BB-A7C3-4A3F-80B3-EF0D3252CB75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A52FC6BB-A7C3-4A3F-80B3-EF0D3252CB75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A52FC6BB-A7C3-4A3F-80B3-EF0D3252CB75}.Release|Any CPU.Build.0 = Release|Any CPU
-		{429C065C-2D29-41B5-9154-CB4EECB6112B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{429C065C-2D29-41B5-9154-CB4EECB6112B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{429C065C-2D29-41B5-9154-CB4EECB6112B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{429C065C-2D29-41B5-9154-CB4EECB6112B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

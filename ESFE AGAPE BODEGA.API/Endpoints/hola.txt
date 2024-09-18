@@ -1,0 +1,6 @@
+﻿namespace ESFE_AGAPE_BODEGA.API.Endpoints
+{
+    public class hola
+    {
+    }
+}
