@@ -9,5 +9,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 
         [Required]
         public string Nombre { get; set; }
+
+        //public Usuario usuario { get; set; }
     }
 }
