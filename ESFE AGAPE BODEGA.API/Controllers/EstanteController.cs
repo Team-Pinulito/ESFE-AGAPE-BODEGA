@@ -9,7 +9,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class EstanteController : Controller
+	public class EstanteController : ControllerBase
 	{
 		private readonly EstanteDAL _estanteDAL;
 		public EstanteController(EstanteDAL estanteDAL)
