@@ -1,5 +1,5 @@
 ﻿using Bodega_Api_Esfe_Agape.Models.EN;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESFE_AGAPE_BODEGA.API.Models.DAL
@@ -14,5 +14,8 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         public DbSet<Activo> activos { get; set; }
         public DbSet<IngresoActivo> ingresoactivos { get; set; }
         public DbSet<DetalleIngresoActivo> detalleIngresos { get; set; }
+        public DbSet<TipoActivo> tipoActivos { get; set; }
+        public DbSet<Bodega> bodegas { get; set; }
+        public DbSet<Rol> rols { get; set; }
     }
 }
