@@ -11,5 +11,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
         public string Nombre { get; set; }
 
         public string Descripcion { get; set; }
+
+        //public Estatante estatante { get; set; }
     }
 }
