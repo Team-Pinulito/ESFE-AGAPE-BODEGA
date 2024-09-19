@@ -9,8 +9,6 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
 {
 	public class CrearUsuarioDTO
 	{
-        public class Usuario
-        {
             [Required(ErrorMessage = "El campo Nombre es obligatorio.")]
             [MaxLength(50, ErrorMessage = "El campo Nombre no puede tener más de 50 caracteres.")]
             public string Nombre { get; set; }
@@ -45,6 +43,6 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
 
             [Required(ErrorMessage = "El campo RolId es obligatorio.")]
             public int RolId { get; set; }
-        }
+        
     }
 }
