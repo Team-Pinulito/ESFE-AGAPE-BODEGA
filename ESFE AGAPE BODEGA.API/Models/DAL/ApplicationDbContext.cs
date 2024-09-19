@@ -12,7 +12,8 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         }
 
         public DbSet<Activo> activos { get; set; }
-        public DbSet<IngresoActivo> ingresoactivos { get; set; }
+		public DbSet<Estante> estantes { get; set; }
+		public DbSet<IngresoActivo> ingresoactivos { get; set; }
         public DbSet<DetalleIngresoActivo> detalleIngresos { get; set; }
         public DbSet<TipoActivo> tipoActivos { get; set; }
         public DbSet<Bodega> bodegas { get; set; }
