@@ -10,11 +10,11 @@ namespace ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs
 {
     public class EditBodegaDTO
     {
-        public EditBodegaDTO(GetIdResultEstanteDTO getIdResultEstanteDTO)
+        public EditBodegaDTO(GetIdResultBodegaDTO getIdResultBodega)
         {
-            Id = getIdResultEstanteDTO.Id;
-            Nombre = getIdResultEstanteDTO.Nombre;
-            Descripcion = getIdResultEstanteDTO.Descripcion;
+            Id = getIdResultBodega.Id;
+            Nombre = getIdResultBodega.Nombre;
+            Descripcion = getIdResultBodega.Descripcion;
         }
 
         public EditBodegaDTO()
