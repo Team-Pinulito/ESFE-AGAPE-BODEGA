@@ -1,17 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ESFE_AGAPE_BODEGA.DTOs.RolDTOs.BuscarRolResultadosDto;
 
 namespace ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs
 {
+    
     public class GetIdResultBodegaDTO
     {
-        public int Id { get; set; }
+        public int CountRow { get; set; }
 
-        public string Nombre { get; set; }
+        public List<BodegaDTO> Data { get; set; }
+        public class BodegaDTO
+        {
+            public int Id { get; set; }
 
-        public string Descripcion { get; set; }
+            [Display(Name = "Nombre")]
+            public string Nombre { get; set; }
+
+            [Display(Name = "Descripcion")]
+            public string Descripcion { get; set; }
+        }
+       
     }
 }
