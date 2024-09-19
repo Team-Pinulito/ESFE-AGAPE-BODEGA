@@ -17,13 +17,15 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 		//obtener roles
 		public async Task<List<Estante>> ObtenerEstantes()
 		{
-			return await applicationDbContext.estantes.ToListAsync();
+			return await applicationDbContext.estantes
+				 .Include(e => e.Bodega) // Incluir la entidad relacionada Bodega
+				.ToListAsync();
 		}
 
 		//buscar rol por id
 		public async Task<Estante> ObtenerEstanteId(int id)
 		{
-			return await applicationDbContext.estantes.FirstOrDefaultAsync(x => x.Id == id);
+			return await applicationDbContext.estantes.Include(e => e.Bodega).FirstOrDefaultAsync(x => x.Id == id);
 		}
 
 		//crear rol
