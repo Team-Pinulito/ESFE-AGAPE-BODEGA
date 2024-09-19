@@ -2,6 +2,7 @@
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,13 +18,13 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 			_estanteDAL = estanteDAL;
 		}
 
-		//obtener todos
+		// GET: api/<UsuarioController>
 		[HttpGet]
-		public async Task<List<SearchResultEstanteDTO.EstanteDTO>> ObtenerTodos()
+		public async Task<List<GetIdResultEstanteDTO>> ObtenerTodos()
 		{
-			var roles = await _estanteDAL.ObtenerEstantes();
+			var estantes = await _estanteDAL.ObtenerEstantes();
 
-			var rolesDto = roles.Select(r => new SearchResultEstanteDTO.EstanteDTO
+			var estanteDto = estantes.Select(r => new GetIdResultEstanteDTO
 			{
 				Id = r.Id,
 				Nombre = r.Nombre,
@@ -31,7 +32,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 				BodegaId = r.BodegaId
 			}).ToList();
 
-			return rolesDto;
+			return estanteDto;
 		}
 
 
