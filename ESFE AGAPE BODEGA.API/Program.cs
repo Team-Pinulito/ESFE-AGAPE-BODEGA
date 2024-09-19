@@ -18,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<RolDAL>();
 
 builder.Services.AddScoped<BodegaDAL>();
+builder.Services.AddScoped<EstanteDAL>();
 
 var app = builder.Build();
 
