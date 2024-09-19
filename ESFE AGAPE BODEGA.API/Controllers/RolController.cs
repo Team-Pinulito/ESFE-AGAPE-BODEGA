@@ -2,6 +2,7 @@
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,14 +26,14 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         {
             var roles = await _rolDAL.ObtenerRoles();
 
-            var rolesDto = roles.Select(r => new BuscarRolResultadosDto.RolDto
+            var rolDto = roles.Select(r => new BuscarRolResultadosDto.RolDto
             {
                 Id = r.Id,
                 Nombre = r.Nombre,
                 Descripcion = r.Descripcion
             }).ToList();
 
-            return rolesDto;
+            return rolDto;
         }
 
 
