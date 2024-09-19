@@ -18,5 +18,6 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         public DbSet<TipoActivo> tipoActivos { get; set; }
         public DbSet<Bodega> bodegas { get; set; }
         public DbSet<Rol> roles { get; set; }
+        public DbSet<Usuario> usuarios { get; set; }
     }
 }

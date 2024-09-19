@@ -17,5 +17,9 @@ namespace ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs
 		[Required(ErrorMessage = "La descripcion es obligatoria.")]
 		public string Descripcion { get; set; }
 
+		[Display(Name = "Bodega")]
+		public int BodegaId { get; set; }
+
+
 	}
 }

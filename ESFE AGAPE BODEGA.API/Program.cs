@@ -17,6 +17,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<RolDAL>();
 
+builder.Services.AddScoped<BodegaDAL>();
+builder.Services.AddScoped<EstanteDAL>();
+builder.Services.AddScoped<UsuarioDAL>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

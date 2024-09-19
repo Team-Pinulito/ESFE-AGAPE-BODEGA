@@ -14,6 +14,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs
 			Id = getIdResultEstanteDTO.Id;
 			Nombre = getIdResultEstanteDTO.Nombre;
 			Descripcion = getIdResultEstanteDTO.Descripcion;
+			BodegaId = getIdResultEstanteDTO.BodegaId;
 		}
 		public EditEstanteDTO()
 		{
@@ -29,5 +30,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs
 		[MaxLength(255, ErrorMessage = "El campo Descripción no puede tener más de 255 caracteres.")]
 		[Required(ErrorMessage = "La descripcion es obligatoria.")]
 		public string Descripcion { get; set; }
+
+		[Display(Name = "Bodega")]
+		public int BodegaId { get; set; }
 	}
 }

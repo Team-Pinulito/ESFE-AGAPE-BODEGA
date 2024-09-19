@@ -1,6 +1,0 @@
-﻿namespace ESFE_AGAPE_BODEGA.API.Models.DAL
-{
-    public class hola
-    {
-    }
-}
