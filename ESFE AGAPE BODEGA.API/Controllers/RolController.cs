@@ -1,5 +1,6 @@
 ﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
+using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -84,9 +85,23 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
         //obtener por id
         [HttpGet("{id}")]
-        public async Task<Rol> ObtenerRolId(int id)
+        public async Task<ActionResult<ObtenerRolIdDto>> ObtenerRolId(int id)
         {
-            return await _rolDAL.ObtenerRolId(id);
+            var rol = await _rolDAL.ObtenerRolId(id);
+
+            if (rol == null)
+            {
+                return NotFound();
+            }
+
+            var rolDto = new ObtenerRolIdDto
+            {
+                Id = rol.Id,
+                Nombre = rol.Nombre,
+                Descripcion = rol.Descripcion
+            };
+
+            return rolDto;
         }
 
 
