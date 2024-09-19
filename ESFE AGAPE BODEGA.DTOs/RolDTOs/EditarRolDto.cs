@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace ESFE_AGAPE_BODEGA.DTOs.RolDTOs
 {
-    public class CrearRolDto
+    public class EditarRolDto
     {
+        public int Id { get; set; }
+
         [Required]
         [StringLength(100, ErrorMessage = "El nombre no puede tener mas de 100 caracteres")]
         [Display(Name = "Nombre")]
