@@ -14,6 +14,6 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 		public string Descripcion { get; set; }
 
 
-		public virtual Bodega Bodega { get; set; } = null!;
+		public  Bodega Bodega { get; set; } 
 	}
 }
