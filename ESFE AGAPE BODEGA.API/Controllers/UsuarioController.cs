@@ -3,7 +3,6 @@ using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using System.Threading.Tasks;
-using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
@@ -20,11 +19,11 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
         // GET: api/<UsuarioController>
         [HttpGet]
-        public async Task<List<GetIdResultUsuarioDTO>> ObtenerTodos()
+        public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerTodos()
         {
             var usuarios = await _usuarioDAL.ObtenerUsuarios();
 
-            var usuarioDto = usuarios.Select(r => new GetIdResultUsuarioDTO
+            var usuarioDto = usuarios.Select(r => new GetIdResultUsuarioDTO.UsuarioDTO
             {
                 Id = r.Id,
                 Nombre = r.Nombre,
@@ -39,6 +38,59 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             }).ToList();
 
             return usuarioDto;
+        }
+
+        //obtener todos paginados
+        [HttpPost("buscar")]
+        public async Task<GetIdResultUsuarioDTO> Buscar(SearchQueryUsuarioDTO usuarioDto)
+        {
+
+            var usuario = new Usuario
+            {
+                Nombre = usuarioDto.Nombre_Like != null ? usuarioDto.Nombre_Like : string.Empty,
+            };
+
+            var usuarios = new List<Usuario>();
+            var countRow = 0;
+
+            if (usuarioDto.SendRowCount == 2)
+            {
+                usuarios = await _usuarioDAL.BuscarPaginado(usuario, skip: usuarioDto.Skip, take: usuarioDto.Take);
+                if (usuarios.Count > 0)
+                {
+                    countRow = await _usuarioDAL.ContarResultUsuario(usuario);
+                }
+            }
+            else
+            {
+                usuarios = await _usuarioDAL.BuscarPaginado(usuario, skip: usuarioDto.Skip, take: usuarioDto.Take);
+            }
+
+            var usuarioResult = new GetIdResultUsuarioDTO
+            {
+                Data = new List<GetIdResultUsuarioDTO.UsuarioDTO>(),
+                CountRow = countRow
+            };
+
+            foreach (var item in usuarios)
+            {
+                usuarioResult.Data.Add(new GetIdResultUsuarioDTO.UsuarioDTO
+                {
+                    Id = item.Id,
+                    Nombre = item.Nombre,
+                    Apellido = item.Apellido,
+                    Email = item.Email,
+                    Telefono = item.Telefono,
+                    DUI = item.DUI,
+                    Password = item.Password,
+                    Codigo = item.Codigo,
+                    Direccion = item.Direccion,
+                    RolId = item.RolId
+                });
+            }
+
+            return usuarioResult;
+
         }
 
         // GET api/<UsuarioController>/5
@@ -103,9 +155,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             var result = await _usuarioDAL.ActualizarUsuario(usuario);
             if (result > 0)
             {
-                return NoContent();
+                return Ok(result);
             }
-            return NotFound();
+            else
+            {
+                return StatusCode(500);
+            }
         }
 
         // DELETE api/<UsuarioController>/5
@@ -115,9 +170,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             var result = await _usuarioDAL.EliminarUsuario(id);
             if (result > 0)
             {
-                return NoContent();
+                return Ok(result);
             }
-            return NotFound();
+            else
+            {
+                return StatusCode(500);
+            }
         }
     }
 }

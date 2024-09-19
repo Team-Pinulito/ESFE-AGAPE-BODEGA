@@ -9,7 +9,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
 {
 	public class EditUsuarioDTO
 	{
-		public EditUsuarioDTO(GetIdResultUsuarioDTO getIdResultUsuarioDTO)
+		public EditUsuarioDTO(GetIdResultUsuarioDTO.UsuarioDTO getIdResultUsuarioDTO)
 		{
 			Id = getIdResultUsuarioDTO.Id;
             Nombre = getIdResultUsuarioDTO.Nombre;
