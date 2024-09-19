@@ -1,4 +1,6 @@
-﻿namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 {
     public class Bodega
     {
