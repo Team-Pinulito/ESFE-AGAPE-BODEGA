@@ -20,6 +20,7 @@ builder.Services.AddScoped<RolDAL>();
 builder.Services.AddScoped<BodegaDAL>();
 builder.Services.AddScoped<EstanteDAL>();
 builder.Services.AddScoped<UsuarioDAL>();
+builder.Services.AddScoped<TipoActivoDAL>();
 
 var app = builder.Build();
 
