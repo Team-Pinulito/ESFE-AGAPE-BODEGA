@@ -4,15 +4,15 @@ namespace ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
 {
     public class EditActivoDTO
     {
-        public EditActivoDTO(GetIdResultActivoDTO.ActivoDTO GetIdResultActivoDTO)
+        public EditActivoDTO(GetIdResultActivoDTO getIdResultActivoDTO)
         {
-            Id = GetIdResultActivoDTO.Id;
-            Nombre = GetIdResultActivoDTO.Nombre;
-            Descripcion = GetIdResultActivoDTO.Descripcion;
-            EstanteId = GetIdResultActivoDTO.EstanteId;
-            TipoActivoId = GetIdResultActivoDTO.TipoActivoId;
-            Codigo = GetIdResultActivoDTO.Codigo;
-            CodigoBarra = GetIdResultActivoDTO.CodigoBarra;
+            Id = getIdResultActivoDTO.Id;
+            Nombre = getIdResultActivoDTO.Nombre;
+            Descripcion = getIdResultActivoDTO.Descripcion;
+            EstanteId = getIdResultActivoDTO.EstanteId;
+            TipoActivoId = getIdResultActivoDTO.TipoActivoId;
+            Codigo = getIdResultActivoDTO.Codigo;
+            CodigoBarra = getIdResultActivoDTO.CodigoBarra;
         }
 
         public EditActivoDTO()
