@@ -1,9 +1,13 @@
-﻿using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
+﻿using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs.GetIdResultUsuarioDTO;
 
 namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 {
@@ -13,8 +17,34 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
         {
             Id = getIdResultIngresoActivoDTO.Id;
             Correlativo = getIdResultIngresoActivoDTO.Correlativo;
-            Nombre = getIdResultPaqueteActivoDTO.Nombre;
-            DetallePaqueteActivos = getIdResultPaqueteActivoDTO.DetallePaqueteActivos;
+            UsuarioId = getIdResultIngresoActivoDTO.UsuarioId;
+            FechaIngreso = getIdResultIngresoActivoDTO.FechaIngreso;
+            NumeroDocRelacionado = getIdResultIngresoActivoDTO.NumeroDocRelacionado;
+            Total = getIdResultIngresoActivoDTO.Total;
+            DetalleIngresoActivos = getIdResultIngresoActivoDTO.DetalleIngresoActivos;
         }
+
+        public EditIngresoActivoDTO()
+        {
+            Correlativo = string.Empty;
+            
+        }
+
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+        [MaxLength(50, ErrorMessage = "El campo Correlativo no puede tener más de 50 caracteres.")]
+        public string Correlativo { get; set; }
+        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+        public int UsuarioId { get; set; }
+        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+        public DateTime FechaIngreso { get; set; }
+        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+        public string NumeroDocRelacionado { get; set; }
+        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+        public decimal Total { get; set; }
+
+        public UsuarioDTO Usuario { get; set; }
+        public List<DetalleIngresoActivoDTO> DetalleIngresoActivos { get; set; }
     }
 }
