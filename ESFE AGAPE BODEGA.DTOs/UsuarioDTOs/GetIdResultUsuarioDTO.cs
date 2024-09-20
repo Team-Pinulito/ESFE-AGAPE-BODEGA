@@ -26,7 +26,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
             public string Password { get; set; }
             public string Codigo { get; set; }
             public string Direccion { get; set; }
-
+            [Display(Name = "Rol")]
             public int RolId { get; set; }
         }
     }

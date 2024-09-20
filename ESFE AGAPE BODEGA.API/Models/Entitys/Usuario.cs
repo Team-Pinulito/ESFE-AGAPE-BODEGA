@@ -14,7 +14,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
         public string Password { get; set; }
         public string Codigo { get; set; }
         public string Direccion { get; set; }
-
+        [Display(Name = "Rol")]
         public Rol RolId { get; set; }
 
 

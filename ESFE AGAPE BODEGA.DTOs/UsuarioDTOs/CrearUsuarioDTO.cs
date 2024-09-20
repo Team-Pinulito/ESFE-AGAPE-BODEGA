@@ -42,6 +42,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
             public string Direccion { get; set; }
 
             [Required(ErrorMessage = "El campo RolId es obligatorio.")]
+            [Display(Name = "Rol")]
             public int RolId { get; set; }
         
     }
