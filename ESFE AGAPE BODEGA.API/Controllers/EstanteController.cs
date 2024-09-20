@@ -1,8 +1,6 @@
 ﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
-using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
-using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +16,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 			_estanteDAL = estanteDAL;
 		}
 
-		// GET: api/<UsuarioController>
 		[HttpGet]
 		public async Task<List<GetIdResultEstanteDTO>> ObtenerTodos()
 		{
