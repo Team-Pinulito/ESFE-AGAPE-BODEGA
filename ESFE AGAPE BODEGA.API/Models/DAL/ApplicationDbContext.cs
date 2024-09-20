@@ -41,7 +41,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                 .HasOne(s => s.Usuario)
                 .WithMany(u => u.solicitudActivos) // Asegúrate de tener esta colección en Usuario
                 .HasForeignKey(s => s.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict); // Restringe la eliminación en cascada
+                .OnDelete(DeleteBehavior.Cascade); // Restringe la eliminación en cascada
 
             // Relación 1-a-1 entre UsuarioBodegueroEntrega y SolicitudActivo
             modelBuilder.Entity<SolicitudActivo>()
