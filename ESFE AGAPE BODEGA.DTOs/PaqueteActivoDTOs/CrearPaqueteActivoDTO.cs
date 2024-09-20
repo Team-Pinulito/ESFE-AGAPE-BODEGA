@@ -12,7 +12,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs
 	{
 		public CrearPaqueteActivoDTO()
 		{
-			DetallePaqueteActivos = new List<DetallePaqueteActivoDTO>();
+			CrearDetallePaqueteActivos = new List<CrearDetallePaqueteActivoDTO>();
 		}
 
 		[Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
@@ -23,7 +23,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs
 		[MaxLength(100, ErrorMessage = "El campo Nombre no puede tener más de 100 caracteres.")]
 		public string Nombre { get; set; }
 
-		public List<DetallePaqueteActivoDTO> DetallePaqueteActivos { get; set; }
+		public List<CrearDetallePaqueteActivoDTO> CrearDetallePaqueteActivos { get; set; }
 
 	}
 
