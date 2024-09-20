@@ -1,4 +1,6 @@
-﻿namespace Bodega_Api_Esfe_Agape.Models.EN
+﻿using ESFE_AGAPE_BODEGA.API.Models.Entitys;
+
+namespace Bodega_Api_Esfe_Agape.Models.EN
 {
     public class IngresoActivo
     {
@@ -9,7 +11,7 @@
         public string NumeroDocRelacionado { get; set; }
         public decimal Total { get; set; }
 
-        //public Usuario usuario { get; set; }
+        public Usuario usuario {  get; set; }
 
     }
 }
