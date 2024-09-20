@@ -14,9 +14,9 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
         public int TipoMantenimiento { get; set; }
         public string Comentario { get; set; }
 
-        public Usuario Usuario { get; set; }
+        public virtual Usuario Usuario { get; set; }
 
-        public List<InventarioActivo> InventarioActivos { get; set; }
+        public ICollection<InventarioActivo> InventarioActivos { get; set; }
 
     }
 }
