@@ -16,5 +16,7 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
         public Estante estante { get; set; }
 
         public TipoActivo tipoactivo { get; set; }
+
+        public List<InventarioActivo> InventarioActivos { get; set; }
     }
 }
