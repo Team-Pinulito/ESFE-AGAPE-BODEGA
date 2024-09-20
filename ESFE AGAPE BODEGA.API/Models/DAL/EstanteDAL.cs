@@ -14,7 +14,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 			this.applicationDbContext = applicationDbContext;
 		}
 
-		//obtener roles
+		//obtener estante
 		public async Task<List<Estante>> ObtenerEstantes()
 		{
 			return await applicationDbContext.estantes
@@ -22,13 +22,13 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 				.ToListAsync();
 		}
 
-		//buscar rol por id
+		//buscar estante por id
 		public async Task<Estante> ObtenerEstanteId(int id)
 		{
 			return await applicationDbContext.estantes.Include(e => e.Bodega).FirstOrDefaultAsync(x => x.Id == id);
 		}
 
-		//crear rol
+		//crear estante
 		public async Task<int> CrearEstante(Estante estante)
 		{
 			applicationDbContext.estantes.Add(estante);
@@ -36,7 +36,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 			return result;
 		}
 
-		//actualizar rol
+		//actualizar estante
 		public async Task<int> ActualizarEstante(Estante estante)
 		{
 			applicationDbContext.estantes.Update(estante);
@@ -44,7 +44,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 			return result;
 		}
 
-		//eliminar rol
+		//eliminar estante
 		public async Task<int> EliminarEstante(int id)
 		{
 			var estante = await ObtenerEstanteId(id);
@@ -53,7 +53,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 			return result;
 		}
 
-		//buscar rol con filtros
+		//buscar estante con filtros
 		public IQueryable<Estante> BuscarEstante(Estante estante )
 		{
 			var query = applicationDbContext.estantes.AsQueryable();
