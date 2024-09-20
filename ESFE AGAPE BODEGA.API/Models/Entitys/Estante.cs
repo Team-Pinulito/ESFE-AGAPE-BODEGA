@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Bodega_Api_Esfe_Agape.Models.EN;
 
 namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 {
@@ -13,7 +14,10 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 
 		public string Descripcion { get; set; }
 
+		public List<Activo> Activos { get; set; }
 
-		public  Bodega Bodega { get; set; } 
+		//public List<InventarioActivo> InventarioActivos { get; set; }
+
+		public Bodega Bodega { get; set; } 
 	}
 }
