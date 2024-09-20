@@ -16,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddScoped<RolDAL>();
-
+builder.Services.AddScoped<ActivoDAL>();
 builder.Services.AddScoped<BodegaDAL>();
 builder.Services.AddScoped<EstanteDAL>();
 builder.Services.AddScoped<UsuarioDAL>();
