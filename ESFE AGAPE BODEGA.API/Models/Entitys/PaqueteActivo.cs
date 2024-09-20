@@ -10,7 +10,7 @@
 
 		public List<DetallePaqueteActivo> DetallePaqueteActivos { get; set; }
 
-		//public List<DetalleSolicitudActivo> DetalleSolicitudActivos { get; set; }
+		public List<DetalleSolicitudActivo> DetalleSolicitudActivos { get; set; }
 
 	}
 }
