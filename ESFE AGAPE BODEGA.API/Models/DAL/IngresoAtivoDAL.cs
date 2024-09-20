@@ -104,5 +104,13 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         {
             return await BuscaringresoActivo(ingresoActivo).CountAsync();
         }
+
+        public async Task<List<IngresoActivo>> BuscarPaginado(IngresoActivo ingresoActivo, int take = 10, int skip = 0)
+        {
+            take = take == 0 ? 10 : take;
+            var query = BuscaringresoActivo(ingresoActivo);
+            query = query.OrderByDescending(x => x.Id).Skip(skip).Take(take);
+            return await query.ToListAsync();
+        }
     }
 }
