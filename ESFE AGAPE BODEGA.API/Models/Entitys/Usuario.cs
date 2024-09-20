@@ -19,6 +19,8 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 
         public Rol Rol { get; set; }
 
+        public ICollection<SolicitudActivo> solicitudActivos { get; set; }
+
 
     }
 }
