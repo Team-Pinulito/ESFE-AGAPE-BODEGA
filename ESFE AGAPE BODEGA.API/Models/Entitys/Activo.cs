@@ -18,6 +18,8 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
 
         public List<DetallePaqueteActivo> detallePaqueteActivos { get; set; }
 
+        public List<DetalleSolicitudActivo> detalleSolicitudActivos { get; set; }
+
         public List<InventarioActivo> InventarioActivos { get; set; }
     }
 }
