@@ -9,8 +9,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs
 {
     public class SearchQueryAjusteInvetarioDTO
     {
-        [Display(Name = "Nombre")]
-        public string? Nombre_Like { get; set; }
+        [Display(Name = "Fecha de Ingreso")]
+        public DateTime? FechaIngreso { get; set; }
 
         [Display(Name = "Pagina")]
         public int Skip { get; set; }
