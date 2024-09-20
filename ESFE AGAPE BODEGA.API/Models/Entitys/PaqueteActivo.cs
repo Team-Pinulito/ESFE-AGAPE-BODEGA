@@ -8,9 +8,9 @@
 		
 		public string Nombre { get; set; }
 
-		public List<DetallePaqueteActivo> DetallePaqueteActivos { get; set; }
+		public IList<DetallePaqueteActivo> DetallePaqueteActivos { get; set; }
 
-		public List<DetalleSolicitudActivo> DetalleSolicitudActivos { get; set; }
+		public ICollection<DetalleSolicitudActivo> DetalleSolicitudActivos { get; set; }
 
 	}
 }
