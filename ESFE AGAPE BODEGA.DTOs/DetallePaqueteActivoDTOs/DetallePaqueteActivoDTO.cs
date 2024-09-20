@@ -19,5 +19,5 @@ namespace ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs
 		[Required(ErrorMessage = "El campo Cantidad es obligatorio.")]
 		public int Cantidad { get; set; }
 	}
-}
+
 }
