@@ -26,18 +26,24 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 			// Obtener la lista de PaqueteActivo desde el DAL
 			var paquetesActivos = await _paqueteActivoDAL.ObtenerPaqueteActivos();
 
+			if (paquetesActivos == null)
+			{
+				// Manejo del caso cuando la lista es nula
+				return new List<GetIdResultPaqueteActivoDTO>();
+			}
+
 			// Mapear la lista de PaqueteActivo a GetIdResultPaqueteActivoDTO
 			var paqueteActivoDto = paquetesActivos.Select(paquete => new GetIdResultPaqueteActivoDTO
 			{
 				Id = paquete.Id,
 				Correlativo = paquete.Correlativo,
 				Nombre = paquete.Nombre,
-				DetallePaqueteActivos = paquete.DetallePaqueteActivos.Select(detalle => new DetallePaqueteActivoDTO
+				DetallePaqueteActivos = paquete.DetallePaqueteActivos?.Select(detalle => new DetallePaqueteActivoDTO
 				{
 					Id = detalle.Id,
 					ActivoId = detalle.ActivoId,
 					Cantidad = detalle.Cantidad
-				}).ToList() // Mapeo de cada DetallePaqueteActivo a su DTO
+				}).ToList() ?? new List<DetallePaqueteActivoDTO>() // Manejo de nulidad
 			}).ToList();
 
 			return paqueteActivoDto;
@@ -73,20 +79,17 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 		[HttpPost("buscar")]
 		public async Task<SearchResultPaqueteActivoDTO> Buscar(SearchQueryPaqueteActivoDTO paqueteActivoDTO)
 		{
-			// Crear el objeto PaqueteActivo con los filtros recibidos en el DTO
 			var paqueteActivo = new PaqueteActivo
 			{
-				Nombre = paqueteActivoDTO.Nombre_Like != null ? paqueteActivoDTO.Nombre_Like : string.Empty,
-				Correlativo = paqueteActivoDTO.Correlativo_Like != null ? paqueteActivoDTO.Correlativo_Like : string.Empty
+				Nombre = paqueteActivoDTO.Nombre_Like ?? string.Empty,
+				Correlativo = paqueteActivoDTO.Correlativo_Like ?? string.Empty
 			};
 
 			var paquetesActivos = new List<PaqueteActivo>();
 			var countRow = 0;
 
-			// Verificar si se debe contar los resultados
 			if (paqueteActivoDTO.SendRowCount == 2)
 			{
-				// Buscar paginados y contar el total de registros
 				paquetesActivos = await _paqueteActivoDAL.BuscarPaginado(paqueteActivo, skip: paqueteActivoDTO.Skip, take: paqueteActivoDTO.Take);
 				if (paquetesActivos.Count > 0)
 				{
@@ -95,18 +98,15 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 			}
 			else
 			{
-				// Buscar paginados sin contar
 				paquetesActivos = await _paqueteActivoDAL.BuscarPaginado(paqueteActivo, skip: paqueteActivoDTO.Skip, take: paqueteActivoDTO.Take);
 			}
 
-			// Mapear los resultados a DTOs
 			var paqueteActivoResult = new SearchResultPaqueteActivoDTO
 			{
 				Data = new List<SearchResultPaqueteActivoDTO.PaqueteActivoDTO>(),
 				CountRow = countRow
 			};
 
-			// Rellenar la lista de resultados con el mapeo de PaqueteActivo y sus Detalles
 			foreach (var item in paquetesActivos)
 			{
 				paqueteActivoResult.Data.Add(new SearchResultPaqueteActivoDTO.PaqueteActivoDTO
@@ -114,12 +114,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 					Id = item.Id,
 					Correlativo = item.Correlativo,
 					Nombre = item.Nombre,
-					DetallePaqueteActivos = item.DetallePaqueteActivos.Select(detalle => new DetallePaqueteActivoDTO
+					DetallePaqueteActivos = item.DetallePaqueteActivos?.Select(detalle => new DetallePaqueteActivoDTO
 					{
 						Id = detalle.Id,
 						ActivoId = detalle.ActivoId,
 						Cantidad = detalle.Cantidad
-					}).ToList() // Mapeo de DetallePaqueteActivo a DetallePaqueteActivoDTO
+					}).ToList() ?? new List<DetallePaqueteActivoDTO>() // Manejo de nulidad
 				});
 			}
 
