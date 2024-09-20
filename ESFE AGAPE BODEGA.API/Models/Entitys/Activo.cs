@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 
 namespace Bodega_Api_Esfe_Agape.Models.EN
 {
     public class Activo
     {
-        [Key]
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
@@ -13,7 +13,8 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
         public string Codigo { get; set; }
         public string CodigoBarra { get; set; }
 
-        //public estante estantes { get; set; }
-        //public tipoActivo tipoactivo { get; set; }
+        public Estante estante { get; set; }
+
+        public TipoActivo tipoactivo { get; set; }
     }
 }
