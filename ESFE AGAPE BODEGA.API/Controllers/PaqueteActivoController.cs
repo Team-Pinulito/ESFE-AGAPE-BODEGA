@@ -50,7 +50,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 			{
 				Correlativo = paqueteActivoDTO.Correlativo,
 				Nombre = paqueteActivoDTO.Nombre,
-				DetallePaqueteActivos = paqueteActivoDTO.DetallePaqueteActivos.Select(detalle => new DetallePaqueteActivo
+				DetallePaqueteActivos = paqueteActivoDTO.CrearDetallePaqueteActivos.Select(detalle => new DetallePaqueteActivo
 				{
 					ActivoId = detalle.ActivoId,
 					Cantidad = detalle.Cantidad
