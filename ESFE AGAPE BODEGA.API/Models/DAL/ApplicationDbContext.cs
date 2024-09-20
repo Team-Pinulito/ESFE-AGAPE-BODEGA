@@ -21,9 +21,11 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 		public DbSet<Usuario> usuarios { get; set; }
 		public DbSet<PaqueteActivo> paqueteActivos { get; set; }
 		public DbSet<DetallePaqueteActivo> detallePaqueteActivos { get; set; }
+        public DbSet<AjusteInventario> ajusteInventarios { get; set; }
+        public DbSet<InventarioActivo> inventarioActivos { get; set; }
 
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 

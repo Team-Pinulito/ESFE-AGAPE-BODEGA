@@ -1,9 +1,13 @@
-﻿namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
+﻿using System.ComponentModel;
+
+namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 {
     public class AjusteInventario
     {
         public int Id { get; set; }
+        [DisplayName("Usuario")]
         public Usuario UsuarioId { get; set; }
+        [DisplayName("Fecha de Ingreso")]
         public DateTime FechaIngreso { get; set; }
         public int Correlativo { get; set; }
         public int Cantidad { get; set; }
