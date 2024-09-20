@@ -95,9 +95,30 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
         // GET api/<UsuarioController>/5
         [HttpGet("{id}")]
-        public async Task<Usuario> ObtenerUsuarioId(int id)
+        public async Task<ActionResult<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuarioId(int id)
         {
-            return await _usuarioDAL.ObtenerUsuarioId(id);
+            var usuario = await _usuarioDAL.ObtenerUsuarioId(id);
+
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            var usuarioDto = new GetIdResultUsuarioDTO.UsuarioDTO
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
+                Email = usuario.Email,
+                Telefono = usuario.Telefono,
+                DUI = usuario.DUI,
+                Password = usuario.Password,
+                Codigo = usuario.Codigo,
+                Direccion = usuario.Direccion,
+                RolId = usuario.RolId
+            };
+
+            return usuarioDto;
         }
 
         // POST api/<UsuarioController>
