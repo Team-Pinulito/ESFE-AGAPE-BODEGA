@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ESFE_AGAPE_BODEGA.API.Models.Entitys;
+﻿using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 
 namespace Bodega_Api_Esfe_Agape.Models.EN
 {
@@ -16,6 +15,8 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
         public Estante estante { get; set; }
 
         public TipoActivo tipoactivo { get; set; }
+
+        public List<DetallePaqueteActivo> detallePaqueteActivos { get; set; }
 
         public List<InventarioActivo> InventarioActivos { get; set; }
     }
