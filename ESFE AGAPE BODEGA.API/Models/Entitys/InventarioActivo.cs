@@ -7,10 +7,14 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
     {
         public int Id { get; init; }
         [Display(Name = "Activo")]
-        public Activo ActivoId { get; init; }
+        public int ActivoId { get; init; }
         [Display(Name = "Estante")]
-        public Estante EstanteId { get; init; }
+        public int EstanteId { get; init; }
         public int Existencia { get; init; }
+
+        public Activo Activo { get; set; }
+
+        public Estante Estante { get; set; }
 
         public List<DetalleIngresoActivo> DetalleIngresoActivos { get; set; }
 
