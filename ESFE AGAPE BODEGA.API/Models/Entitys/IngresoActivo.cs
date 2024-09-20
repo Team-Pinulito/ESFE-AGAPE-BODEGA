@@ -13,5 +13,7 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
 
         public virtual Usuario usuario {  get; set; }
 
+        public IList<DetalleIngresoActivo> detalleIngresoActivos { get; set; }
+
     }
 }
