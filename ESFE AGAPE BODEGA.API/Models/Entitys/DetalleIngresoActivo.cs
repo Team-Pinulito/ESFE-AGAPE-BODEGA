@@ -1,4 +1,6 @@
-﻿namespace Bodega_Api_Esfe_Agape.Models.EN
+﻿using ESFE_AGAPE_BODEGA.API.Models.Entitys;
+
+namespace Bodega_Api_Esfe_Agape.Models.EN
 {
     public class DetalleIngresoActivo
     {
@@ -8,7 +10,9 @@
         public int Cantidad { get; set; }
         public decimal Precio { get; set; }
 
-        public IngresoActivo ingresoActivo { get; set; }
-        //public InventarioActivo inventarioactivo { get; set; }
+        public virtual IngresoActivo ingresoActivo { get; set; }
+        public virtual InventarioActivo inventarioActivo { get; set; }
+
+
     }
 }

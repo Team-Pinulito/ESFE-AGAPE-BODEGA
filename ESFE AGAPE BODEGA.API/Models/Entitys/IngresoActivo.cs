@@ -11,7 +11,7 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
         public string NumeroDocRelacionado { get; set; }
         public decimal Total { get; set; }
 
-        public Usuario usuario {  get; set; }
+        public virtual Usuario usuario {  get; set; }
 
     }
 }
