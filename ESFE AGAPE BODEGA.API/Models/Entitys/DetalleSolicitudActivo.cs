@@ -14,7 +14,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 
         public Activo Activo { get; set; }
         public PaqueteActivo PaqueteActivo { get; set; }
-        public SolicitudActivo SolicitudActivo { get; set; }
+        //public SolicitudActivo SolicitudActivo { get; set; }
 
     }
 }
