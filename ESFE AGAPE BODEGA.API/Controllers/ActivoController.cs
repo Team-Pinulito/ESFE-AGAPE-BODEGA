@@ -2,15 +2,14 @@
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs;
 using Microsoft.AspNetCore.Mvc;
-using static ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs.SearchResultActivoDTO;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ActivoController : ControllerBase
     {
-
         private readonly ActivoDAL _activoDAL;
 
         public ActivoController(ActivoDAL activoDAL)
@@ -18,41 +17,36 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             _activoDAL = activoDAL;
         }
 
-        // GET: api/Activo
         [HttpGet]
-        public async Task<ActionResult<List<ActivoDTO>>> ObtenerTodos()
+        public async Task<List<GetIdResultActivoDTO>> ObtenerTodos()
         {
             var activos = await _activoDAL.ObtenerActivos();
-
-            var activoDto = activos.Select(r => new ActivoDTO
+            return activos.Select(a => new GetIdResultActivoDTO
             {
-                Id = r.Id,
-                Nombre = r.Nombre,
-                Descripcion = r.Descripcion,
-                EstanteId = r.EstanteId,
-                TipoActivoId = r.TipoActivoId,
-                Codigo = r.Codigo,
-                CodigoBarra = r.CodigoBarra
+                Id = a.Id,
+                Nombre = a.Nombre,
+                Descripcion = a.Descripcion,
+                EstanteId = a.EstanteId,
+                TipoActivoId = a.TipoActivoId,
+                Codigo = a.Codigo,
+                CodigoBarra = a.CodigoBarra
             }).ToList();
-
-            return Ok(activoDto);
         }
 
-        // POST: api/Activo/buscar
         [HttpPost("buscar")]
-        public async Task<ActionResult<SearchResultActivoDTO>> Buscar(SearchQueryActivoDTO activoDto)
+        public async Task<SearchResultActivoDTO> Buscar(SearchQueryActivoDTO activoDTO)
         {
             var activo = new Activo
             {
-                Nombre = activoDto.Nombre ?? string.Empty,
+                Nombre = activoDTO.Nombre ?? string.Empty
             };
 
-            var activos = await _activoDAL.BuscarPaginado(activo, activoDto.Take, activoDto.Skip);
-            var countRow = activoDto.SendRowCount == 2 ? await _activoDAL.ContarResultActivo(activo) : 0;
+            var activos = await _activoDAL.BuscarPaginado(activo, activoDTO.Take, activoDTO.Skip);
+            var countRow = await _activoDAL.ContarResultActivo(activo);
 
-            var activoResult = new SearchResultActivoDTO
+            return new SearchResultActivoDTO
             {
-                Data = activos.Select(a => new ActivoDTO
+                Data = activos.Select(a => new SearchResultActivoDTO.ActivoDTO
                 {
                     Id = a.Id,
                     Nombre = a.Nombre,
@@ -64,22 +58,18 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 }).ToList(),
                 CountRow = countRow
             };
-
-            return Ok(activoResult);
         }
 
-        // GET: api/Activo/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ActivoDTO>> ObtenerActivoId(int id)
+        public async Task<ActionResult<GetIdResultActivoDTO>> ObtenerActivoId(int id)
         {
             var activo = await _activoDAL.ObtenerActivoPorId(id);
-
             if (activo == null)
             {
                 return NotFound();
             }
 
-            var activoDto = new ActivoDTO
+            return new GetIdResultActivoDTO
             {
                 Id = activo.Id,
                 Nombre = activo.Nombre,
@@ -89,11 +79,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Codigo = activo.Codigo,
                 CodigoBarra = activo.CodigoBarra
             };
-
-            return Ok(activoDto);
         }
 
-        // POST: api/Activo
         [HttpPost]
         public async Task<IActionResult> Crear([FromBody] CrearActivoDTO crearActivoDTO)
         {
@@ -112,62 +99,62 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 CodigoBarra = crearActivoDTO.CodigoBarra
             };
 
-            var result = await _activoDAL.CrearActivo(activo);
+            int result = await _activoDAL.CrearActivo(activo);
 
             if (result > 0)
             {
-                return CreatedAtAction(nameof(ObtenerActivoId), new { id = activo.Id }, activo);
+                return Ok(result);
             }
             else
             {
-                return StatusCode(500, "Error al crear el activo.");
+                return StatusCode(500);
             }
         }
 
-        // PUT: api/Activo/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] EditActivoDTO editActivoDTO)
         {
-            if (!ModelState.IsValid || id != editActivoDTO.Id)
+            var updateActivo = await _activoDAL.ObtenerActivoPorId(id);
+
+            if (updateActivo == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
 
-            var activo = new Activo
-            {
-                Id = editActivoDTO.Id,
-                Nombre = editActivoDTO.Nombre,
-                Descripcion = editActivoDTO.Descripcion,
-                EstanteId = editActivoDTO.EstanteId,
-                TipoActivoId = editActivoDTO.TipoActivoId,
-                Codigo = editActivoDTO.Codigo,
-                CodigoBarra = editActivoDTO.CodigoBarra
-            };
+            updateActivo.Nombre = editActivoDTO.Nombre;
+            updateActivo.Descripcion = editActivoDTO.Descripcion;
+            updateActivo.EstanteId = editActivoDTO.EstanteId;
+            updateActivo.TipoActivoId = editActivoDTO.TipoActivoId;
+            updateActivo.Codigo = editActivoDTO.Codigo;
+            updateActivo.CodigoBarra = editActivoDTO.CodigoBarra;
 
-            var result = await _activoDAL.ActualizarActivo(activo);
+            int result = await _activoDAL.ActualizarActivo(updateActivo);
+
             if (result > 0)
             {
-                return Ok("Activo actualizado correctamente.");
+                return Ok(result);
             }
             else
             {
-                return StatusCode(500, "Error al actualizar el activo.");
+                return StatusCode(500);
             }
         }
 
-        // DELETE: api/Activo/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Eliminar(int id)
         {
-            var result = await _activoDAL.EliminarActivo(id);
+            int result = await _activoDAL.EliminarActivo(id);
+
             if (result > 0)
             {
-                return Ok("Activo eliminado correctamente.");
+                return Ok(result);
             }
             else
             {
-                return StatusCode(500, "Error al eliminar el activo.");
+                return StatusCode(500);
             }
         }
     }
+
 }
+
