@@ -35,23 +35,27 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 			.WithOne(d => d.PaqueteActivo)
 			.HasForeignKey(d => d.PaqueteActivoId)
 			.OnDelete(DeleteBehavior.Cascade); // Aquí habilitas la eliminación en cascada
+                                               // Relación 1-a-muchos entre Usuario y SolicitudActivo (quien hace la solicitud)
+                                               // Relación 1-a-muchos entre Usuario y SolicitudActivo (quien hace la solicitud)
+            modelBuilder.Entity<SolicitudActivo>()
+                .HasOne(s => s.Usuario)
+                .WithMany(u => u.solicitudActivos) // Asegúrate de tener esta colección en Usuario
+                .HasForeignKey(s => s.UsuarioId)
+                .OnDelete(DeleteBehavior.Restrict); // Restringe la eliminación en cascada
 
-			// Relación 1-a-muchos entre Usuario y SolicitudActivo (quien hace la solicitud)
-			modelBuilder.Entity<SolicitudActivo>()
-				.HasOne(s => s.Usuario)
-				.WithMany(u => u.solicitudActivos) // Asegúrate de tener esta colección en Usuario
-				.HasForeignKey(s => s.UsuarioId);
-			// Relación 1-a-1 entre UsuarioBodegueroEntrega y SolicitudActivo
-			modelBuilder.Entity<SolicitudActivo>()
-				.HasOne(s => s.UsuarioBodegueroEntrega)
-				.WithMany()
-				.HasForeignKey(s => s.UsuarioIdBodegueroEntregaId);
+            // Relación 1-a-1 entre UsuarioBodegueroEntrega y SolicitudActivo
+            modelBuilder.Entity<SolicitudActivo>()
+                .HasOne(s => s.UsuarioBodegueroEntrega)
+                .WithMany()
+                .HasForeignKey(s => s.UsuarioIdBodegueroEntregaId)
+                .OnDelete(DeleteBehavior.Restrict); // Evitar eliminación en cascada
 
             // Relación 1-a-1 entre UsuarioBodegueroRecibe y SolicitudActivo
             modelBuilder.Entity<SolicitudActivo>()
                 .HasOne(s => s.UsuarioBodegueroRecibe)
                 .WithMany()
-                .HasForeignKey(s => s.UsuarioIdBodegueroRecibeId);
+                .HasForeignKey(s => s.UsuarioIdBodegueroRecibeId)
+                .OnDelete(DeleteBehavior.Restrict); // Evitar e
         }
 	}
 }
