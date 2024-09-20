@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ESFE_AGAPE_BODEGA.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240920200022_10")]
-    partial class _10
+    [Migration("20240920201545_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
