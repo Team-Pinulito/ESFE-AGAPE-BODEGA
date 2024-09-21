@@ -24,6 +24,7 @@ builder.Services.AddScoped<TipoActivoDAL>();
 builder.Services.AddScoped<PaqueteActivoDAL>();
 builder.Services.AddScoped<AjusteInventarioDAL>();
 builder.Services.AddScoped<InventarioActivoDAL>();
+builder.Services.AddScoped<IngresoAtivoDAL>();
 
 
 var app = builder.Build();
