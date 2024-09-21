@@ -100,7 +100,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return query;
         }
 
-        public async Task<int> ContarResultPaqueteActivo(IngresoActivo ingresoActivo)
+        public async Task<int> ContarResultIngresoActivo(IngresoActivo ingresoActivo)
         {
             return await BuscaringresoActivo(ingresoActivo).CountAsync();
         }
