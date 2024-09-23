@@ -16,5 +16,7 @@ builder.Services.AddHttpClient("BodegaAPI", client =>
 
 builder.Services.AddScoped<RolService>();
 
+builder.Services.AddScoped<UsuarioService>();
+
 await builder.Build().RunAsync();
 
