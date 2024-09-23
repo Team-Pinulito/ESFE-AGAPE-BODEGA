@@ -9,6 +9,20 @@ namespace ESFE_AGAPE_BODEGA.DTOs.RolDTOs
 {
     public class EditarRolDto
     {
+
+        public EditarRolDto(ObtenerRolIdDto obtenerRol)
+        {
+            Id = obtenerRol.Id;
+            Nombre = obtenerRol.Nombre;
+            Descripcion = obtenerRol.Descripcion;
+        }
+
+        public EditarRolDto()
+        {
+            Nombre = string.Empty;
+            Descripcion = string.Empty;
+        }
+
         public int Id { get; set; }
 
         [Required]
