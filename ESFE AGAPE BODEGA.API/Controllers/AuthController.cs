@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
