@@ -14,19 +14,19 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             this.applicationDbContext = applicationDbContext;
         }
 
-        //obtener roles
+       
         public async Task<List<Bodega>> ObtenerBodega()
         {
             return await applicationDbContext.bodegas.ToListAsync();
         }
 
-        //buscar rol por id
+        
         public async Task<Bodega> ObtenerBodegaId(int id)
         {
             return await applicationDbContext.bodegas.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        //crear rol
+        
         public async Task<int> CrearBodega(Bodega bodega)
         {
             applicationDbContext.bodegas.Add(bodega);
@@ -34,7 +34,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return result;
         }
 
-        //actualizar rol
+        
         public async Task<int> ActualizarBodega(Bodega bodega)
         {
             applicationDbContext.bodegas.Update(bodega);
@@ -42,7 +42,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return result;
         }
 
-        //eliminar rol
+        
         public async Task<int> EliminarBodega(int id)
         {
             var bodega = await ObtenerBodegaId(id);
@@ -51,7 +51,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return result;
         }
 
-        //buscar rol con filtros
+        
         public IQueryable<Bodega> BuscarBodega(Bodega bodega)
         {
             var query = applicationDbContext.bodegas.AsQueryable();
