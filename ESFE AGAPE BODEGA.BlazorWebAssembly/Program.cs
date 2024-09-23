@@ -11,7 +11,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddHttpClient("BodegaAPI", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7214/api/");
+    client.BaseAddress = new Uri("https://bodega.bsite.net/api/");
 });
 
 builder.Services.AddScoped<RolService>();
