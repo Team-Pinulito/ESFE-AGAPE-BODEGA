@@ -39,21 +39,21 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                                                // Relación 1-a-muchos entre Usuario y SolicitudActivo (quien hace la solicitud)
             modelBuilder.Entity<SolicitudActivo>()
                 .HasOne(s => s.Usuario)
-                .WithMany(u => u.solicitudActivos) // Asegúrate de tener esta colección en Usuario
+                .WithMany(u => u.SolicitudActivos) // Asegúrate de tener esta colección en Usuario
                 .HasForeignKey(s => s.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade); // Restringe la eliminación en cascada
 
             // Relación 1-a-1 entre UsuarioBodegueroEntrega y SolicitudActivo
             modelBuilder.Entity<SolicitudActivo>()
                 .HasOne(s => s.UsuarioBodegueroEntrega)
-                .WithMany()
+                .WithMany(u=> u.BodegasEntregaSolicitudes)
                 .HasForeignKey(s => s.UsuarioIdBodegueroEntregaId)
                 .OnDelete(DeleteBehavior.Restrict); // Evitar eliminación en cascada
 
             // Relación 1-a-1 entre UsuarioBodegueroRecibe y SolicitudActivo
             modelBuilder.Entity<SolicitudActivo>()
                 .HasOne(s => s.UsuarioBodegueroRecibe)
-                .WithMany()
+                .WithMany(u=> u.BodegaRecibeSolicitudes)
                 .HasForeignKey(s => s.UsuarioIdBodegueroRecibeId)
                 .OnDelete(DeleteBehavior.Restrict); // Evitar e
         }
