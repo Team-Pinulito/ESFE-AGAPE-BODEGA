@@ -1,0 +1,225 @@
+﻿@page "/lista-rol"
+@using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
+@using System.Text.Json;
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<h3>Buscar Rol</h3>
+<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <label for="Name">Nombre:</label>
+                <InputText class="form-control" @bind-Value="searchQuery.Nombre" />
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <label for="LastName">Descripcion:</label>
+                <InputText class="form-control" @bind-Value="searchQuery.Descripcion" />
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
+                <label for="Take">CantReg X Pagina</label>
+                <select class="form-control" @bind="searchQuery.Take">
+                    @for (var i = 10; i < 1000; i += 10)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Buscar</button>
+    <NavLink href="/crear-rol" class="btn btn-secondary">Ir a crear</NavLink>
+    <br />
+</EditForm>
+<br />
+<h3>Lista de Roles</h3>
+<div class="row" style="overflow:auto !important;max-width:600px">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
+            </li>
+            @foreach (var item in paginations)
+            {
+                if (item.Skip != searchQuery.Skip)
+                {
+                    <li class="page-item">
+                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item active">
+                        <NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                    </li>
+                }
+            }
+            <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
+        </ul>
+
+    </nav>
+</div>
+<div class="row-cols-6">
+    <span>Total registros: @searchResult.CountRow</span>
+</div>
+@if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var rol in searchResult.Data)
+            {
+                <tr>
+                    <td>@rol.Nombre</td>
+                    <td>@rol.Descripcion</td>
+                    <td>
+                        <button class="btn btn-dark" @onclick="() => GoEdit(rol.Id)">Editar</button>
+                        <button class="btn btn-info" @onclick="() => GoDetails(rol.Id)">Ver</button>
+                        <button class="btn btn-danger" @onclick="() => GoDelete(rol.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    // Inyección de dependencias de CustomerService y NavigationManager
+    [Inject]
+    RolService rolService { get; set; }
+    [Inject]
+    NavigationManager navigation { get; set; }
+
+    // Declaración e inicialización de objetos y variables
+    BuscarRolResultadosDto searchResult = new BuscarRolResultadosDto();
+    BuscarRolFiltroDto searchQuery = new BuscarRolFiltroDto { Take = 10 };
+    List<Pagination> paginations = new List<Pagination>();
+    int skipAnte = 0;
+    int skipSi = 0;
+
+    // Método para realizar una búsqueda
+    private async Task Search()
+    {
+        searchResult = await rolService.Search(searchQuery);
+    }
+
+    // Método que se llama cuando se inicializa el componente
+    /*
+         *  se utiliza para realizar inicializaciones o tareas
+         *  cuando se carga una página o componente de Blazor.
+         * Este método se llama automáticamente cuando el componente se está inicializando
+         *  antes de que se muestre en la interfaz de usuario.
+         */
+    protected override async Task OnInitializedAsync()
+    {
+        // Configuración inicial de la búsqueda
+        searchQuery.SendRowCount = 2;
+        searchQuery.Skip = 0;
+
+        // Realizar la búsqueda inicial
+        await Search();
+
+        // Actualizar la paginación
+        UpdatePagination();
+    }
+
+    // Método para realizar una búsqueda después de una acción de búsqueda
+    private async Task SubmitSearch()
+    {
+        // Configuración de la búsqueda
+        searchQuery.SendRowCount = 2;
+        searchQuery.Skip = 0;
+
+        // Realizar la búsqueda
+        await Search();
+
+        // Actualizar la paginación
+        UpdatePagination();
+    }
+
+    // Método para realizar una búsqueda paginada
+    private async Task PaginationSearch(int skip)
+    {
+        // Almacenar temporalmente la cantidad de filas de resultados
+        int countRowTemp = searchResult.CountRow;
+
+        // Configuración de la búsqueda paginada
+        searchQuery.SendRowCount = 1;
+        searchQuery.Skip = skip;
+
+        // Realizar la búsqueda paginada
+        await Search();
+
+        // Restaurar la cantidad de filas original
+        searchResult.CountRow = countRowTemp;
+
+        // Actualizar la paginación
+        UpdatePagination();
+    }
+
+    // Métodos para navegar a las páginas de edición, detalles y eliminación
+    private void GoEdit(int Id)
+    {
+        navigation.NavigateTo($"/editar-rol/{Id}");
+    }
+
+    private void GoDetails(int Id)
+    {
+        navigation.NavigateTo($"/rol-detalles/{Id}");
+    }
+
+    private void GoDelete(int Id)
+    {
+        navigation.NavigateTo($"/eliminar-rol/{Id}");
+    }
+
+    // Método para actualizar la lista de paginación
+    private void UpdatePagination()
+    {
+        // Inicializar la lista de paginación
+        paginations = new List<Pagination>();
+
+        // Calcular el número total de páginas
+        int totalPages = (int)Math.Ceiling((double)searchResult.CountRow / searchQuery.Take);
+
+        // Calcular el valor de skipAnte y skipSi
+        skipAnte = searchQuery.Skip > 0 ? searchQuery.Skip - searchQuery.Take : 0;
+        int skipMax = 0;
+
+        // Generar objetos de paginación y agregarlos a la lista
+        for (var i = 0; i < totalPages; i++)
+        {
+            var pagination = new Pagination()
+                {
+                    Skip = i * searchQuery.Take,
+                    NumPage = i + 1
+                };
+
+            paginations.Add(pagination);
+            skipMax = pagination.Skip;
+        }
+
+        // Calcular el valor de skipSi
+        skipSi = searchQuery.Skip + searchQuery.Take;
+        skipSi = skipSi > skipMax ? skipSi - searchQuery.Take : skipSi;
+    }
+
+    // Clase para representar la información de paginación
+    class Pagination
+    {
+        public int NumPage { get; set; }
+        public int Skip { get; set; }
+    }
+
+}
