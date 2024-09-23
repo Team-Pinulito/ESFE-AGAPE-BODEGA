@@ -1,4 +1,5 @@
 Configuración de CORS para Blazor WebAssembly
+
 Para permitir que tu aplicación Blazor WebAssembly se comunique correctamente con el servidor, es necesario configurar CORS (Cross-Origin Resource Sharing) en tu servidor API. A continuación, se detallan los pasos necesarios.
 
 Configuración de Servicios
