@@ -1,4 +1,5 @@
 ﻿using ESFE_AGAPE_BODEGA.API.Models.Entitys;
+using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESFE_AGAPE_BODEGA.API.Models.DAL
@@ -77,6 +78,11 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             var query = BuscarUsuario(usuario);
             query = query.OrderByDescending(x => x.Id).Skip(skip).Take(take);
             return await query.ToListAsync();
+        }
+
+        public async Task<Usuario> GetUser(LoginUsuarioDTO login)
+        {
+            return await applicationDbContext.usuarios.SingleOrDefaultAsync(x => x.DUI == login.DUI && x.Password == login.Password);
         }
     }
 }

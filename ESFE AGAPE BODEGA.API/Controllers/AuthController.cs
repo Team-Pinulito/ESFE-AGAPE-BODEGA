@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+using ESFE_AGAPE_BODEGA.API.Models.DAL;
+using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
@@ -14,51 +13,49 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly string secretKey;
+        private readonly UsuarioDAL _usuarioDAL;
 
-        public AuthController(IConfiguration config)
+        private IConfiguration _config;
+
+        public AuthController(UsuarioDAL usuarioDAL, IConfiguration config)
         {
-            secretKey = config.GetSection("settings").GetSection("secretKey").ToString();
+            _usuarioDAL = usuarioDAL;
+            _config = config;
         }
 
-        [HttpPost]
-        [Route("Validar")]
-        public IActionResult Validar([FromBody] Usuario request)
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Login(LoginUsuarioDTO loginUsuario)
         {
+            var admin = await _usuarioDAL.GetUser(loginUsuario);
 
-            if (request.DUI == "000000000" && request.Password == "123")
+            if (admin is null)
             {
-
-                var keyBytes = Encoding.ASCII.GetBytes(secretKey);
-                var claims = new ClaimsIdentity();
-                claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, request.Email));
-
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = claims,
-                    Expires = DateTime.UtcNow.AddMinutes(5),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256Signature)
-                };
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
-
-                string tokencreado = tokenHandler.WriteToken(tokenConfig);
-
-
-                return StatusCode(StatusCodes.Status200OK, new { token = tokencreado });
-
+                return BadRequest(new { message = "Credenciales Invalidas." });
             }
-            else
-            {
+            string jwtToken = GenerateToken(admin);
 
-                return StatusCode(StatusCodes.Status401Unauthorized, new { token = "" });
-            }
-
-
-
+            return Ok(new {token = jwtToken});
         }
 
+        private string GenerateToken(Usuario usuario)
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, usuario.DUI),
+                new Claim(ClaimTypes.Email, usuario.Password),
+            };
 
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JWT:key").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var SecurityToken = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(60),
+                signingCredentials: creds);
+
+            string token = new JwtSecurityTokenHandler().WriteToken(SecurityToken);
+
+            return token;
+        }
     }
 }
