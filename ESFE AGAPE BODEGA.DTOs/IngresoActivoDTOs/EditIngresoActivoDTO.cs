@@ -44,7 +44,6 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
         [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
         public decimal Total { get; set; }
 
-        public UsuarioDTO Usuario { get; set; }
         public List<DetalleIngresoActivoDTO> DetalleIngresoActivos { get; set; }
     }
 }
