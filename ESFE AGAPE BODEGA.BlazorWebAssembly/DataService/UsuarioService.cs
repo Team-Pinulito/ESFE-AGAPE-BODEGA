@@ -36,7 +36,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
         public async Task<GetIdResultUsuarioDTO.UsuarioDTO> ObtenerUsuario(int id)
         {
-            var rol = await _httpClient.GetAsync($"usuario/buscar/{id}");
+            var rol = await _httpClient.GetAsync($"usuario/{id}");
 
             if (rol.IsSuccessStatusCode)
             {
