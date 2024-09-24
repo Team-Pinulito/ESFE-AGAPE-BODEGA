@@ -52,7 +52,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
             var SecurityToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.Now.AddHours(8),
                 signingCredentials: creds);
 
             string token = new JwtSecurityTokenHandler().WriteToken(SecurityToken);
