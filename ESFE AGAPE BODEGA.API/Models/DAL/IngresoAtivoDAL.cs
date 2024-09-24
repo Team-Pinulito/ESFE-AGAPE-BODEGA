@@ -20,22 +20,33 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
         public async Task<IngresoActivo> ObtenerIngresoActivoId(int id)
         {
-            return await applicationDbContext.ingresoactivos.Include(e => e.detalleIngresoActivos).FirstOrDefaultAsync(x => x.Id == id);
+            return await applicationDbContext.ingresoactivos.Include(e => e.DetalleIngresoActivos).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        //crear PaqueteActivo
         public async Task<int> CrearIngresoActivo(IngresoActivo ingresoActivo)
         {
+            // Primero, asegúrate de que los detalles sean válidos.
+            foreach (var detalle in ingresoActivo.DetalleIngresoActivos)
+            {
+                // Verifica si el InventarioActivoId es válido
+                if (!await applicationDbContext.inventarioActivos.AnyAsync(i => i.Id == detalle.InventarioActivoId))
+                {
+                    throw new Exception($"El InventarioActivoId {detalle.InventarioActivoId} no existe.");
+                }
+            }
+
+            // Agrega el IngresoActivo y sus detalles
             applicationDbContext.ingresoactivos.Add(ingresoActivo);
             var result = await applicationDbContext.SaveChangesAsync();
             return result;
         }
 
+
         public async Task<int> ActualizaringresoActivo(IngresoActivo ingresoActivo)
         {
             // Buscar el PaqueteActivo existente con sus DetallePaqueteActivos
             var existingIngresoActivo = await applicationDbContext.ingresoactivos
-                .Include(p => p.detalleIngresoActivos)
+                .Include(p => p.DetalleIngresoActivos)
                 .FirstOrDefaultAsync(p => p.Id == ingresoActivo.Id);
 
             if (existingIngresoActivo != null)
@@ -46,9 +57,9 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                 // Gestionar los DetallePaqueteActivos
 
                 // Actualizar o añadir nuevos detalles
-                foreach (var detalle in ingresoActivo.detalleIngresoActivos)
+                foreach (var detalle in ingresoActivo.DetalleIngresoActivos)
                 {
-                    var existingDetalle = existingIngresoActivo.detalleIngresoActivos
+                    var existingDetalle = existingIngresoActivo.DetalleIngresoActivos
                         .FirstOrDefault(d => d.Id == detalle.Id);
 
                     if (existingDetalle != null)
@@ -59,14 +70,15 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                     else
                     {
                         // Si el detalle no existe, agregarlo al PaqueteActivo
-                        existingIngresoActivo.detalleIngresoActivos.Add(detalle);
+                        existingIngresoActivo.DetalleIngresoActivos.Add(detalle);
                     }
                 }
 
                 // Eliminar detalles que ya no están en la nueva lista
-                foreach (var existingDetalle in existingIngresoActivo.detalleIngresoActivos.ToList())
+                foreach (var existingDetalle in existingIngresoActivo.DetalleIngresoActivos.ToList())
+
                 {
-                    if (!ingresoActivo.detalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
+                    if (!ingresoActivo.DetalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
                     {
                         applicationDbContext.detalleIngresos.Remove(existingDetalle);
                     }

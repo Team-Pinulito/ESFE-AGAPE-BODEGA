@@ -46,7 +46,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 FechaIngreso = ingreso.FechaIngreso,
                 NumeroDocRelacionado = ingreso.NumeroDocRelacionado,
                 Total = ingreso.Total,
-                DetalleIngresoActivos = ingreso.detalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
+                DetalleIngresoActivos = ingreso.DetalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
                 {
                     Id = detalle.Id,
                     InventarioActivoId = detalle.InventarioActivoId,
@@ -59,36 +59,32 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear([FromBody] CrearIngresoActivoDTO crearIngresoActivoDTO)
+        public async Task<IActionResult> CrearIngresoActivo([FromBody] CrearIngresoActivoDTO crearIngresoActivoDTO)
         {
-            var ingreso = new IngresoActivo
+            if (!ModelState.IsValid)
             {
+                return BadRequest(ModelState);
+            }
 
+            var nuevoIngresoActivo = new IngresoActivo
+            {
                 Correlativo = crearIngresoActivoDTO.Correlativo,
                 UsuarioId = crearIngresoActivoDTO.UsuarioId,
                 FechaIngreso = crearIngresoActivoDTO.FechaIngreso,
                 NumeroDocRelacionado = crearIngresoActivoDTO.NumeroDocRelacionado,
                 Total = crearIngresoActivoDTO.Total,
-                detalleIngresoActivos = crearIngresoActivoDTO.CrearDetalleIngresoActivoDTOs.Select(detalle => new DetalleIngresoActivo
+                DetalleIngresoActivos = crearIngresoActivoDTO.DetalleIngresoActivos.Select(detalle => new DetalleIngresoActivo
                 {
-                    IngresoActivoId = detalle.InventarioActivoId,
+                    InventarioActivoId = detalle.InventarioActivoId,
                     Cantidad = detalle.Cantidad,
-                    Precio = detalle.Precio,
+                    Precio = detalle.Precio
                 }).ToList()
             };
 
-            int result = await _ativoDAL.CrearIngresoActivo(ingreso);
-
-            if (result > 0)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return StatusCode(500);
-            }
-
+            var result = await _ativoDAL.CrearIngresoActivo(nuevoIngresoActivo);
+            return result > 0 ? Ok() : StatusCode(500, "Error al crear el ingreso activo.");
         }
+
 
         [HttpPost("buscar")]
         public async Task<SearchResultIngresoActivoDTO> Buscar(SearchQueryIngresoActivoDTO ingresoActivoDTO)
@@ -127,7 +123,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 {
                     Id = item.Id,
                     Correlativo = item.Correlativo,            
-                    DetalleIngresoActivoDTO = item.detalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
+                    DetalleIngresoActivoDTO = item.DetalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
                     {
                         Id = detalle.Id,
                         InventarioActivoId = detalle.InventarioActivoId,
@@ -161,7 +157,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 FechaIngreso = ingresoActivo.FechaIngreso,
                 NumeroDocRelacionado = ingresoActivo.NumeroDocRelacionado,
                 Total = ingresoActivo.Total,
-                DetalleIngresoActivos = ingresoActivo.detalleIngresoActivos.Select(detalle => new DetalleIngresoActivoDTO
+                DetalleIngresoActivos = ingresoActivo.DetalleIngresoActivos.Select(detalle => new DetalleIngresoActivoDTO
                 {
                     Id = detalle.Id,
                     InventarioActivoId = detalle.InventarioActivoId,
@@ -195,7 +191,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             // Actualizar los DetallePaqueteActivos
             foreach (var detalle in editIngresoActivoDTO.DetalleIngresoActivos)
             {
-                var existingDetalle = updateingresoActivo.detalleIngresoActivos
+                var existingDetalle = updateingresoActivo.DetalleIngresoActivos
                     .FirstOrDefault(d => d.Id == detalle.Id);
 
                 if (existingDetalle != null)
@@ -208,7 +204,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 else
                 {
                     // Si el detalle no existe, agregarlo al PaqueteActivo
-                    updateingresoActivo.detalleIngresoActivos.Add(new DetalleIngresoActivo
+                    updateingresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivo
                     {
                         IngresoActivoId = detalle.InventarioActivoId,
                         Cantidad = detalle.Cantidad,
@@ -218,12 +214,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             }
 
             // Eliminar detalles que ya no están en la nueva lista
-            foreach (var existingDetalle in updateingresoActivo.detalleIngresoActivos.ToList())
+            foreach (var existingDetalle in updateingresoActivo.DetalleIngresoActivos.ToList())
             {
                 if (!editIngresoActivoDTO.DetalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
                 {
                     // Remover el detalle a través del DAL si es necesario
-                    updateingresoActivo.detalleIngresoActivos.Remove(existingDetalle);
+                    updateingresoActivo.DetalleIngresoActivos.Remove(existingDetalle);
                 }
             }
 
