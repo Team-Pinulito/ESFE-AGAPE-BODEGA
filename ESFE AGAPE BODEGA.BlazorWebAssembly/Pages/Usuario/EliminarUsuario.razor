@@ -1,0 +1,140 @@
+﻿@page "/eliminar-usuario/{Id:int}"
+
+@using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+
+<h3>Eliminar Usuario</h3>
+@if (isSuccess == false && isError == false)
+{
+    <div class="row">
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="Nombre">Nombre:</label>
+                    <input type="text" class="form-control" disabled @bind="usuario.Nombre" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="Apellido">Apellido:</label>
+                    <input type="text" class="form-control" disabled @bind="usuario.Apellido" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <input type="text" class="form-control" disabled @bind="usuario.Email" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="Telefono">Telefono:</label>
+                    <input type="text" class="form-control" disabled @bind="usuario.Telefono" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="RolId">Rol:</label>
+                    <select class="form-control" @bind="usuario.RolId" disabled>
+                        <option value="">Seleccione un rol</option>
+                        @foreach (var rol in roles)
+                        {
+                            <option value="@rol.Id">@rol.Nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="DUI">DUI:</label>
+                    <input type="text" class="form-control" disabled @bind="usuario.DUI" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="Codigo">Codigo:</label>
+                    <input type="text" class="form-control" disabled @bind="usuario.Codigo" />
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="Direccion">Direccion:</label>
+                    <input type="text" class="form-control" disabled @bind="usuario.Direccion" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label for="Password">Contraseña:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.Password" />
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-primary" @onclick="async () => await Delete()">Eliminar</button>
+            <NavLink href="/lista-usuario" class="btn btn-secondary">Cancelar</NavLink>
+        </div>
+    </div>
+}
+else if (isSuccess)
+{
+    <p class="alert alert-success">Usuario se elimino con éxito.</p>
+    <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
+}
+else if (isError)
+{
+    <p class="alert alert-error">Sucedio un error al intentar eliminar</p>
+    <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
+}
+@code {
+    // Declaración de un parámetro llamado "Id" que puede ser pasado al componente
+    [Parameter]
+    public int Id { get; set; }
+
+    // Inyección de dependencia de CustomerService para acceder a los servicios relacionados con los clientes
+    [Inject]
+    UsuarioService usuarioService { get; set; }
+
+    List<BuscarRolResultadosDto.RolDto> roles = new List<BuscarRolResultadosDto.RolDto>();
+
+    // Declaración e inicialización de un objeto "customer" para almacenar la información del cliente
+    GetIdResultUsuarioDTO.UsuarioDTO usuario = new GetIdResultUsuarioDTO.UsuarioDTO();
+
+    // Declaración de variables booleanas para manejar el estado de éxito y error
+    bool isSuccess = false;
+    bool isError = false;
+
+    // Método que se llama cuando se inicializa el componente
+    protected override async Task OnInitializedAsync()
+    {
+        // Realiza una llamada asincrónica para obtener la información del cliente por su Id
+        usuario = await usuarioService.ObtenerUsuario(Id);
+
+        roles = await usuarioService.ObtenerRoles();
+    }
+
+    // Método para eliminar el cliente
+    private async Task Delete()
+    {
+        // Realiza una llamada asincrónica para eliminar el cliente por su Id
+        int result = await usuarioService.EliminarUsuario(usuario.Id);
+
+        // Verifica si el resultado de la eliminación es diferente de cero (éxito) o igual a cero (error)
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+}

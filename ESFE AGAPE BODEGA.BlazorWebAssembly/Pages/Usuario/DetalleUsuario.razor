@@ -1,0 +1,114 @@
+﻿@page "/usuario-detalles/{Id:int}"
+
+@using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<h3>Ver Usuario</h3>
+<div class="row">
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="Nombre">Nombre:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.Nombre" />
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="Apellido">Apellido:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.Apellido" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="Email">Email:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.Email" />
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="Telefono">Telefono:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.Telefono" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="RolId">Rol:</label>
+                <select class="form-control" @bind="usuario.RolId" disabled>
+                    <option value="">Seleccione un rol</option>
+                    @foreach (var rol in roles)
+                    {
+                        <option value="@rol.Id">@rol.Nombre</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="DUI">DUI:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.DUI" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <div class="form-group">
+                <label for="Codigo">Codigo:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.Codigo" />
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="Direccion">Direccion:</label>
+                <input type="text" class="form-control" disabled @bind="usuario.Direccion" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label for="Password">Contraseña:</label>
+            <input type="text" class="form-control" disabled @bind="usuario.Password" />
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-12">
+        <NavLink href="/lista-usuario" class="btn btn-primary">Ir a buscar usuarios</NavLink>
+    </div>
+</div>
+
+@code {
+    // Parámetro para recibir el ID del cliente desde la llamada al componente
+    [Parameter]
+    public int Id { get; set; }
+
+    // Inyección de dependencia de CustomerService para acceder a sus métodos
+    [Inject]
+    UsuarioService usuarioService { get; set; }
+
+    List<BuscarRolResultadosDto.RolDto> roles = new List<BuscarRolResultadosDto.RolDto>();
+    // Creación de una instancia de GetIdResultCustomerDTO para almacenar los datos del cliente
+    GetIdResultUsuarioDTO.UsuarioDTO usuario = new GetIdResultUsuarioDTO.UsuarioDTO();
+
+    /*
+         *  se utiliza para realizar inicializaciones o tareas
+         *  cuando se carga una página o componente de Blazor.
+         * Este método se llama automáticamente cuando el componente se está inicializando
+         *  antes de que se muestre en la interfaz de usuario.
+         */
+    protected override async Task OnInitializedAsync()
+    {
+        // En el momento de inicialización del componente, llama al método GetById de
+        //  CustomerService para obtener los datos del cliente con el ID proporcionado
+        usuario = await usuarioService.ObtenerUsuario(Id);
+
+        roles = await usuarioService.ObtenerRoles();
+    }
+
+}
