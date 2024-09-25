@@ -1,0 +1,59 @@
+﻿@page "/login"
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+
+<div class="container mt-5">
+    <h3 class="text-center">Iniciar Sesión</h3>
+    <EditForm Model="@loginDto" OnValidSubmit="@HandleLogin">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="dui">DUI</label>
+            <InputText id="dui" class="form-control" @bind-Value="@loginDto.DUI" />
+            <ValidationMessage For="@(() => loginDto.DUI)" />
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña</label>
+            <InputText id="password" type="password" class="form-control" @bind-Value="@loginDto.Password" />
+            <ValidationMessage For="@(() => loginDto.Password)" />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+        </div>
+
+        @if (errorMessage != null)
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+    </EditForm>
+</div>
+
+@code {
+    private LoginUsuarioDTO loginDto = new LoginUsuarioDTO();
+    private string errorMessage;
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            var result = await AuthService.Login(loginDto);
+            if (result)
+            {
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Credenciales inválidas. Inténtalo de nuevo.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error en el inicio de sesión: {ex.Message}";
+        }
+    }
+}

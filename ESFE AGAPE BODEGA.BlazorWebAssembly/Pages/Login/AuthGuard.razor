@@ -1,0 +1,21 @@
+﻿@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    private bool isAuthenticated = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await AuthService.IsAuthenticated();
+        if (!isAuthenticated)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+}
+
+@if (isAuthenticated)
+{
+    @ChildContent
+}
