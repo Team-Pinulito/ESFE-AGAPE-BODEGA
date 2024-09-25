@@ -25,39 +25,55 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             _config = config;
         }
 
-        [HttpPost("authenticate")]
-        public async Task<IActionResult> Login(LoginUsuarioDTO loginUsuario)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUsuarioDTO loginDTO)
         {
-            var admin = await _usuarioDAL.GetUser(loginUsuario);
-
-            if (admin is null)
+            var user = await ValidateUser(loginDTO.DUI, loginDTO.Password);
+            if (user == null)
             {
-                return BadRequest(new { message = "Credenciales Invalidas." });
+                return Unauthorized("DUI o contraseña incorrectos");
             }
-            string jwtToken = GenerateToken(admin);
 
-            return Ok(new {token = jwtToken});
+            var token = GenerateToken(user);
+
+            // Registrar el token generado para verificar
+            Console.WriteLine($"Token generado: {token}");
+
+            return Ok(new { token });
         }
 
-        private string GenerateToken(Usuario usuario)
+        private async Task<Usuario> ValidateUser(string dui, string password)
         {
+            // Aquí se hace la consulta a la base de datos para validar el usuario
+            var user = await _usuarioDAL.ObtenerUsuarioPorDUIyPassword(dui, password);
+            if (user == null)
+            {
+                return null; // Usuario no encontrado
+            }
+
+            return user;
+        }
+
+        private string GenerateToken(Usuario user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, usuario.DUI),
-                new Claim(ClaimTypes.Email, usuario.Password),
+                new Claim(JwtRegisteredClaimNames.Sub, user.DUI),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JWT:key").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-
-            var SecurityToken = new JwtSecurityToken(
+            var token = new JwtSecurityToken(
+               issuer: _config["JWT:issuer"],
+               audience: _config["JWT:audience"],
                 claims: claims,
                 expires: DateTime.Now.AddHours(8),
                 signingCredentials: creds);
 
-            string token = new JwtSecurityTokenHandler().WriteToken(SecurityToken);
-
-            return token;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }

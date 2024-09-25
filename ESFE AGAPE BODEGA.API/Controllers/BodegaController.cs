@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BodegaController : ControllerBase
     {
         private readonly BodegaDAL _dal;
@@ -23,6 +24,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
         //obtener todos
         [HttpGet]
+        
         public async Task<List<GetIdResultBodegaDTO.BodegaDTO>> ObtenerTodos()
         {
             var bodegas = await _dal.ObtenerBodega();
@@ -38,6 +40,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         }
 
         [HttpPost]
+        
         public async Task<IActionResult> Crear([FromBody] CrearBodegaDTO crearBodegaDTO)
         {
             var bodega = new Bodega

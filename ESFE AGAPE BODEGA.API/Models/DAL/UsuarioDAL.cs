@@ -27,12 +27,12 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return await applicationDbContext.usuarios.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        //crear rol
         public async Task<int> CrearUsuario(Usuario usuario)
         {
+            // Hashear la contraseña antes de guardarla
+            usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
             applicationDbContext.usuarios.Add(usuario);
-            var result = await applicationDbContext.SaveChangesAsync();
-            return result;
+            return await applicationDbContext.SaveChangesAsync();
         }
 
         //actualizar rol
@@ -83,6 +83,17 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         public async Task<Usuario> GetUser(LoginUsuarioDTO login)
         {
             return await applicationDbContext.usuarios.SingleOrDefaultAsync(x => x.DUI == login.DUI && x.Password == login.Password);
+        }
+
+        public async Task<Usuario> ObtenerUsuarioPorDUIyPassword(string dui, string password)
+        {
+            // Buscar al usuario por DUI
+            var user = await applicationDbContext.usuarios.FirstOrDefaultAsync(u => u.DUI == dui);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                return null; // Usuario no encontrado o contraseña incorrecta
+            }
+            return user; //
         }
     }
 }

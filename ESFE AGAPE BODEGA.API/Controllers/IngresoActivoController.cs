@@ -1,11 +1,9 @@
 ﻿using Bodega_Api_Esfe_Agape.Models.EN;
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
-using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
-using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
 using Microsoft.AspNetCore.Mvc;
-using static ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs.SearchResultIngresoActivoDTO;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
