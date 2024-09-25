@@ -9,7 +9,6 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
         public int InventarioActivoId { get; set; }
         public int Cantidad { get; set; }
         public decimal Precio { get; set; }
-
         public virtual IngresoActivo ingresoActivo { get; set; }
         public virtual InventarioActivo inventarioActivo { get; set; }
 

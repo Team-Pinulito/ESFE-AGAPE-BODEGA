@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bodega_Api_Esfe_Agape.Models.EN;
+using System.ComponentModel.DataAnnotations;
 
 namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 {
@@ -22,6 +23,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
         public ICollection<SolicitudActivo> SolicitudActivos { get; set; }
         public ICollection<SolicitudActivo> BodegasEntregaSolicitudes { get; set; }
         public ICollection<SolicitudActivo> BodegaRecibeSolicitudes { get; set; }
+        public virtual ICollection<IngresoActivo> IngresoActivos { get; set; }
 
     }
 }

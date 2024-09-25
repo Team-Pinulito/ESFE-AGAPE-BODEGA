@@ -172,48 +172,47 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] EditIngresoActivoDTO editIngresoActivoDTO)
         {
-            
-                var existingIngresoActivo = await _ativoDAL.ObtenerIngresoActivoId(id);
-                if (existingIngresoActivo == null)
+            var existingIngresoActivo = await _ativoDAL.ObtenerIngresoActivoId(id);
+            if (existingIngresoActivo == null)
+            {
+                return NotFound();
+            }
+
+            existingIngresoActivo.Correlativo = editIngresoActivoDTO.Correlativo;
+            existingIngresoActivo.UsuarioId = editIngresoActivoDTO.UsuarioId;
+            existingIngresoActivo.FechaIngreso = editIngresoActivoDTO.FechaIngreso;
+            existingIngresoActivo.NumeroDocRelacionado = editIngresoActivoDTO.NumeroDocRelacionado;
+            existingIngresoActivo.Total = editIngresoActivoDTO.Total;
+
+            foreach (var detalle in editIngresoActivoDTO.DetalleIngresoActivos)
+            {
+                var existingDetalle = existingIngresoActivo.DetalleIngresoActivos
+                    .FirstOrDefault(d => d.Id == detalle.Id);
+
+                if (existingDetalle != null)
                 {
-                    return NotFound();
+                    existingDetalle.InventarioActivoId = detalle.InventarioActivoId;
+                    existingDetalle.Cantidad = detalle.Cantidad;
+                    existingDetalle.Precio = detalle.Precio;
                 }
-
-                existingIngresoActivo.Correlativo = editIngresoActivoDTO.Correlativo;
-                existingIngresoActivo.UsuarioId = editIngresoActivoDTO.UsuarioId;
-                existingIngresoActivo.FechaIngreso = editIngresoActivoDTO.FechaIngreso;
-                existingIngresoActivo.NumeroDocRelacionado = editIngresoActivoDTO.NumeroDocRelacionado;
-                existingIngresoActivo.Total = editIngresoActivoDTO.Total;
-
-                foreach (var detalle in editIngresoActivoDTO.DetalleIngresoActivos)
+                else
                 {
-                    var existingDetalle = existingIngresoActivo.DetalleIngresoActivos
-                        .FirstOrDefault(d => d.Id == detalle.Id);
-
-                    if (existingDetalle != null)
+                    existingIngresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivo
                     {
-                        existingDetalle.IngresoActivoId = detalle.InventarioActivoId;
-                        existingDetalle.Cantidad = detalle.Cantidad;
-                        existingDetalle.Precio = detalle.Precio;
-                    }
-                    else
-                    {
-                        existingIngresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivo
-                        {
-                            IngresoActivoId = detalle.InventarioActivoId,
-                            Cantidad = detalle.Cantidad,
-                            Precio = detalle.Precio
-                        });
-                    }
+                        InventarioActivoId = detalle.InventarioActivoId,
+                        Cantidad = detalle.Cantidad,
+                        Precio = detalle.Precio
+                    });
                 }
+            }
 
-                foreach (var existingDetalle in existingIngresoActivo.DetalleIngresoActivos.ToList())
+            foreach (var existingDetalle in existingIngresoActivo.DetalleIngresoActivos.ToList())
+            {
+                if (!editIngresoActivoDTO.DetalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
                 {
-                    if (!editIngresoActivoDTO.DetalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
-                    {
-                        existingIngresoActivo.DetalleIngresoActivos.Remove(existingDetalle);
-                    }
+                    existingIngresoActivo.DetalleIngresoActivos.Remove(existingDetalle);
                 }
+            }
 
             var result = await _ativoDAL.ActualizaringresoActivo(existingIngresoActivo);
 
@@ -223,7 +222,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             }
 
             return Ok(result);
-
         }
 
         [HttpDelete("{id}")]
