@@ -13,6 +13,9 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
         public byte Status { get; set; }
 
         public Activo Activo { get; set; }
+
+        public SolicitudActivo SolicitudActivo { get; set; }
+
         public PaqueteActivo PaqueteActivo { get; set; }
         //public SolicitudActivo SolicitudActivo { get; set; }
 
