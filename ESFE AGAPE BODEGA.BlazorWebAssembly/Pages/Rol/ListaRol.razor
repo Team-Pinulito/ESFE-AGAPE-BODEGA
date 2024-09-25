@@ -6,95 +6,127 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-<h3>Buscar Rol</h3>
-<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
-    <div class="row">
-        <div class="col-3">
-            <div class="form-group">
-                <label for="Name">Nombre:</label>
-                <InputText class="form-control" @bind-Value="searchQuery.Nombre" />
+
+    <div class="row" style="margin:20px;">
+        <div class="card col-md-12">
+            <div class="card-header"><h1 class="row">Lista de Roles</h1></div>
+            <div class="card-body">
+                <EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Name">Nombre:</label>
+                                <InputText class="form-control" @bind-Value="searchQuery.Nombre" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="LastName">Descripcion:</label>
+                                <InputText class="form-control" @bind-Value="searchQuery.Descripcion" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Take">CantReg X Pagina</label>
+                                <select class="form-control" @bind="searchQuery.Take">
+                                    @for (var i = 10; i < 1000; i += 10)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary col-md-3">Buscar</button>
+                        <NavLink href="/crear-rol" class="btn btn-secondary col-md-3" style="margin-left:5px;">Ir a crear</NavLink>
+                        <div class="row col-md-3" style="overflow:auto !important;max-width:600px">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination">
+                                    <li class="page-item">
+                                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
+                                    </li>
+                                    @foreach (var item in paginations)
+                                    {
+                                        if (item.Skip != searchQuery.Skip)
+                                        {
+                                            <li class="page-item">
+                                                <NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item active">
+                                                <NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                                            </li>
+                                        }
+                                    }
+                                    <li>
+                                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
+                                    </li>
+                                </ul>
+
+                            </nav>
+                        </div>
+                        <div class="col-md-3">
+                            <span>Total registros: @searchResult.CountRow</span>
+                        </div>
+                    </div>
+                    
+                    <br />
+                </EditForm>
+                <br />
+                
+               
             </div>
         </div>
-        <div class="col-3">
-            <div class="form-group">
-                <label for="LastName">Descripcion:</label>
-                <InputText class="form-control" @bind-Value="searchQuery.Descripcion" />
-            </div>
-        </div>
-        <div class="col-2">
-            <div class="form-group">
-                <label for="Take">CantReg X Pagina</label>
-                <select class="form-control" @bind="searchQuery.Take">
-                    @for (var i = 10; i < 1000; i += 10)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
+        <div class="card col-md-12">
+            <div class="card-header"><h1 class="row">Lista de Roles</h1></div>
+            <div class="card-body">
+                @if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripcion</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var rol in searchResult.Data)
+                            {
+                                <tr>
+                                    <td>@rol.Nombre</td>
+                                    <td>@rol.Descripcion</td>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <button class="btn btn-dark" @onclick="() => GoEdit(rol.Id)">Editar</button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-info" @onclick="() => GoDetails(rol.Id)">Ver</button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-danger" @onclick="() => GoDelete(rol.Id)">Eliminar</button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
             </div>
         </div>
     </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Buscar</button>
-    <NavLink href="/crear-rol" class="btn btn-secondary">Ir a crear</NavLink>
-    <br />
-</EditForm>
-<br />
-<h3>Lista de Roles</h3>
-<div class="row" style="overflow:auto !important;max-width:600px">
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item">
-                <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
-            </li>
-            @foreach (var item in paginations)
-            {
-                if (item.Skip != searchQuery.Skip)
-                {
-                    <li class="page-item">
-                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item active">
-                        <NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
-                    </li>
-                }
-            }
-            <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
-        </ul>
+    
 
-    </nav>
-</div>
-<div class="row-cols-6">
-    <span>Total registros: @searchResult.CountRow</span>
-</div>
-@if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var rol in searchResult.Data)
-            {
-                <tr>
-                    <td>@rol.Nombre</td>
-                    <td>@rol.Descripcion</td>
-                    <td>
-                        <button class="btn btn-dark" @onclick="() => GoEdit(rol.Id)">Editar</button>
-                        <button class="btn btn-info" @onclick="() => GoDetails(rol.Id)">Ver</button>
-                        <button class="btn btn-danger" @onclick="() => GoDelete(rol.Id)">Eliminar</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+
+
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     // Inyección de dependencias de CustomerService y NavigationManager
