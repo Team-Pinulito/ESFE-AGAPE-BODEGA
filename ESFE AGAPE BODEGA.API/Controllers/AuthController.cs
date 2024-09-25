@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -25,8 +25,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             _config = config;
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUsuarioDTO loginDTO)
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Login(LoginUsuarioDTO loginUsuario)
         {
             if (loginUsuario == null || string.IsNullOrEmpty(loginUsuario.DUI) || string.IsNullOrEmpty(loginUsuario.Password))
             {
@@ -44,21 +44,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 return StatusCode(500, new { message = "Error al autenticar al usuario." });
             }
 
-            var token = GenerateToken(user);
-
-            // Registrar el token generado para verificar
-            Console.WriteLine($"Token generado: {token}");
-
-            return Ok(new { token });
-        }
-
-        private async Task<Usuario> ValidateUser(string dui, string password)
-        {
-            // Aquí se hace la consulta a la base de datos para validar el usuario
-            var user = await _usuarioDAL.ObtenerUsuarioPorDUIyPassword(dui, password);
-            if (user == null)
+            if (admin is null)
             {
-                return null; // Usuario no encontrado
+                return BadRequest(new { message = "Credenciales Invalidas." });
             }
 
             string jwtToken = GenerateToken(admin);
@@ -72,11 +60,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             });
         }
 
-        private string GenerateToken(Usuario user)
+        private string GenerateToken(Usuario usuario)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, usuario.Nombre),
@@ -84,15 +69,17 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
             };
 
-            var token = new JwtSecurityToken(
-               issuer: _config["JWT:issuer"],
-               audience: _config["JWT:audience"],
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JWT:key").Value));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+
+            var SecurityToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(8),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: creds);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+            string token = new JwtSecurityTokenHandler().WriteToken(SecurityToken);
 
+            return token;
+        }
     }
 }
