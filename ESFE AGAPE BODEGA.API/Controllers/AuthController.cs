@@ -28,23 +28,45 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Login(LoginUsuarioDTO loginUsuario)
         {
-            var admin = await _usuarioDAL.GetUser(loginUsuario);
+            if (loginUsuario == null || string.IsNullOrEmpty(loginUsuario.DUI) || string.IsNullOrEmpty(loginUsuario.Password))
+            {
+                return BadRequest(new { message = "Usuario y contraseña son requeridos." });
+            }
+
+            Usuario admin;
+            try
+            {
+                admin = await _usuarioDAL.GetUser(loginUsuario);
+            }
+            catch (Exception ex)
+            {
+                // Log el error si es necesario
+                return StatusCode(500, new { message = "Error al autenticar al usuario." });
+            }
 
             if (admin is null)
             {
                 return BadRequest(new { message = "Credenciales Invalidas." });
             }
+
             string jwtToken = GenerateToken(admin);
 
-            return Ok(new {token = jwtToken});
+            return Ok(new
+            {
+                token = jwtToken,
+                nombre = admin.Nombre,
+                apellido = admin.Apellido,
+                rol = admin.Rol.Nombre
+            });
         }
 
         private string GenerateToken(Usuario usuario)
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, usuario.DUI),
-                new Claim(ClaimTypes.Email, usuario.Password),
+                new Claim(ClaimTypes.Name, usuario.Nombre),
+                new Claim("Apellido", usuario.Apellido),
+                new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JWT:key").Value));
