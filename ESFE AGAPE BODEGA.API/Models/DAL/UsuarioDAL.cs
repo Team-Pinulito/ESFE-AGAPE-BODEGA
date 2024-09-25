@@ -82,7 +82,9 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
         public async Task<Usuario> GetUser(LoginUsuarioDTO login)
         {
-            return await applicationDbContext.usuarios.SingleOrDefaultAsync(x => x.DUI == login.DUI && x.Password == login.Password);
+            return await applicationDbContext.usuarios
+                .Include(u => u.Rol) // Incluir la entidad de Rol para acceder al ID del rol
+                .SingleOrDefaultAsync(x => x.DUI == login.DUI && x.Password == login.Password);
         }
     }
 }
