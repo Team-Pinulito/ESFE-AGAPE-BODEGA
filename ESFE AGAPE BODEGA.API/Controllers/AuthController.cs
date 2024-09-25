@@ -26,7 +26,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         }
 
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Login(LoginUsuarioDTO loginUsuario)
+        public async Task<IActionResult> Login([FromBody]LoginUsuarioDTO loginUsuario)
         {
             if (loginUsuario == null || string.IsNullOrEmpty(loginUsuario.DUI) || string.IsNullOrEmpty(loginUsuario.Password))
             {
@@ -62,6 +62,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
         private string GenerateToken(Usuario usuario)
         {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, usuario.Nombre),
@@ -69,17 +72,14 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("JWT:key").Value));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+            var token = new JwtSecurityToken(
+             issuer: _config["JWT:issuer"],
+             audience: _config["JWT:audience"],
+              claims: claims,
+              expires: DateTime.Now.AddHours(8),
+              signingCredentials: creds);
 
-            var SecurityToken = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
-                signingCredentials: creds);
-
-            string token = new JwtSecurityTokenHandler().WriteToken(SecurityToken);
-
-            return token;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
