@@ -43,12 +43,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
 
         public async Task<int> ActualizaringresoActivo(IngresoActivo ingresoActivo)
-        {
-            if (ingresoActivo == null)
-            {
-                throw new ArgumentNullException(nameof(ingresoActivo));
-            }
-
+        {      
             // Buscar el IngresoActivo existente con sus DetalleIngresoActivos
             var existingIngresoActivo = await applicationDbContext.ingresoactivos
                 .Include(p => p.DetalleIngresoActivos)
@@ -88,16 +83,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                     }
                 }
 
-                // Guardar los cambios en la base de datos
-                try
-                {
-                    return await applicationDbContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception (ex)
-                    throw; // or handle the exception as needed
-                }
+                return await applicationDbContext.SaveChangesAsync();
             }
 
             // Si no se encuentra el IngresoActivo, devolver 0

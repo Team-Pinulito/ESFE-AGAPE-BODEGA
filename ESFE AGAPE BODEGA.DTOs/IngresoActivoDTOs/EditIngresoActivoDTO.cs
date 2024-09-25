@@ -25,10 +25,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 
         public EditIngresoActivoDTO()
         {
-            Correlativo = string.Empty;
-            UsuarioId = 0;
-            FechaIngreso = DateTime.Now;
-            NumeroDocRelacionado = string.Empty;
+            
             
         }
 

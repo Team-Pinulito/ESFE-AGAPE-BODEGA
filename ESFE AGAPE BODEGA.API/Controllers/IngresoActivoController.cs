@@ -172,13 +172,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] EditIngresoActivoDTO editIngresoActivoDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
+            
                 var existingIngresoActivo = await _ativoDAL.ObtenerIngresoActivoId(id);
                 if (existingIngresoActivo == null)
                 {
@@ -221,32 +215,15 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                     }
                 }
 
-                int result = await _ativoDAL.ActualizaringresoActivo(existingIngresoActivo);
+            var result = await _ativoDAL.ActualizaringresoActivo(existingIngresoActivo);
 
-                if (result > 0)
-                {
-                    return Ok(result);
-                }
-                else
-                {
-                    return StatusCode(500, "Error updating the entity.");
-                }
-            }
-            catch (DbUpdateException ex)
+            if (result == 0)
             {
-                // Log the error or extract more details from the inner exception
-                var sqlException = ex.InnerException as SqlException;
-                if (sqlException != null)
-                {
-                    return StatusCode(500, $"SQL Error: {sqlException.Message}");
-                }
-                return StatusCode(500, $"Database Update Error: {ex.Message}");
+                return StatusCode(500);
             }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+
+            return Ok(result);
+
         }
 
         [HttpDelete("{id}")]
