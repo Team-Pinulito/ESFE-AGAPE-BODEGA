@@ -1,0 +1,159 @@
+﻿@inherits LayoutComponentBase
+@inject AuthService Authservice
+@inject NavigationManager Navigation
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <!-- Logo Header -->
+                <div class="logo-header" data-background-color="dark">
+                    <a href="/" class="logo">
+                        <img src="/assets/img/logo/esfelogo.webp" width="90px" alt="navbar brand"
+                            class="navbar-brand" height="80px" />
+                    </a>
+                    <div class="nav-toggle" id="botonmenu">
+                        <button class="btn btn-toggle toggle-sidebar p-3">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler p-3">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more p-3">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+                <!-- End Logo Header -->
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="lista-rol">
+                                <svg width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1)">
+                                    <path d="m2.344 15.271 2 3.46a1 1 0 0 0 1.366.365l1.396-.806c.58.457 1.221.832 1.895 1.112V21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1.598a8.094 8.094 0 0 0 1.895-1.112l1.396.806c.477.275 1.091.11 1.366-.365l2-3.46a1.004 1.004 0 0 0-.365-1.366l-1.372-.793a7.683 7.683 0 0 0-.002-2.224l1.372-.793c.476-.275.641-.89.365-1.366l-2-3.46a1 1 0 0 0-1.366-.365l-1.396.806A8.034 8.034 0 0 0 15 4.598V3a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1.598A8.094 8.094 0 0 0 7.105 5.71L5.71 4.904a.999.999 0 0 0-1.366.365l-2 3.46a1.004 1.004 0 0 0 .365 1.366l1.372.793a7.683 7.683 0 0 0 0 2.224l-1.372.793c-.476.275-.641.89-.365 1.366zM12 8c2.206 0 4 1.794 4 4s-1.794 4-4 4-4-1.794-4-4 1.794-4 4-4z">
+                                    </path>
+                                </svg>
+                                <p style="margin-left: 5px">Roles</p>
+                            </NavLink>
+                        </li>
+                        <!-- Otros elementos del menú -->
+                        <li class="nav-item" style="margin-top:auto;">
+                            <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        <!-- End Sidebar -->
+
+        <div class="main-panel">
+            <div class="main-header">
+                <div class="main-header-logo">
+                    <!-- Logo Header -->
+                    <div class="logo-header" data-background-color="dark">
+                        <a href="/" class="logo">
+                            <img src="/assets/img/logo/esfelogo.webp" alt="navbar brand" class="navbar-brand"
+                                height="20" />
+                        </a>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="gg-menu-right"></i>
+                            </button>
+                            <button class="btn btn-toggle sidenav-toggler">
+                                <i class="gg-menu-left"></i>
+                            </button>
+                        </div>
+                        <button class="topbar-toggler more">
+                            <i class="gg-more-vertical-alt"></i>
+                        </button>
+
+                    </div>
+                    <!-- End Logo Header -->
+                </div>
+                <!-- Navbar Header -->
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                    <div class="container-fluid">
+                        <nav
+                            class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="submit" class="btn btn-search pe-1">
+                                        <i class="fa fa-search search-icon"></i>
+                                    </button>
+                                </div>
+                                <input type="text" placeholder="Search ..." class="form-control" />
+                            </div>
+                        </nav>
+
+                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                            <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/''"
+                                    role="button" aria-expanded="false" aria-haspopup="true">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-search animated fadeIn">
+                                    <form class="navbar-left navbar-form nav-search">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="Search ..." class="form-control" />
+                                        </div>
+                                    </form>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <!-- End Navbar -->
+            </div>
+
+            <div class="container ">
+               <div class="container">
+                   @Body
+               </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+<style>
+    /* Asegúrate de que el sidebar ocupe el 100% de la altura de la página */
+    .sidebar-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .sidebar-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav.nav-secondary {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .nav-item {
+        margin-bottom: 0.5rem;
+    }
+
+        /* El botón de cerrar sesión debe tener margin-top auto */
+        .nav-item:last-child {
+            margin-top: auto;
+        }
+</style>
+
+
+@code {
+    private async Task HandleLogout()
+    {
+        await Authservice.Logout();
+        Navigation.NavigateTo("/login");
+    }
+}
