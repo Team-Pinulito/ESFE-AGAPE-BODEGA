@@ -24,12 +24,13 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         public DbSet<AjusteInventario> ajusteInventarios { get; set; }
         public DbSet<InventarioActivo> inventarioActivos { get; set; }
         public DbSet<SolicitudActivo> solicitudActivos { get; set; }
+        public DbSet<DetalleSolicitudActivo> detalleSolicitudActivos { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
-
 			modelBuilder.Entity<PaqueteActivo>()
 			.HasMany(p => p.DetallePaqueteActivos)
 			.WithOne(d => d.PaqueteActivo)
@@ -42,6 +43,12 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                 .WithMany(u => u.SolicitudActivos) // Asegúrate de tener esta colección en Usuario
                 .HasForeignKey(s => s.UsuarioId)
                 .OnDelete(DeleteBehavior.Cascade); // Restringe la eliminación en cascada
+
+            modelBuilder.Entity<SolicitudActivo>()
+                .HasMany(s => s.DetalleSolicitudActivos)
+                .WithOne(d => d.SolicitudActivo)
+                .HasForeignKey(d => d.SolicitudActivoId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Relación 1-a-1 entre UsuarioBodegueroEntrega y SolicitudActivo
             modelBuilder.Entity<SolicitudActivo>()
