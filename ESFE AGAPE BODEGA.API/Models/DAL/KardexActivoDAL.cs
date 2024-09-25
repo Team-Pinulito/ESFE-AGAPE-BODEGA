@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ESFE_AGAPE_BODEGA.API.Models.Entitys;
+using ESFE_AGAPE_BODEGA.DTOs.KardexActivoDTOs;
+using Microsoft.EntityFrameworkCore;
 using static ESFE_AGAPE_BODEGA.DTOs.KardexActivoDTOs.SearchResultKardexActivoDTO;
 
 namespace ESFE_AGAPE_BODEGA.API.Models.DAL
@@ -18,12 +20,27 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                 .Select(ia => new KardexActivoDTO
                 {
                     InventarioActivo = ia.Id,
-                    FechaMovimiento = DateTime.Now, // Ejemplo
+                    FechaMovimiento = DateTime.Now, // Cambia esto según tus necesidades
                     Cantidad = ia.Existencia,
-                    TipoMovimiento = 1, // Ejemplo
-                    Saldo = DateTime.Now // Ejemplo
+                    TipoMovimiento = 1, // Cambia esto según tus necesidades
+                    Saldo = DateTime.Now // Cambia esto según tus necesidades
                 })
                 .ToListAsync();
+        }
+
+        public async Task AgregarKardexActivo(CreateKardexActivoDTO dto)
+        {
+            var kardexActivo = new KardexActivo
+            {
+                InventarioActivoId = dto.InventarioActivoId,
+                FechaMovimiento = dto.FechaMovimiento,
+                Cantidad = dto.Cantidad,
+                TipoMovimiento = dto.TipoMovimiento,
+                Saldo = dto.Saldo
+            };
+
+            _context.kardexActivos.Add(kardexActivo);
+            await _context.SaveChangesAsync();
         }
     }
 }

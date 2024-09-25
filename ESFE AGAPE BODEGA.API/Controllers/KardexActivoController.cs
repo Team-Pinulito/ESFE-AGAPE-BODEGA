@@ -45,5 +45,17 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> PostKardexActivo([FromBody] CreateKardexActivoDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _kardexActivoDAL.AgregarKardexActivo(dto);
+            return CreatedAtAction(nameof(GetKardexActivos), new { id = dto.InventarioActivoId }, dto);
+        }
     }
 }
