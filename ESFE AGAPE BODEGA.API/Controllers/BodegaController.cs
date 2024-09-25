@@ -12,7 +12,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
     
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class BodegaController : ControllerBase
     {
         private readonly BodegaDAL _dal;

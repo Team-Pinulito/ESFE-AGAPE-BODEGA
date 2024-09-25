@@ -3,9 +3,11 @@ using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuarioController : ControllerBase
