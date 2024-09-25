@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Components.Forms;
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
-
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 <h3>Eliminar Rol</h3>
 @if (isSuccess == false && isError == false)
 {
@@ -40,6 +40,7 @@ else if (isError)
     <p class="alert alert-error">Sucedio un error al intentar eliminar</p>
     <NavLink href="/lista-rol" class="btn btn-primary">Aceptar</NavLink>
 }
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     // Declaración de un parámetro llamado "Id" que puede ser pasado al componente
     [Parameter]
