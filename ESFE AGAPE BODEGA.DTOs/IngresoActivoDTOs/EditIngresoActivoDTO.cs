@@ -4,10 +4,6 @@ using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs.GetIdResultUsuarioDTO;
 
 namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 {
@@ -15,18 +11,24 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
     {
         public EditIngresoActivoDTO(GetIdResultIngresoActivoDTO getIdResultIngresoActivoDTO)
         {
+            if (getIdResultIngresoActivoDTO == null)
+                throw new ArgumentNullException(nameof(getIdResultIngresoActivoDTO));
+
             Id = getIdResultIngresoActivoDTO.Id;
             Correlativo = getIdResultIngresoActivoDTO.Correlativo;
             UsuarioId = getIdResultIngresoActivoDTO.UsuarioId;
             FechaIngreso = getIdResultIngresoActivoDTO.FechaIngreso;
             NumeroDocRelacionado = getIdResultIngresoActivoDTO.NumeroDocRelacionado;
             Total = getIdResultIngresoActivoDTO.Total;
-            DetalleIngresoActivos = getIdResultIngresoActivoDTO.DetalleIngresoActivos;
+            DetalleIngresoActivos = getIdResultIngresoActivoDTO.DetalleIngresoActivos ?? new List<DetalleIngresoActivoDTO>();
         }
 
         public EditIngresoActivoDTO()
         {
             Correlativo = string.Empty;
+            UsuarioId = 0;
+            FechaIngreso = DateTime.Now;
+            NumeroDocRelacionado = string.Empty;
             
         }
 
@@ -35,16 +37,19 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
         [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
         [MaxLength(50, ErrorMessage = "El campo Correlativo no puede tener más de 50 caracteres.")]
         public string Correlativo { get; set; }
-        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+
+        [Required(ErrorMessage = "El campo UsuarioId es obligatorio.")]
         public int UsuarioId { get; set; }
-        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+
+        [Required(ErrorMessage = "El campo FechaIngreso es obligatorio.")]
         public DateTime FechaIngreso { get; set; }
-        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+
+        [Required(ErrorMessage = "El campo NumeroDocRelacionado es obligatorio.")]
         public string NumeroDocRelacionado { get; set; }
-        [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
+
+        [Required(ErrorMessage = "El campo Total es obligatorio.")]
         public decimal Total { get; set; }
 
-        public UsuarioDTO Usuario { get; set; }
         public List<DetalleIngresoActivoDTO> DetalleIngresoActivos { get; set; }
     }
 }

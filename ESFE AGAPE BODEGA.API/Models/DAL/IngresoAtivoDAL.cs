@@ -44,17 +44,22 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
         public async Task<int> ActualizaringresoActivo(IngresoActivo ingresoActivo)
         {
-            // Buscar el PaqueteActivo existente con sus DetallePaqueteActivos
+            if (ingresoActivo == null)
+            {
+                throw new ArgumentNullException(nameof(ingresoActivo));
+            }
+
+            // Buscar el IngresoActivo existente con sus DetalleIngresoActivos
             var existingIngresoActivo = await applicationDbContext.ingresoactivos
                 .Include(p => p.DetalleIngresoActivos)
                 .FirstOrDefaultAsync(p => p.Id == ingresoActivo.Id);
 
             if (existingIngresoActivo != null)
             {
-                // Actualizar los campos del PaqueteActivo
+                // Actualizar los campos del IngresoActivo
                 applicationDbContext.Entry(existingIngresoActivo).CurrentValues.SetValues(ingresoActivo);
 
-                // Gestionar los DetallePaqueteActivos
+                // Gestionar los DetalleIngresoActivos
 
                 // Actualizar o añadir nuevos detalles
                 foreach (var detalle in ingresoActivo.DetalleIngresoActivos)
@@ -69,14 +74,13 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                     }
                     else
                     {
-                        // Si el detalle no existe, agregarlo al PaqueteActivo
+                        // Si el detalle no existe, agregarlo al IngresoActivo
                         existingIngresoActivo.DetalleIngresoActivos.Add(detalle);
                     }
                 }
 
                 // Eliminar detalles que ya no están en la nueva lista
                 foreach (var existingDetalle in existingIngresoActivo.DetalleIngresoActivos.ToList())
-
                 {
                     if (!ingresoActivo.DetalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
                     {
@@ -85,13 +89,20 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                 }
 
                 // Guardar los cambios en la base de datos
-                return await applicationDbContext.SaveChangesAsync();
+                try
+                {
+                    return await applicationDbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception (ex)
+                    throw; // or handle the exception as needed
+                }
             }
 
-            // Si no se encuentra el PaqueteActivo, devolver 0 o lanzar una excepción
+            // Si no se encuentra el IngresoActivo, devolver 0
             return 0;
         }
-
         public async Task<int> EliminarIngresoActivo(int id)
         {
             var ingresoactivo = await ObtenerIngresoActivoId(id);

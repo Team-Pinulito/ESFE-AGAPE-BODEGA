@@ -58,19 +58,19 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                 .OnDelete(DeleteBehavior.Restrict); // Evitar e
 
             modelBuilder.Entity<IngresoActivo>()
-        .HasMany(i => i.DetalleIngresoActivos)
-        .WithOne(d => d.ingresoActivo)
-        .HasForeignKey(d => d.IngresoActivoId)
-        .OnDelete(DeleteBehavior.Cascade); // Configuración de eliminación en cascada
+               .HasMany(i => i.DetalleIngresoActivos)
+               .WithOne(d => d.ingresoActivo)
+               .HasForeignKey(d => d.IngresoActivoId)
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<DetalleIngresoActivo>()
-       .HasOne(d => d.ingresoActivo)
-       .WithMany(i => i.DetalleIngresoActivos)
-       .HasForeignKey(d => d.IngresoActivoId);
+                .HasOne(d => d.ingresoActivo)
+                .WithMany(i => i.DetalleIngresoActivos)
+                .HasForeignKey(d => d.IngresoActivoId);
 
             modelBuilder.Entity<DetalleIngresoActivo>()
                 .HasOne(d => d.inventarioActivo)
-                .WithMany(i => i.DetalleIngresoActivos) // Asegúrate de tener una colección aquí también
+                .WithMany(i => i.DetalleIngresoActivos)
                 .HasForeignKey(d => d.InventarioActivoId);
         }
 	}

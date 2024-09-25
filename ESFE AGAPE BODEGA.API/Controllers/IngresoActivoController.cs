@@ -1,11 +1,11 @@
 ﻿using Bodega_Api_Esfe_Agape.Models.EN;
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
-using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
-using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
 using Microsoft.AspNetCore.Mvc;
-using static ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs.SearchResultIngresoActivoDTO;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -172,67 +172,80 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Actualizar(int id, [FromBody] EditIngresoActivoDTO editIngresoActivoDTO)
         {
-            // Obtener el PaqueteActivo existente por ID a través del DAL
-            var updateingresoActivo = await _ativoDAL.ObtenerIngresoActivoId(id);
-
-            // Verificar si el PaqueteActivo existe
-            if (updateingresoActivo == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
 
-            // Actualizar los campos del PaqueteActivo
-            updateingresoActivo.Correlativo = editIngresoActivoDTO.Correlativo;
-            updateingresoActivo.UsuarioId = editIngresoActivoDTO.UsuarioId;
-            updateingresoActivo.FechaIngreso = editIngresoActivoDTO.FechaIngreso;
-            updateingresoActivo.NumeroDocRelacionado = editIngresoActivoDTO.NumeroDocRelacionado;
-            updateingresoActivo.Total = editIngresoActivoDTO.Total;
-
-            // Actualizar los DetallePaqueteActivos
-            foreach (var detalle in editIngresoActivoDTO.DetalleIngresoActivos)
+            try
             {
-                var existingDetalle = updateingresoActivo.DetalleIngresoActivos
-                    .FirstOrDefault(d => d.Id == detalle.Id);
-
-                if (existingDetalle != null)
+                var existingIngresoActivo = await _ativoDAL.ObtenerIngresoActivoId(id);
+                if (existingIngresoActivo == null)
                 {
-                    // Si el detalle existe, actualizar sus valores
-                    existingDetalle.IngresoActivoId = detalle.InventarioActivoId;
-                    existingDetalle.Cantidad = detalle.Cantidad;
-                    existingDetalle.Precio = detalle.Precio;
+                    return NotFound();
+                }
+
+                existingIngresoActivo.Correlativo = editIngresoActivoDTO.Correlativo;
+                existingIngresoActivo.UsuarioId = editIngresoActivoDTO.UsuarioId;
+                existingIngresoActivo.FechaIngreso = editIngresoActivoDTO.FechaIngreso;
+                existingIngresoActivo.NumeroDocRelacionado = editIngresoActivoDTO.NumeroDocRelacionado;
+                existingIngresoActivo.Total = editIngresoActivoDTO.Total;
+
+                foreach (var detalle in editIngresoActivoDTO.DetalleIngresoActivos)
+                {
+                    var existingDetalle = existingIngresoActivo.DetalleIngresoActivos
+                        .FirstOrDefault(d => d.Id == detalle.Id);
+
+                    if (existingDetalle != null)
+                    {
+                        existingDetalle.IngresoActivoId = detalle.InventarioActivoId;
+                        existingDetalle.Cantidad = detalle.Cantidad;
+                        existingDetalle.Precio = detalle.Precio;
+                    }
+                    else
+                    {
+                        existingIngresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivo
+                        {
+                            IngresoActivoId = detalle.InventarioActivoId,
+                            Cantidad = detalle.Cantidad,
+                            Precio = detalle.Precio
+                        });
+                    }
+                }
+
+                foreach (var existingDetalle in existingIngresoActivo.DetalleIngresoActivos.ToList())
+                {
+                    if (!editIngresoActivoDTO.DetalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
+                    {
+                        existingIngresoActivo.DetalleIngresoActivos.Remove(existingDetalle);
+                    }
+                }
+
+                int result = await _ativoDAL.ActualizaringresoActivo(existingIngresoActivo);
+
+                if (result > 0)
+                {
+                    return Ok(result);
                 }
                 else
                 {
-                    // Si el detalle no existe, agregarlo al PaqueteActivo
-                    updateingresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivo
-                    {
-                        IngresoActivoId = detalle.InventarioActivoId,
-                        Cantidad = detalle.Cantidad,
-                        Precio = detalle.Precio
-                    });
+                    return StatusCode(500, "Error updating the entity.");
                 }
             }
-
-            // Eliminar detalles que ya no están en la nueva lista
-            foreach (var existingDetalle in updateingresoActivo.DetalleIngresoActivos.ToList())
+            catch (DbUpdateException ex)
             {
-                if (!editIngresoActivoDTO.DetalleIngresoActivos.Any(d => d.Id == existingDetalle.Id))
+                // Log the error or extract more details from the inner exception
+                var sqlException = ex.InnerException as SqlException;
+                if (sqlException != null)
                 {
-                    // Remover el detalle a través del DAL si es necesario
-                    updateingresoActivo.DetalleIngresoActivos.Remove(existingDetalle);
+                    return StatusCode(500, $"SQL Error: {sqlException.Message}");
                 }
+                return StatusCode(500, $"Database Update Error: {ex.Message}");
             }
-
-            // Guardar los cambios usando el DAL
-            int result = await _ativoDAL.ActualizaringresoActivo(updateingresoActivo);
-
-            if (result > 0)
+            catch (Exception ex)
             {
-                return Ok(result);
-            }
-            else
-            {
-                return StatusCode(500);
+                // Log the exception
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
