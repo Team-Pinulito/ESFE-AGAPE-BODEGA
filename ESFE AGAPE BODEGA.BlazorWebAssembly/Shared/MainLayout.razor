@@ -6,8 +6,11 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        @inject AuthService AuthService
+        @inject NavigationManager Navigation
+
+        <div class="logout-container">
+            <button @onclick="HandleLogout" class="btn btn-danger btn-sm">Cerrar Sesión</button>
         </div>
 
         <article class="content px-4">
@@ -15,3 +18,24 @@
         </article>
     </main>
 </div>
+
+@code {
+    private async Task HandleLogout()
+    {
+        await AuthService.Logout();
+        Navigation.NavigateTo("/login");
+    }
+}
+<style>
+    .logout-container {
+        position: absolute;
+        top: 20px; /* Ajusta según sea necesario */
+        right: 20px; /* Ajusta según sea necesario */
+        z-index: 1000; /* Asegúrate de que esté sobre otros elementos */
+    }
+
+    .btn-sm {
+        font-size: 0.8rem; /* Tamaño de fuente más pequeño */
+        padding: 0.25rem 0.5rem; /* Espaciado reducido */
+    }
+</style>
