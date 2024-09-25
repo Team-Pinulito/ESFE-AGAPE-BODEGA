@@ -5,31 +5,31 @@
 
 @using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 
-<div class="container mt-5">
+<div class="container mt-3"> <!-- Cambiar mt-5 a mt-3 -->
     <h3 class="text-center">Iniciar Sesión</h3>
     <EditForm Model="@loginDto" OnValidSubmit="@HandleLogin">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <div class="form-group">
+        <div class="form-group text-center">
             <label for="dui">DUI</label>
-            <InputText id="dui" class="form-control" @bind-Value="@loginDto.DUI" />
+            <InputText id="dui" class="form-control short-input" @bind-Value="@loginDto.DUI" />
             <ValidationMessage For="@(() => loginDto.DUI)" />
         </div>
 
-        <div class="form-group">
+        <div class="form-group text-center">
             <label for="password">Contraseña</label>
-            <InputText id="password" type="password" class="form-control" @bind-Value="@loginDto.Password" />
+            <InputText id="password" type="password" class="form-control short-input" @bind-Value="@loginDto.Password" />
             <ValidationMessage For="@(() => loginDto.Password)" />
         </div>
-
-        <div class="form-group">
+        <br />
+        <div class="form-group text-center">
             <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
         </div>
 
         @if (errorMessage != null)
         {
-            <div class="alert alert-danger">@errorMessage</div>
+            <div class="alert alert-danger text-center">@errorMessage</div>
         }
     </EditForm>
 </div>
@@ -58,3 +58,11 @@
         }
     }
 }
+
+<style>
+    .short-input {
+        max-width: 300px; /* Ancho máximo de los inputs */
+        margin: 0 auto; /* Centrar inputs */
+    }
+
+</style>
