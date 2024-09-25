@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Components;
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @if (isSuccess == false && isError == false)
 {
     <h3>Crear Nuevo Usuario</h3>
@@ -113,7 +114,7 @@ else if (isError)
     <p class="alert alert-success">sucedio un error al intentar registrar.</p>
     <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
 }
-
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     [Inject]
     UsuarioService usuarioService { get; set; }
