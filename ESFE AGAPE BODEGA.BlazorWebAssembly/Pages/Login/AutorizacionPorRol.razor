@@ -1,0 +1,31 @@
+﻿@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string Rol { get; set; }
+
+    private bool hasPermission = false;
+    private bool isAuthenticated = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await AuthService.IsAuthenticated();
+
+        if (isAuthenticated)
+        {
+            var userRole = await AuthService.GetUserRole();
+            hasPermission = userRole == Rol;
+        }
+
+        if (!isAuthenticated || !hasPermission)
+        {
+           Navigation.NavigateTo("/SinPermisos");
+        }
+    }
+}
+
+@if (hasPermission)
+{
+    @ChildContent
+}
