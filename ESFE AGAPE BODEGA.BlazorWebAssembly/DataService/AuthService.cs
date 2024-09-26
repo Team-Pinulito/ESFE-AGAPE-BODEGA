@@ -26,7 +26,6 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             {
                 var responseData = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
                 await _localStorage.SetItemAsync("authToken", responseData.token);
-                // Puedes almacenar más información si es necesario
                 await _localStorage.SetItemAsync("nombre", responseData.nombre);
                 await _localStorage.SetItemAsync("apellido", responseData.apellido);
                 await _localStorage.SetItemAsync("rol", responseData.rol);
