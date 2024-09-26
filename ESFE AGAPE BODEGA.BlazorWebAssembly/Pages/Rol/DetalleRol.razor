@@ -5,6 +5,7 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
 <h3>Ver Rol</h3>
 <div class="row">
     <div class="col-4">
@@ -26,6 +27,7 @@
         <NavLink href="/lista-rol" class="btn btn-primary">Ir a buscar roles</NavLink>
     </div>
 </div>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     // Parámetro para recibir el ID del cliente desde la llamada al componente

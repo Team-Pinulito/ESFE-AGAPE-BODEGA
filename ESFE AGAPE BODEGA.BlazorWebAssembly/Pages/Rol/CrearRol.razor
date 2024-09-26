@@ -7,6 +7,7 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
 @if (isSuccess == false && isError == false)
 {
     <h3>Crear Nuevo Rol</h3>
@@ -51,6 +52,7 @@ else if (isError)
     <p class="alert alert-success">sucedio un error al intentar registrar.</p>
     <NavLink href="/lista-rol" class="btn btn-primary">Aceptar</NavLink>
 }
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     [Inject]
