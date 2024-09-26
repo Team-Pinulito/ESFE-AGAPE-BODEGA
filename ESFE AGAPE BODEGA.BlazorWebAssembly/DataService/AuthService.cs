@@ -41,9 +41,16 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
+            await _localStorage.RemoveItemAsync("nombre");
+            await _localStorage.RemoveItemAsync("apellido");
+            await _localStorage.RemoveItemAsync("rol");
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
+        public async Task<string> GetUserRole()
+        {
+            return await _localStorage.GetItemAsync<string>("rol");
+        }
         public async Task<bool> IsAuthenticated()
         {
             var token = await _localStorage.GetItemAsync<string>("authToken");
