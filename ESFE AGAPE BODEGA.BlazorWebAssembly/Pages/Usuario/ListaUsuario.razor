@@ -7,6 +7,7 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+ <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
 <h3>Buscar Usuario</h3>
 <EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
     <div class="row">
@@ -102,6 +103,7 @@
         </tbody>
     </table>
 }
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     // Inyección de dependencias de CustomerService y NavigationManager

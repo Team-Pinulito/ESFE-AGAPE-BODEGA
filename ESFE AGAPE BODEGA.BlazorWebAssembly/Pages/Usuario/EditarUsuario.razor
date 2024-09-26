@@ -6,6 +6,8 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+
 @if (isSuccess == false && isError == false)
 {
     <h3>Modificar Usuario</h3>
@@ -110,6 +112,7 @@ else if (isError)
     <p class="alert alert-error">Sucedio un error al intentar modificar. o no ha realizado ninguna modificacion al registro actual</p>
     <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
 }
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     // Declaración de un parámetro llamado "Id" que puede ser pasado al componente
