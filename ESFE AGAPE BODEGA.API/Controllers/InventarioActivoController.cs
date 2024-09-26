@@ -4,11 +4,13 @@ using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using System.Threading.Tasks;
 using ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class InventarioActivoController : ControllerBase
     {
         private readonly InventarioActivoDAL _inventarioActivoDAL;

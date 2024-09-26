@@ -2,6 +2,7 @@
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class PaqueteActivoController : ControllerBase
+    [Authorize]
+    public class PaqueteActivoController : ControllerBase
 	{
 
 

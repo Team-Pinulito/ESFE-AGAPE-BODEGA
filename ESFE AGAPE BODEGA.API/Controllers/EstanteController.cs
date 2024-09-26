@@ -1,6 +1,7 @@
 ﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class EstanteController : ControllerBase
+    [Authorize]
+    public class EstanteController : ControllerBase
 	{
 		private readonly EstanteDAL _estanteDAL;
 		public EstanteController(EstanteDAL estanteDAL)

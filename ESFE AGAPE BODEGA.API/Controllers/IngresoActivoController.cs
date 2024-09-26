@@ -2,6 +2,7 @@
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class IngresoActivoController : ControllerBase
     {
 

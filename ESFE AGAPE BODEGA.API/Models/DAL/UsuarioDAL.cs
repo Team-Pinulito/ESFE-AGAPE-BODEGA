@@ -35,10 +35,31 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return await applicationDbContext.SaveChangesAsync();
         }
 
-        //actualizar rol
         public async Task<int> ActualizarUsuario(Usuario usuario)
         {
-            applicationDbContext.usuarios.Update(usuario);
+            // Buscar el usuario actual en la base de datos
+            var usuarioExistente = await applicationDbContext.usuarios.FindAsync(usuario.Id);
+
+            if (usuarioExistente == null)
+            {
+                throw new Exception("El usuario no existe");
+            }
+
+            // Si el password es diferente, encriptar el nuevo password con BCrypt
+            if (!string.IsNullOrEmpty(usuario.Password) && !BCrypt.Net.BCrypt.Verify(usuario.Password, usuarioExistente.Password))
+            {
+                usuarioExistente.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
+            }
+
+            // Actualizar los demás campos
+            usuarioExistente.Nombre = usuario.Nombre;
+            usuarioExistente.Apellido = usuario.Apellido;
+            usuarioExistente.Email = usuario.Email;
+            usuarioExistente.Telefono = usuario.Telefono;
+            usuarioExistente.Direccion = usuario.Direccion;
+            usuarioExistente.RolId = usuario.RolId;
+
+            applicationDbContext.usuarios.Update(usuarioExistente);
             var result = await applicationDbContext.SaveChangesAsync();
             return result;
         }

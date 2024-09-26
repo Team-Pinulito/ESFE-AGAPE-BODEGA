@@ -2,6 +2,7 @@
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleSolicitudActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs.SearchResultPaqueteActivoDTO;
@@ -10,6 +11,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SolicitudActivoController : ControllerBase
     {
         private readonly SolicitudActivoDAL _solicitudActivoDAL;

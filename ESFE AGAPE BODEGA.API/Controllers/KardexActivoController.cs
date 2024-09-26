@@ -1,11 +1,13 @@
 ﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.DTOs.KardexActivoDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class KardexActivoController : ControllerBase
     {
         private readonly KardexActivoDAL _kardexActivoDAL;

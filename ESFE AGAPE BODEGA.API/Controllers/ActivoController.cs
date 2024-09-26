@@ -1,6 +1,7 @@
 ﻿using Bodega_Api_Esfe_Agape.Models.EN;
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
@@ -8,6 +9,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ActivoController : ControllerBase
     {
         private readonly ActivoDAL _activoDAL;
