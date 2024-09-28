@@ -1,0 +1,101 @@
+﻿@page "/crear-estante"
+
+@using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs
+
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1 class="col-md-12">Crear Nuevo Estante</h1>
+                </div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="estante" OnValidSubmit="Create">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
+                                    <InputText class="form-control" id="Nombre" @bind-Value="estante.Nombre" />
+                                    <ValidationMessage For="() => estante.Nombre" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Nombre" class="form-label">Bodega<span style="color:red;">*</span></label>
+                                    <select class="form-control" @bind="estante.BodegaId" required>
+                                        <option value="">Seleccione una bodega</option>
+                                        @foreach (var bodega in bodegas)
+                                        {
+                                            <option value="@bodega.Id">@bodega.Nombre</option>
+                                        }
+                                    </select>
+                                    <ValidationMessage For="() => estante.BodegaId" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="Descripcion" class="form-label">Descripcion<span style="color:red;">*</span></label>
+                                    <InputTextArea class="form-control" id="Descripcion" @bind-Value="estante.Descripcion" />
+                                    <ValidationMessage For="() => estante.Descripcion" />
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <NavLink href="/lista-estante" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        estante = new CrearEstanteDTO();
+                        isError = false;
+                        <p class="alert alert-success">Estante creado con éxito.</p>
+                        <NavLink href="/lista-estante" class="btn btn-success">Aceptar</NavLink>
+                        <button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-success">sucedio un error al intentar registrar.</p>
+                        <NavLink href="/lista-estante" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+@code {
+    [Inject]
+    EstanteService estanteService { get; set; }
+
+    List<SearchResultBodegaDTO.BodegaDTO> bodegas = new List<SearchResultBodegaDTO.BodegaDTO>();
+    CrearEstanteDTO estante = new CrearEstanteDTO();
+    bool isSuccess = false;
+    bool isError = false;
+
+     protected override async Task OnInitializedAsync()
+    {
+        bodegas = await estanteService.ObtenerBodegas();
+    }
+
+    private async Task Create()
+    {
+        int result = await estanteService.CrearEstante(estante);
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+    private void GoCreate()
+    {
+        isSuccess = false;
+        isError = false;
+    }
+}
