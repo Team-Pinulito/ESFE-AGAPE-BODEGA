@@ -13,9 +13,9 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 			_httpClient = httpCli.CreateClient("BodegaAPI");
 		}
 
-		public async Task<List<SearchResultBodegaDTO.BodegaDTO>> ObtenerTodos()
+		public async Task<List<SearchResultBodegaDTO.BodegaDTO>> ObtenerBodegas()
 		{
-			var response = await _httpClient.GetAsync("Bodegap");
+			var response = await _httpClient.GetAsync("Bodega");
 			if (response.IsSuccessStatusCode)
 			{
 				var result = await response.Content.ReadFromJsonAsync<List<SearchResultBodegaDTO.BodegaDTO>>();
