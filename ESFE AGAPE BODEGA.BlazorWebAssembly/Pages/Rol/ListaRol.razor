@@ -10,7 +10,7 @@
 
     <div class="row" style="margin:20px;">
         <div class="card col-md-12">
-            <div class="card-header"><h1 class="row">Lista de Roles</h1></div>
+            <div class="card-header row"><h1 class="col-md-12">Lista de Roles</h1></div>
             <div class="card-body">
                 <EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
                     <div class="row">
@@ -40,9 +40,15 @@
                     </div>
                     <br />
                     <div class="row">
-                        <button type="submit" class="btn btn-primary col-md-3">Buscar</button>
-                        <NavLink href="/crear-rol" class="btn btn-secondary col-md-3" style="margin-left:5px;">Ir a crear</NavLink>
-                        <div class="row col-md-3" style="overflow:auto !important;max-width:600px">
+                        <div class="col-md-6 row">
+                            <div class="col-md-6 mt-1">
+                                <button type="submit" class="btn btn-primary" style="width:100%;">Buscar</button>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <NavLink href="/crear-rol" class="btn btn-secondary" style="width:100%;">Ir a crear</NavLink>
+                            </div>
+                        </div>
+                        <div class="row col-md-3" style="overflow:auto !important;max-width:600px; margin-top:5px;">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination">
                                     <li class="page-item">
@@ -74,16 +80,11 @@
                             <span>Total registros: @searchResult.CountRow</span>
                         </div>
                     </div>
-                    
-                    <br />
                 </EditForm>
-                <br />
-                
-               
             </div>
         </div>
         <div class="card col-md-12">
-            <div class="card-header"><h1 class="row">Lista de Roles</h1></div>
+            <div class="card-header row"><h1 class="col-md-12">Lista de Roles</h1></div>
             <div class="card-body">
                 @if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
                 {
