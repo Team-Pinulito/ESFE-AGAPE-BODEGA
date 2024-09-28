@@ -1,0 +1,80 @@
+﻿@page "/crear-bodega"
+
+@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        @if (isSuccess == false && isError == false)
+        {
+            <h3>Crear Nueva Bodega</h3>
+
+            <EditForm Model="bodega" OnValidSubmit="Create">
+                <DataAnnotationsValidator />
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="Nombre">Nombre:</label>
+                            <InputText class="form-control" id="Nombre" @bind-Value="bodega.Nombre" />
+                            <ValidationMessage For="() => bodega.Nombre" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="Descripcion">Descripción:</label>
+                            <InputText class="form-control" id="Descripcion" @bind-Value="bodega.Descripcion" />
+                            <ValidationMessage For="() => bodega.Descripcion" />
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <NavLink href="/lista-bodega" class="btn btn-secondary">Cancelar</NavLink>
+                    </div>
+                </div>
+            </EditForm>
+        }
+        else if (isSuccess)
+        {
+            bodega = new CrearBodegaDTO();
+            isError = false;
+            <p class="alert alert-success">Bodega creada con éxito.</p>
+            <button type="button" @onclick="GoCreate" class="btn btn-primary">Ir a crear</button>
+            <NavLink href="/lista-bodega" class="btn btn-primary">Ir a buscar bodegas</NavLink>
+        }
+        else if (isError)
+        {
+            <p class="alert alert-success">Sucedió un error al intentar registrar.</p>
+            <NavLink href="/lista-bodega" class="btn btn-primary">Aceptar</NavLink>
+        }
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
+@code {
+    [Inject]
+    BodegaService bodegaService { get; set; }
+
+    CrearBodegaDTO bodega = new CrearBodegaDTO();
+    bool isSuccess = false;
+    bool isError = false;
+
+    private async Task Create()
+    {
+        int result = await bodegaService.CrearBodega(bodega);
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+    private void GoCreate()
+    {
+        isSuccess = false;
+        isError = false;
+    }
+}
