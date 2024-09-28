@@ -1,0 +1,81 @@
+﻿@page "/eliminar-bodega/{Id:int}"
+
+@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs; // Asegúrate de que este espacio de nombres sea el correcto
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <h3>Eliminar Bodega</h3>
+        @if (isSuccess == false && isError == false)
+        {
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="Nombre">Nombre:</label>
+                        <input type="text" class="form-control" disabled @bind="bodega.Nombre" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="Descripcion">Descripcion:</label>
+                        <input type="text" class="form-control" disabled @bind="bodega.Descripcion" />
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-12">
+                    <button class="btn btn-primary" @onclick="async () => await Delete()">Eliminar</button>
+                    <NavLink href="/lista-bodega" class="btn btn-secondary">Cancelar</NavLink>
+                </div>
+            </div>
+        }
+        else if (isSuccess)
+        {
+            <p class="alert alert-success">Bodega se eliminó con éxito.</p>
+            <NavLink href="/lista-bodega" class="btn btn-primary">Aceptar</NavLink>
+        }
+        else if (isError)
+        {
+            <p class="alert alert-error">Sucedió un error al intentar eliminar.</p>
+            <NavLink href="/lista-bodega" class="btn btn-primary">Aceptar</NavLink>
+        }
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+@code {
+    // Declaración de un parámetro llamado "Id" que puede ser pasado al componente
+    [Parameter]
+    public int Id { get; set; }
+
+    // Inyección de dependencia de BodegaService para acceder a los servicios relacionados con las bodegas
+    [Inject]
+    BodegaService bodegaService { get; set; }
+
+    // Declaración e inicialización de un objeto "bodega" para almacenar la información de la bodega
+    GetIdResultBodegaDTO bodega = new GetIdResultBodegaDTO();
+
+    // Declaración de variables booleanas para manejar el estado de éxito y error
+    bool isSuccess = false;
+    bool isError = false;
+
+    // Método que se llama cuando se inicializa el componente
+    protected override async Task OnInitializedAsync()
+    {
+        // Realiza una llamada asincrónica para obtener la información de la bodega por su Id
+        bodega = await bodegaService.ObtenerBodega(Id);
+    }
+
+    // Método para eliminar la bodega
+    private async Task Delete()
+    {
+        // Realiza una llamada asincrónica para eliminar la bodega por su Id
+        int result = await bodegaService.EliminarBodega(bodega.Id);
+
+        // Verifica si el resultado de la eliminación es diferente de cero (éxito) o igual a cero (error)
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+}
