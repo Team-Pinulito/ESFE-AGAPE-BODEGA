@@ -9,20 +9,20 @@
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 	<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
 
-		<div class="row" style="margin:20px;">
+		<div class="row m-4">
 			<div class="card col-md-12">
 				<div class="card-header row"><h1 class="col-md-12">Lista de Estantes</h1></div>
 				<div class="card-body">
 					<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
 						<div class="row">
 							<div class="col-md-6">
-								<div class="form-group">
+								
 									<label for="Name">Nombre:</label>
 									<InputText class="form-control" @bind-Value="searchQuery.Nombre_Like" />
-								</div>
+								
 							</div>
 							<div class="col-md-6">
-								<div class="form-group">
+								
 									<label for="Take">CantReg X Pagina</label>
 									<select class="form-control" @bind="searchQuery.Take">
 										@for (var i = 10; i < 1000; i += 10)
@@ -30,17 +30,17 @@
 											<option value="@i">@i</option>
 										}
 									</select>
-								</div>
+								
 							</div>
 						</div>
 						<br />
 						<div class="row">
 							<div class="col-md-6 row">
 								<div class="col-md-6 mt-1">
-									<button type="submit" class="btn btn-primary" style="width:100%;">Buscar</button>
+									<button type="submit" class="btn btn-secondary" style="width:100%;">Buscar</button>
 								</div>
 								<div class="col-md-6 mt-1">
-									<NavLink href="/crear-rol" class="btn btn-secondary" style="width:100%;">Ir a crear</NavLink>
+									<NavLink href="/crear-estante" class="btn btn-success" style="width:100%;">Crear</NavLink>
 								</div>
 							</div>
 							<div class="row col-md-3" style="overflow:auto !important;max-width:600px; margin-top:5px;">
@@ -64,15 +64,15 @@
 												</li>
 											}
 										}
-										<li>
+										<li class="page-item">
 											<NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
 										</li>
 									</ul>
 
 								</nav>
 							</div>
-							<div class="col-md-3">
-								<span>Total registros: @searchResult.CountRow</span>
+							<div class="col-md-3 m-3">
+								<span>Total de registros: @searchResult.CountRow</span>
 							</div>
 						</div>
 
