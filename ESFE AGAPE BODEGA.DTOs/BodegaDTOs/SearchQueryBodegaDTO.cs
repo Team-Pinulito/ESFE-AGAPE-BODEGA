@@ -23,3 +23,4 @@ namespace ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs
         /// </summary>
         public byte SendRowCount { get; set; }
     }
+}
