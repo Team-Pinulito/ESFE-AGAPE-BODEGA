@@ -8,50 +8,53 @@
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-@if (isSuccess == false && isError == false)
-{
-    <h3>Crear Nuevo Rol</h3>
 
-    <EditForm Model="rol" OnValidSubmit="Create">
-        <DataAnnotationsValidator />
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Nombre">Nombre:</label>
-                    <InputText class="form-control" id="Nombre" @bind-Value="rol.Nombre" />
-                    <ValidationMessage For="() => rol.Nombre" />
-                </div>
+    <div class="row" style="margin:20px;">
+        <div class="card">
+            <div class="card-header row">
+                <h1 class="col-md-12">Crear Nuevo Rol</h1>
             </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Descripcion">Descripcion:</label>
-                    <InputText class="form-control" id="Descripcion" @bind-Value="rol.Descripcion" />
-                    <ValidationMessage For="() => rol.Descripcion" />
-                </div>
+            <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="rol" OnValidSubmit="Create">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Nombre" class="form-label">Nombre:</label>
+                                    <InputText class="form-control" id="Nombre" @bind-Value="rol.Nombre" />
+                                    <ValidationMessage For="() => rol.Nombre" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Descripcion" class="form-label">Descripcion:</label>
+                                    <InputText class="form-control" id="Descripcion" @bind-Value="rol.Descripcion" />
+                                    <ValidationMessage For="() => rol.Descripcion" />
+                                </div>
+                                <div class="col-md-6 mt-1">
+                                    <button type="submit" class="btn btn-primary" style="width:100%;">Guardar</button>
+                                </div>
+                                <div class="col-md-6 mt-1">
+                                    <NavLink href="/lista-rol" class="btn btn-secondary" style="width:100%;">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        rol = new CrearRolDto();
+                        isError = false;
+                        <p class="alert alert-success">Rol creado con éxito.</p>
+                        <button type="button" @onclick="GoCreate" class="btn btn-primary">Ir a crear</button>
+                        <NavLink href="/lista-rol" class="btn btn-primary">Ir a buscar roles</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-success">sucedio un error al intentar registrar.</p>
+                        <NavLink href="/lista-rol" class="btn btn-primary">Aceptar</NavLink>
+                    }
             </div>
         </div>
-        <br>
-        <div class="row">
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <NavLink href="/lista-rol" class="btn btn-secondary">Cancelar</NavLink>
-            </div>
-        </div>
-    </EditForm>
-}
-else if (isSuccess)
-{
-    rol = new CrearRolDto();
-    isError = false;
-    <p class="alert alert-success">Rol creado con éxito.</p>
-    <button type="button" @onclick="GoCreate" class="btn btn-primary">Ir a crear</button>
-    <NavLink href="/lista-rol" class="btn btn-primary">Ir a buscar roles</NavLink>
-}
-else if (isError)
-{
-    <p class="alert alert-success">sucedio un error al intentar registrar.</p>
-    <NavLink href="/lista-rol" class="btn btn-primary">Aceptar</NavLink>
-}
+    </div>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
