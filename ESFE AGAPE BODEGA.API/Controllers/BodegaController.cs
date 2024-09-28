@@ -1,7 +1,6 @@
 ﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
-using ESFE_AGAPE_BODEGA.DTOs.RolDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,11 +24,11 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         //obtener todos
         [HttpGet]
         
-        public async Task<List<GetIdResultBodegaDTO.BodegaDTO>> ObtenerTodos()
+        public async Task<List<GetIdResultBodegaDTO>> ObtenerTodos()
         {
             var bodegas = await _dal.ObtenerBodega();
 
-            var bodegaDto = bodegas.Select(r => new GetIdResultBodegaDTO.BodegaDTO
+            var bodegaDto = bodegas.Select(r => new GetIdResultBodegaDTO
             {
                 Id = r.Id,
                 Nombre = r.Nombre,
@@ -63,13 +62,13 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
         //obtener todos paginados
         [HttpPost("buscar")]
-        public async Task<GetIdResultBodegaDTO> Buscar(SearchQueryBodegaDTO searchbodega)
+        public async Task<SearchResultBodegaDTO> Buscar(SearchQueryBodegaDTO searchbodega)
         {
 
             var bodega = new Bodega
             {
-                Nombre = searchbodega.Nombre != null ? searchbodega.Nombre : string.Empty,
-                Descripcion = searchbodega.Descripcion != null ? searchbodega.Descripcion : string.Empty
+                Nombre = searchbodega.Nombre_Like != null ? searchbodega.Nombre_Like : string.Empty,
+               
             };
 
             var bodegas = new List<Bodega>();
@@ -88,15 +87,15 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 bodegas = await _dal.BuscarPaginado(bodega, skip: searchbodega.Skip, take: searchbodega.Take);
             }
 
-            var bodegaResult = new GetIdResultBodegaDTO
+            var bodegaResult = new SearchResultBodegaDTO
             {
-                Data = new List<GetIdResultBodegaDTO.BodegaDTO>(),
+                Data = new List<SearchResultBodegaDTO.BodegaDTO>(),
                 CountRow = countRow
             };
 
             foreach (var item in bodegas)
             {
-                bodegaResult.Data.Add(new GetIdResultBodegaDTO.BodegaDTO
+                bodegaResult.Data.Add(new SearchResultBodegaDTO.BodegaDTO
                 {
                     Id = item.Id,
                     Nombre = item.Nombre,
@@ -110,10 +109,25 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
         //obtener por id
         [HttpGet("{id}")]
-        public async Task<Bodega> ObtenerRolId(int id)
+        public async Task<ActionResult<GetIdResultBodegaDTO>> ObtenerRolId(int id)
         {
-            return await _dal.ObtenerBodegaId(id);
+            var bodega = await _dal.ObtenerBodegaId(id);
+
+            if (bodega == null)
+            {
+                return NotFound();  // Devuelve un NotFoundResult
+            }
+
+            var bodegaDTO = new GetIdResultBodegaDTO
+            {
+                Id = bodega.Id,
+                Nombre = bodega.Nombre,
+                Descripcion = bodega.Descripcion,
+            };
+
+            return Ok(bodegaDTO);  // Devuelve el objeto envuelto en un OkResult
         }
+
 
         //actualizar
         [HttpPut("{id}")]
