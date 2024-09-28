@@ -1,0 +1,70 @@
+﻿@page "/estante-detalles/{Id:int}"
+@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1 class="col-md-12">Detalles de Estante</h1></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="Nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" disabled @bind="estante.Nombre" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="Nombre" class="form-label">Bodega</label>
+                            <select class="form-control" disabled @bind="estante.BodegaId" required>
+                                <option value="">Seleccione una bodega</option>
+                                @foreach (var bodega in bodegas)
+                                {
+                                    <option value="@bodega.Id">@bodega.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="Descripcion" class="form-label">Descripcion</label>
+                            <textarea type="text" disabled class="form-control" @bind="estante.Descripcion" />
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <NavLink href="/lista-estante" class="btn btn-secondary w-100">Volver</NavLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+@code {
+    // Parámetro para recibir el ID del estante desde la llamada al componente
+    [Parameter]
+    public int Id { get; set; }
+
+    // Inyección de dependencia de CustomerService para acceder a sus métodos
+    [Inject]
+    EstanteService estanteService { get; set; }
+
+    List<SearchResultBodegaDTO.BodegaDTO> bodegas = new List<SearchResultBodegaDTO.BodegaDTO>();
+
+    GetIdResultEstanteDTO estante = new GetIdResultEstanteDTO();
+
+
+    /*
+         *  se utiliza para realizar inicializaciones o tareas
+         *  cuando se carga una página o componente de Blazor.
+         * Este método se llama automáticamente cuando el componente se está inicializando
+         *  antes de que se muestre en la interfaz de usuario.
+         */
+    protected override async Task OnInitializedAsync()
+    {
+        // En el momento de inicialización del componente, llama al método GetById de
+        //  estanteService para obtener los datos del estante con el ID proporcionado
+        estante = await estanteService.ObtenerEstanteId(Id);
+        bodegas = await estanteService.ObtenerBodegas();
+    }
+
+}
