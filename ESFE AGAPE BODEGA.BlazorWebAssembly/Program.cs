@@ -20,6 +20,8 @@ builder.Services.AddScoped<RolService>();
 
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EstanteService>();
+builder.Services.AddScoped<PaqueteActivoService>();
+
 
 
 builder.Services.AddScoped<AuthService>();
