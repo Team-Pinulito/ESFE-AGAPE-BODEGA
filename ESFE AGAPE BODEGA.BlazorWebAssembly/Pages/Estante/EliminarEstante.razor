@@ -1,0 +1,95 @@
+﻿@page "/eliminar-estante/{Id:int}"
+@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1>Eliminar Estante</h1></div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="Nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" disabled @bind="estante.Nombre" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Nombre" class="form-label">Bodega</label>
+                                <select class="form-control"  disabled @bind="estante.BodegaId" required>
+                                    <option value="">Seleccione una bodega</option>
+                                    @foreach (var bodega in bodegas)
+                                    {
+                                        <option value="@bodega.Id">@bodega.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="Descripcion" class="form-label">Descripcion</label>
+                                <textarea type="text" disabled class="form-control" @bind="estante.Descripcion" />
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <NavLink href="/lista-estante" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            </div>
+                        </div>
+                    }
+                    else if (isSuccess)
+                    {
+                        <p class="alert alert-success">Estante se elimino con éxito.</p>
+                        <NavLink href="/lista-estante" class="btn btn-success">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-error">Sucedio un error al intentar eliminar</p>
+                        <NavLink href="/lista-estante" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+@code {
+    // Declaración de un parámetro llamado "Id" que puede ser pasado al componente
+    [Parameter]
+    public int Id { get; set; }
+
+    // Inyección de dependencia de CustomerService para acceder a los servicios relacionados con los clientes
+    [Inject]
+    EstanteService estanteService { get; set; }
+    List<SearchResultBodegaDTO.BodegaDTO> bodegas = new List<SearchResultBodegaDTO.BodegaDTO>();
+    // Declaración e inicialización de un objeto "customer" para almacenar la información del cliente
+    GetIdResultEstanteDTO estante = new GetIdResultEstanteDTO();
+
+    // Declaración de variables booleanas para manejar el estado de éxito y error
+    bool isSuccess = false;
+    bool isError = false;
+
+    // Método que se llama cuando se inicializa el componente
+    protected override async Task OnInitializedAsync()
+    {
+        // Realiza una llamada asincrónica para obtener la información del cliente por su Id
+        estante = await estanteService.ObtenerEstanteId(Id);
+
+        bodegas = await estanteService.ObtenerBodegas();
+    }
+
+    // Método para eliminar el cliente
+    private async Task Delete()
+    {
+        // Realiza una llamada asincrónica para eliminar el cliente por su Id
+        int result = await estanteService.EliminarEstante(estante.Id);
+
+        // Verifica si el resultado de la eliminación es diferente de cero (éxito) o igual a cero (error)
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+}
