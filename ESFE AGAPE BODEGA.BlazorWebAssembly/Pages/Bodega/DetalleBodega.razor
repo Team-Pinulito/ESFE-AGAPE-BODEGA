@@ -1,6 +1,6 @@
 ﻿@page "/bodega-detalles/{Id:int}"
 
-@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs; // Asegúrate de que este espacio de nombres sea el correcto
+@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
 @using Microsoft.AspNetCore.Components.Forms;
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
@@ -16,7 +16,7 @@
             </div>
             <div class="col-4">
                 <div class="form-group">
-                    <label for="Descripcion">Descripcion:</label>
+                    <label for="Descripcion">Descripción:</label>
                     <input type="text" class="form-control" disabled @bind="bodega.Descripcion" />
                 </div>
             </div>
@@ -29,28 +29,23 @@
         </div>
     </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
 @code {
-    // Parámetro para recibir el ID de la bodega desde la llamada al componente
+    // Parámetro para recibir el ID de la bodega desde la URL
     [Parameter]
     public int Id { get; set; }
 
-    // Inyección de dependencia de BodegaService para acceder a sus métodos
+    // Inyección de dependencia de BodegaService para acceder a los métodos relacionados con bodegas
     [Inject]
     BodegaService bodegaService { get; set; }
 
-    // Creación de una instancia de ObtenerBodegaIdDto para almacenar los datos de la bodega
+    // Creación de una instancia de GetIdResultBodegaDTO para almacenar los datos de la bodega
     GetIdResultBodegaDTO bodega = new GetIdResultBodegaDTO();
 
-    /*
-         *  Se utiliza para realizar inicializaciones o tareas
-         *  cuando se carga una página o componente de Blazor.
-         * Este método se llama automáticamente cuando el componente se está inicializando
-         *  antes de que se muestre en la interfaz de usuario.
-         */
+    // Método que se llama cuando el componente se inicializa
     protected override async Task OnInitializedAsync()
     {
-        // En el momento de inicialización del componente, llama al método ObtenerBodega de
-        //  BodegaService para obtener los datos de la bodega con el ID proporcionado
+        // Obtiene la información de la bodega por su ID al inicializar el componente
         bodega = await bodegaService.ObtenerBodega(Id);
     }
 }
