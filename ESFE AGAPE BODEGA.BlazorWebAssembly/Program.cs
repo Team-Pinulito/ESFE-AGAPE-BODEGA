@@ -1,4 +1,3 @@
-using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using ESFE_AGAPE_BODEGA.BlazorWebAssembly;
 using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
@@ -22,8 +21,9 @@ builder.Services.AddScoped<BodegaService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EstanteService>();
 builder.Services.AddScoped<PaqueteActivoService>();
-
-
+builder.Services.AddScoped<TipoActivoService>();
+builder.Services.AddScoped<KardexActivoService>();
+builder.Services.AddScoped<IngresoActivoService>();
 
 builder.Services.AddScoped<AuthService>();
 
