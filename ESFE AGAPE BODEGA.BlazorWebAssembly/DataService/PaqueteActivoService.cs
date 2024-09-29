@@ -1,4 +1,5 @@
-﻿using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
+﻿using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
 using System.Net.Http.Json;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
@@ -10,6 +11,16 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         public PaqueteActivoService(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient("BodegaAPI");
+        }
+        public async Task<List<SearchResultActivoDTO.ActivoDTO>> ObtenerActivos()
+        {
+            var response = await _httpClient.GetAsync("Activo");
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<List<SearchResultActivoDTO.ActivoDTO>>();
+                return result ?? new List<SearchResultActivoDTO.ActivoDTO>();
+            }
+            return new List<SearchResultActivoDTO.ActivoDTO>();
         }
 
         public async Task<int> CrearPaqueteActivo(CrearPaqueteActivoDTO crearPaqueteActivoDTO)
@@ -53,15 +64,16 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
         public async Task<int> EliminarPaqueteActivo(int id)
         {
+            int result = 0;
             var response = await _httpClient.DeleteAsync($"PaqueteActivo/{id}");
 
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
-                return int.TryParse(result, out var deletedId) ? deletedId : 0;
+                var responseBody = await response.Content.ReadAsStringAsync();
+                if (int.TryParse(responseBody, out result) == false)
+                    return result = 0;
             }
-
-            return 0;
+            return result;
         }
 
         public async Task<SearchResultPaqueteActivoDTO> Search(SearchQueryPaqueteActivoDTO searchQuery)
