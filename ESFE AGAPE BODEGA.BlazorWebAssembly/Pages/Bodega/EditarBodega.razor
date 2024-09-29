@@ -6,49 +6,49 @@
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
     <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-        @if (isSuccess == false && isError == false)
-        {
-            <h3>Modificar Bodega</h3>
-
-            <EditForm Model="bodega" OnValidSubmit="Edit">
-                <DataAnnotationsValidator />
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="Nombre">Nombre:</label>
-                            <InputText class="form-control" @bind-Value="bodega.Nombre" />
-                            <ValidationMessage For="() => bodega.Nombre" />
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="Descripcion">Descripción:</label>
-                            <InputText class="form-control" @bind-Value="bodega.Descripcion" />
-                            <ValidationMessage For="() => bodega.Descripcion" />
-                        </div>
-                    </div>
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1>Editar Bodega</h1></div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="bodega" OnValidSubmit="Edit">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Nombre">Nombre:</label>
+                                    <InputText class="form-control" @bind-Value="bodega.Nombre" />
+                                    <ValidationMessage For="() => bodega.Nombre" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Descripcion">Descripción:</label>
+                                    <InputText class="form-control" @bind-Value="bodega.Descripcion" />
+                                    <ValidationMessage For="() => bodega.Descripcion" />
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100">Modificar</button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <NavLink href="/lista-bodega" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        bodega = new EditBodegaDTO();
+                        isError = false;
+                        <p class="alert alert-success">Bodega se modificó con éxito.</p>
+                        <NavLink href="/lista-bodega" class="btn btn-success">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-error">Sucedió un error al intentar modificar.</p>
+                        <NavLink href="/lista-bodega" class="btn btn-danger">Aceptar</NavLink>
+                    }
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Modificar</button>
-                        <NavLink href="/lista-bodega" class="btn btn-secondary">Cancelar</NavLink>
-                    </div>
-                </div>
-            </EditForm>
-        }
-        else if (isSuccess)
-        {
-            bodega = new EditBodegaDTO();
-            isError = false;
-            <p class="alert alert-success">Bodega se modificó con éxito.</p>
-            <NavLink href="/lista-bodega" class="btn btn-primary">Aceptar</NavLink>
-        }
-        else if (isError)
-        {
-            <p class="alert alert-error">Sucedió un error al intentar modificar o no ha realizado ninguna modificación al registro actual</p>
-            <NavLink href="/lista-bodega" class="btn btn-primary">Aceptar</NavLink>
-        }
+            </div>
+        </div>
     </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 
