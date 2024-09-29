@@ -6,26 +6,26 @@
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-<h3>Ver Rol</h3>
-<div class="row">
-    <div class="col-4">
-        <div class="form-group">
-            <label for="Nombre">Nombre:</label>
-            <input type="text" class="form-control" disabled @bind="rol.Nombre" />
+<div class="row m-4"    >
+    <div class="card col-md-12">
+        <div class="card-header row"><h1 class="col-md-12">Detalles de  Rol</h1></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="Nombre">Nombre:</label>
+                    <input type="text" class="form-control" disabled @bind="rol.Nombre" />
+                </div>
+                <div class="col-md-6">
+                    <label for="Descripciom">Descripcion:</label>
+                    <input type="text" class="form-control" disabled @bind="rol.Descripcion" />
+                </div>
+                <div class="col-md-12 mt-3">
+                    <NavLink href="/lista-rol" class="btn btn-secondary w-100">Volver</NavLink>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-4">
-        <div class="form-group">
-            <label for="Descripciom">Descripcion:</label>
-            <input type="text" class="form-control" disabled @bind="rol.Descripcion" />
-        </div>
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="col-12">
-        <NavLink href="/lista-rol" class="btn btn-primary">Ir a buscar roles</NavLink>
-    </div>
+   
 </div>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>

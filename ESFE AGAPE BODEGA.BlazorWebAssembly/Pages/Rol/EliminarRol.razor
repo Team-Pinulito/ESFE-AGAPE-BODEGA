@@ -6,41 +6,42 @@
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-<h3>Eliminar Rol</h3>
-@if (isSuccess == false && isError == false)
-{
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Nombre">Nombre:</label>
-                <input type="text" class="form-control" disabled @bind="rol.Nombre" />
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Descripcion">Descripcion:</label>
-                <input type="text" class="form-control" disabled @bind="rol.Descripcion" />
+    <div class="row m-4">
+        <div class="card col-md-12">
+            <div class="card-header row"><h1>Eliminar Rol</h1></div>
+            <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="Nombre">Nombre:</label>
+                                <input type="text" class="form-control" disabled @bind="rol.Nombre" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Descripcion">Descripcion:</label>
+                                <input type="text" class="form-control" disabled @bind="rol.Descripcion" />
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <NavLink href="/lista-rol" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            </div>
+                        </div>
+                    }
+                    else if (isSuccess)
+                    {
+                        <p class="alert alert-success">Rol se elimino con éxito.</p>
+                        <NavLink href="/lista-rol" class="btn btn-success">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-error">Sucedio un error al intentar eliminar</p>
+                        <NavLink href="/lista-rol" class="btn btn-danger">Aceptar</NavLink>
+                    }
             </div>
         </div>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-12">
-            <button class="btn btn-primary" @onclick="async () => await Delete()">Eliminar</button>
-            <NavLink href="/lista-rol" class="btn btn-secondary">Cancelar</NavLink>
-        </div>
-    </div>
-}
-else if (isSuccess)
-{
-    <p class="alert alert-success">Rol se elimino con éxito.</p>
-    <NavLink href="/lista-rol" class="btn btn-primary">Aceptar</NavLink>
-}
-else if (isError)
-{
-    <p class="alert alert-error">Sucedio un error al intentar eliminar</p>
-    <NavLink href="/lista-rol" class="btn btn-primary">Aceptar</NavLink>
-}
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {

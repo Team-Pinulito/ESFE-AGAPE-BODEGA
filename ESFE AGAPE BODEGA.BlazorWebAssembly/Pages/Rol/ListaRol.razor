@@ -8,41 +8,41 @@
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
 
-    <div class="row" style="margin:20px;">
+    <div class="row m-4">
         <div class="card col-md-12">
-            <div class="card-header"><h1 class="row">Lista de Roles</h1></div>
+            <div class="card-header row"><h1 class="col-md-12">Lista de Roles</h1></div>
             <div class="card-body">
                 <EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="Name">Nombre:</label>
-                                <InputText class="form-control" @bind-Value="searchQuery.Nombre" />
-                            </div>
+                            <label for="Name">Nombre:</label>
+                            <InputText class="form-control" @bind-Value="searchQuery.Nombre" />
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="LastName">Descripcion:</label>
-                                <InputText class="form-control" @bind-Value="searchQuery.Descripcion" />
-                            </div>
+                            <label for="LastName">Descripcion:</label>
+                            <InputText class="form-control" @bind-Value="searchQuery.Descripcion" />
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="Take">CantReg X Pagina</label>
-                                <select class="form-control" @bind="searchQuery.Take">
-                                    @for (var i = 10; i < 1000; i += 10)
-                                    {
-                                        <option value="@i">@i</option>
-                                    }
-                                </select>
-                            </div>
+                            <label for="Take">CantReg X Pagina</label>
+                            <select class="form-control" @bind="searchQuery.Take">
+                                @for (var i = 10; i < 1000; i += 10)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
                         </div>
                     </div>
                     <br />
                     <div class="row">
-                        <button type="submit" class="btn btn-primary col-md-3">Buscar</button>
-                        <NavLink href="/crear-rol" class="btn btn-secondary col-md-3" style="margin-left:5px;">Ir a crear</NavLink>
-                        <div class="row col-md-3" style="overflow:auto !important;max-width:600px">
+                        <div class="col-md-6 row">
+                            <div class="col-md-6 mt-1">
+                                <button type="submit" class="btn btn-secondary" style="width:100%;">Buscar</button>
+                            </div>
+                            <div class="col-md-6 mt-1">
+                                <NavLink href="/crear-rol" class="btn btn-success" style="width:100%;">Crear</NavLink>
+                            </div>
+                        </div>
+                        <div class="row col-md-3" style="overflow:auto !important;max-width:600px; margin-top:5px;">
                             <nav aria-label="Page navigation example">
                                 <ul class="pagination">
                                     <li class="page-item">
@@ -63,27 +63,22 @@
                                             </li>
                                         }
                                     }
-                                    <li>
+                                    <li class="page-item">
                                         <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
                                     </li>
                                 </ul>
 
                             </nav>
                         </div>
-                        <div class="col-md-3">
-                            <span>Total registros: @searchResult.CountRow</span>
+                        <div class="col-md-3 m-3">
+                            <span>Total de registros: @searchResult.CountRow</span>
                         </div>
                     </div>
-                    
-                    <br />
                 </EditForm>
-                <br />
-                
-               
             </div>
         </div>
         <div class="card col-md-12">
-            <div class="card-header"><h1 class="row">Lista de Roles</h1></div>
+            <div class="card-header row"><h1 class="col-md-12">Lista de Roles</h1></div>
             <div class="card-body">
                 @if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
                 {

@@ -1,0 +1,74 @@
+﻿@page "/eliminar-bodega/{Id:int}"
+
+@using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1>Eliminar Bodega</h1></div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="Nombre">Nombre:</label>
+                                <input type="text" class="form-control" disabled @bind="bodega.Nombre" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Descripcion">Descripción:</label>
+                                <input type="text" class="form-control" disabled @bind="bodega.Descripcion" />
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <NavLink href="/lista-bodega" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            </div>
+                        </div>
+                    }
+                    else if (isSuccess)
+                    {
+                        <p class="alert alert-success">Bodega se eliminó con éxito.</p>
+                        <NavLink href="/lista-bodega" class="btn btn-success">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-danger">Sucedió un error al intentar eliminar</p>
+                        <NavLink href="/lista-bodega" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Inject]
+    BodegaService bodegaService { get; set; }
+
+    GetIdResultBodegaDTO bodega = new GetIdResultBodegaDTO();
+
+    bool isSuccess = false;
+    bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bodega = await bodegaService.ObtenerBodega(Id);
+    }
+
+    private async Task Delete()
+    {
+        int result = await bodegaService.EliminarBodega(bodega.Id);
+
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+}

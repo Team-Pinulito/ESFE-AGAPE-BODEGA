@@ -1,16 +1,16 @@
-﻿using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
-using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs
 {
     public class EditBodegaDTO
     {
-        
+        public EditBodegaDTO(GetIdResultBodegaDTO bodegaDTO)
+        {
+            Id = bodegaDTO.Id;
+            Nombre = bodegaDTO.Nombre;
+            Descripcion = bodegaDTO.Descripcion;
+        }
 
         public EditBodegaDTO()
         {
