@@ -1,0 +1,127 @@
+﻿@page "/crear-paqueteActivo"
+
+@using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
+
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+	<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+
+		<div class="row m-4">
+			<div class="card col-md-12">
+				<div class="card-header row">
+					<h1 class="col-md-12">Crear Nuevo Paquete Activo</h1>
+				</div>
+				<div class="card-body">
+					@if (isSuccess == false && isError == false)
+					{
+						<EditForm Model="paqueteActivo" OnValidSubmit="Create">
+							<DataAnnotationsValidator />
+							<div class="row">
+								<div class="col-md-6">
+									<label for="Correlativo" class="form-label">Correlativo<span style="color:red;">*</span></label>
+									<InputText class="form-control" id="Correlativo" @bind-Value="paqueteActivo.Correlativo" />
+									<ValidationMessage For="() => paqueteActivo.Correlativo" />
+								</div>
+								<div class="col-md-6">
+									<label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
+									<InputText class="form-control" id="Nombre" @bind-Value="paqueteActivo.Nombre" />
+									<ValidationMessage For="() => paqueteActivo.Nombre" />
+								</div>
+							</div>
+							<div class="row mt-3 align-items-center">
+								<div class="col-md-6">
+									<h3>Detalles del Paquete</h3>
+								</div>
+								<div class="col-md-6 text-end">
+									<button type="button" class="btn btn-primary  mt-4" @onclick="AgregarDetalle">
+									<!-- SVG del icono -->
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
+										<path d="M19 15v-3h-2v3h-3v2h3v3h2v-3h3v-2h-.937zM4 7h11v2H4zm0 4h11v2H4zm0 4h8v2H4z"></path>
+									</svg>
+								</button>
+								</div>
+							</div>
+							
+
+							<div class="row">
+								@foreach (var detalle in paqueteActivo.CrearDetallePaqueteActivos)
+								{
+									<_CrearDetallePaqueteActivo detalle="detalle"
+														   activos="activos"
+														   EliminarDetalle="() => EliminarDetalle(detalle)" />
+								}
+							</div>
+							<div class="row mt-4">
+								<div class="col-md-6">
+									<button type="submit" class="btn btn-primary w-100">Guardar</button>
+								</div>
+								<div class="col-md-6">
+									<NavLink href="/lista-paqueteActivo" class="btn btn-secondary w-100">Cancelar</NavLink>
+								</div>
+							</div>
+						</EditForm>
+					}
+					else if (isSuccess)
+					{
+						paqueteActivo = new CrearPaqueteActivoDTO();
+						isError = false;
+						<p class="alert alert-success">Paquete Activo creado con éxito.</p>
+						<NavLink href="/lista-paqueteActivo" class="btn btn-success">Aceptar</NavLink>
+						<button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
+					}
+					else if (isError)
+					{
+						<p class="alert alert-danger">Ocurrió un error al intentar registrar el paquete activo.</p>
+						<NavLink href="/lista-paqueteActivo" class="btn btn-danger">Aceptar</NavLink>
+					}
+				</div>
+			</div>
+		</div>
+	</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
+@code {
+	[Inject]
+	PaqueteActivoService paqueteActivoService { get; set; }
+
+
+	List<SearchResultActivoDTO.ActivoDTO> activos = new List<SearchResultActivoDTO.ActivoDTO>();
+	CrearPaqueteActivoDTO paqueteActivo = new CrearPaqueteActivoDTO();
+	bool isSuccess = false;
+	bool isError = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		activos = await paqueteActivoService.ObtenerActivos();
+	}
+
+	private async Task Create()
+	{
+		int result = await paqueteActivoService.CrearPaqueteActivo(paqueteActivo);
+		if (result != 0)
+			isSuccess = true;
+		else
+			isError = true;
+	}
+
+	private void GoCreate()
+	{
+		isSuccess = false;
+		isError = false;
+	}
+
+	private void AgregarDetalle()
+	{
+		paqueteActivo.CrearDetallePaqueteActivos.Add(new CrearDetallePaqueteActivoDTO());
+	}
+
+	private void EliminarDetalle(CrearDetallePaqueteActivoDTO detalle)
+	{
+		paqueteActivo.CrearDetallePaqueteActivos.Remove(detalle);
+	}
+}
