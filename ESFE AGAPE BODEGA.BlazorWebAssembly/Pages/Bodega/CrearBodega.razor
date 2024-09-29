@@ -8,50 +8,53 @@
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
     <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-        @if (isSuccess == false && isError == false)
-        {
-            <h3>Crear Nueva Bodega</h3>
 
-            <EditForm Model="bodega" OnValidSubmit="Create">
-                <DataAnnotationsValidator />
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="Nombre">Nombre:</label>
-                            <InputText class="form-control" id="Nombre" @bind-Value="bodega.Nombre" />
-                            <ValidationMessage For="() => bodega.Nombre" />
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="Descripcion">Descripción:</label>
-                            <InputText class="form-control" id="Descripcion" @bind-Value="bodega.Descripcion" />
-                            <ValidationMessage For="() => bodega.Descripcion" />
-                        </div>
-                    </div>
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1 class="col-md-12">Crear Nueva Bodega</h1>
                 </div>
-                <br>
-                <div class="row">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                        <NavLink href="/lista-bodega" class="btn btn-secondary">Cancelar</NavLink>
-                    </div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="bodega" OnValidSubmit="Create">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Nombre" class="form-label">Nombre:</label>
+                                    <InputText class="form-control" id="Nombre" @bind-Value="bodega.Nombre" />
+                                    <ValidationMessage For="() => bodega.Nombre" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Descripcion" class="form-label">Descripción:</label>
+                                    <InputText class="form-control" id="Descripcion" @bind-Value="bodega.Descripcion" />
+                                    <ValidationMessage For="() => bodega.Descripcion" />
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <NavLink href="/lista-bodega" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        bodega = new CrearBodegaDTO();
+                        isError = false;
+                        <p class="alert alert-success">Bodega creada con éxito.</p>
+                        <NavLink href="/lista-bodega" class="btn btn-success">Aceptar</NavLink>
+                        <button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otra</button>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-danger">Sucedió un error al intentar registrar.</p>
+                        <NavLink href="/lista-bodega" class="btn btn-danger">Aceptar</NavLink>
+                    }
                 </div>
-            </EditForm>
-        }
-        else if (isSuccess)
-        {
-            bodega = new CrearBodegaDTO();
-            isError = false;
-            <p class="alert alert-success">Bodega creada con éxito.</p>
-            <button type="button" @onclick="GoCreate" class="btn btn-primary">Ir a crear</button>
-            <NavLink href="/lista-bodega" class="btn btn-primary">Ir a buscar bodegas</NavLink>
-        }
-        else if (isError)
-        {
-            <p class="alert alert-success">Sucedió un error al intentar registrar.</p>
-            <NavLink href="/lista-bodega" class="btn btn-primary">Aceptar</NavLink>
-        }
+            </div>
+        </div>
     </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 
