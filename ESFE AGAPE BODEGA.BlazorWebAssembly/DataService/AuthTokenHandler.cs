@@ -6,9 +6,9 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 {
     public class AuthTokenHandler : DelegatingHandler
     {
-        private readonly ISessionStorageService _localStorage;
+        private readonly ILocalStorageService _localStorage;
 
-        public AuthTokenHandler(ISessionStorageService localStorage)
+        public AuthTokenHandler(ILocalStorageService localStorage)
         {
             _localStorage = localStorage;
         }

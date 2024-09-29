@@ -4,15 +4,16 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+using Blazored.LocalStorage;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 {
     public class AuthService
     {
         private readonly HttpClient _httpClient;
-        private readonly ISessionStorageService _localStorage;
+        private readonly ILocalStorageService _localStorage;
 
-        public AuthService(IHttpClientFactory httpClient, ISessionStorageService localStorage)
+        public AuthService(IHttpClientFactory httpClient, ILocalStorageService localStorage)
         {
             _httpClient = httpClient.CreateClient("BodegaAPI");
             _localStorage = localStorage;
