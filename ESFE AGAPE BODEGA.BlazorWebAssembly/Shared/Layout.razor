@@ -93,7 +93,7 @@
                     </ul>
 
                     <div class="m-3">
-                        <a href="/logout" class="btn btn-danger text-white w-100">Cerrar Sesión</a>
+                        <a @onclick="Logout" class="btn btn-danger text-white w-100">Cerrar Sesión</a>
                     </div>
                 </div>
             </div>
@@ -205,10 +205,10 @@
 </style>
 
 @code {
-    private async Task HandleLogout()
+    private async Task Logout()
     {
         await Authservice.Logout();
-        Navigation.NavigateTo("/login");
+        Navigation.NavigateTo("/login", true);
     }
     private string userRole = string.Empty;
 
