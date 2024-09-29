@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace ESFE_AGAPE_BODEGA.DTOs.TipoActivoDTOs
 {
     public class SearchQueryTipoActivoDTO
