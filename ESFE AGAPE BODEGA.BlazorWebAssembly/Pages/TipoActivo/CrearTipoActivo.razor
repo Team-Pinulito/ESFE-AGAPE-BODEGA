@@ -1,0 +1,84 @@
+﻿@page "/crear-tipoActivo"
+
+@using ESFE_AGAPE_BODEGA.DTOs.TipoActivoDTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1 class="col-md-12">Crear Nuevo Tipo Activo</h1>
+                </div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="tipoActivo" OnValidSubmit="Create">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
+                                    <InputText class="form-control" id="Nombre" @bind-Value="tipoActivo.Nombre" />
+                                    <ValidationMessage For="() => tipoActivo.Nombre" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Descripcion" class="form-label">Descripción<span style="color:red;">*</span></label>
+                                    <InputTextArea class="form-control" id="Descripcion" @bind-Value="tipoActivo.Descripcion" />
+                                    <ValidationMessage For="() => tipoActivo.Descripcion" />
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <NavLink href="/lista-tipoActivo" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        tipoActivo = new CrearTipoActivoDTO();
+                        isError = false;
+                        <p class="alert alert-success">Tipo Activo creado con éxito.</p>
+                        <NavLink href="/lista-tipoActivo" class="btn btn-success">Aceptar</NavLink>
+                        <button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-danger">Ocurrió un error al intentar registrar el tipo activo.</p>
+                        <NavLink href="/lista-tipoActivo" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
+@code {
+    [Inject]
+    TipoActivoService tipoActivoService { get; set; }
+
+    CrearTipoActivoDTO tipoActivo = new CrearTipoActivoDTO();
+    bool isSuccess = false;
+    bool isError = false;
+
+    private async Task Create()
+    {
+        int result = await tipoActivoService.Crear(tipoActivo);
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+    private void GoCreate()
+    {
+        isSuccess = false;
+        isError = false;
+    }
+}
