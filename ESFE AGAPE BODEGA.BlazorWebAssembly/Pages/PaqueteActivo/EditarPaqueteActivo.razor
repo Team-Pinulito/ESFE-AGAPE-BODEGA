@@ -9,7 +9,7 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-	<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
         <div class="row m-4">
             <div class="card col-md-12">
                 <div class="card-header row"><h1>Editar Paquete Activo</h1></div>
@@ -29,12 +29,13 @@
                                     <InputText class="form-control" id="Nombre" @bind-Value="paqueteActivo.Nombre" />
                                     <ValidationMessage For="() => paqueteActivo.Nombre" />
                                 </div>
+
                                 <div class="row mt-3 align-items-center">
                                     <div class="col-md-6">
                                         <h3>Detalles del Paquete</h3>
                                     </div>
                                     <div class="col-md-6 text-end">
-                                        <button type="button" class="btn btn-primary  mt-4" @onclick="AgregarDetalle">
+                                        <button type="button" class="btn btn-primary mt-4" @onclick="AgregarDetalle">
                                             <!-- SVG del icono -->
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
                                                 <path d="M19 15v-3h-2v3h-3v2h3v3h2v-3h3v-2h-.937zM4 7h11v2H4zm0 4h11v2H4zm0 4h8v2H4z"></path>
@@ -43,15 +44,23 @@
                                     </div>
                                 </div>
 
-
                                 <div class="row">
-                                    @foreach (var detalle in paqueteActivo.DetallePaqueteActivos)
+                                    @if (paqueteActivo.DetallePaqueteActivos != null && paqueteActivo.DetallePaqueteActivos.Any())
                                     {
-                                        <_DetallePaqueteActivo detalle="detalle"
-                                                               activos="activos"
-                                                               EliminarDetalle="() => EliminarDetalle(detalle)" />
+                                        @foreach (var detalle in paqueteActivo.DetallePaqueteActivos)
+                                        {
+                                            <_DetallePaqueteActivo detalle="detalle"
+                                                                   activos="activos"
+                                                                   EliminarDetalle="() => EliminarDetalle(detalle)"
+                                                                   isEditMode="true" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <p>Cargando...</p>
                                     }
                                 </div>
+
                                 <div class="col-md-6 mt-3">
                                     <button type="submit" class="btn btn-primary w-100" disabled="@isSubmitting">Guardar</button>
                                 </div>
@@ -79,7 +88,6 @@
     </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 
-
 @code {
     [Parameter]
     public int Id { get; set; }
@@ -88,8 +96,11 @@
     PaqueteActivoService paqueteActivoService { get; set; }
 
     List<SearchResultActivoDTO.ActivoDTO> activos = new List<SearchResultActivoDTO.ActivoDTO>();
-    
-    EditPaqueteActivoDTO paqueteActivo = new EditPaqueteActivoDTO();
+
+    EditPaqueteActivoDTO paqueteActivo = new EditPaqueteActivoDTO
+        {
+            DetallePaqueteActivos = new List<DetallePaqueteActivoDTO>()
+        };
 
     bool isSuccess = false;
     bool isError = false;
@@ -97,10 +108,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var paqueteActivoDetail = await paqueteActivoService.ObtenerPaqueteActivoPorId(Id);
-        paqueteActivo = new EditPaqueteActivoDTO(paqueteActivoDetail);
+        try
+        {
+            var paqueteActivoDetail = await paqueteActivoService.ObtenerPaqueteActivoPorId(Id);
 
-        activos = await paqueteActivoService.ObtenerActivos();
+            if (paqueteActivoDetail != null)
+            {
+                paqueteActivo = new EditPaqueteActivoDTO(paqueteActivoDetail);
+                paqueteActivo.DetallePaqueteActivos ??= new List<DetallePaqueteActivoDTO>();
+            }
+
+            activos = await paqueteActivoService.ObtenerActivos() ?? new List<SearchResultActivoDTO.ActivoDTO>();
+        }
+        catch (Exception)
+        {
+            isError = true;
+        }
     }
 
     private async Task Edit()
@@ -120,11 +143,12 @@
 
     private void AgregarDetalle()
     {
+        paqueteActivo.DetallePaqueteActivos ??= new List<DetallePaqueteActivoDTO>();
         paqueteActivo.DetallePaqueteActivos.Add(new DetallePaqueteActivoDTO());
     }
 
     private void EliminarDetalle(DetallePaqueteActivoDTO detalle)
     {
-        paqueteActivo.DetallePaqueteActivos.Remove(detalle);
+        paqueteActivo.DetallePaqueteActivos?.Remove(detalle);
     }
 }

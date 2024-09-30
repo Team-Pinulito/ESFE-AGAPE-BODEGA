@@ -30,11 +30,25 @@
                             </div>
 
                             <div class="row">
-                                @foreach (var detalle in paqueteActivo.DetallePaqueteActivos)
+                                @if (paqueteActivo.DetallePaqueteActivos != null && paqueteActivo.DetallePaqueteActivos.Any())
                                 {
-                                    <_DetallePaqueteActivo detalle="detalle" activos="activos" EliminarDetalle="() => EliminarDetalle(detalle)" />
+                                    // La colección está inicializada y contiene elementos
+                                    @foreach (var detalle in paqueteActivo.DetallePaqueteActivos)
+                                    {
+                                        <EditForm Model="detalle">
+                                            <DataAnnotationsValidator />
+                                            <ValidationSummary />
+                                            <_DetallePaqueteActivo detalle="detalle" activos="activos" isEditMode="false" EliminarDetalle="() => EliminarDetalle(detalle)" />
+                                        </EditForm>
+                                    }
+                                }
+                                else
+                                {
+                                    // La colección no está inicializada o no contiene elementos
+                                    <p>Cargando...</p>
                                 }
                             </div>
+
 
                             <div class="col-md-6 mt-3">
                                 <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
