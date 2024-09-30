@@ -21,7 +21,7 @@
                             <div class="col-md-6">
                                 <label for="Take">CantReg X Pagina</label>
                                 <select class="form-control" @bind="searchQuery.Take">
-                                    @for (var i = 10; i < 1000; i += 10)
+                                    @for (var i = 10; i < 100; i += 10)
                                     {
                                         <option value="@i">@i</option>
                                     }
@@ -137,6 +137,7 @@
     private async Task Search()
     {
         searchResult = await tipoActivoService.Buscar(searchQuery);
+        <script>console.log(@JsonSerializer.Serialize(searchResult)</script>
         // Asegúrate de que Buscar devuelva SearchResultTipoActivoDTO
     }
 
@@ -185,7 +186,7 @@
 
     private void GoDelete(int Id)
     {
-        navigation.NavigateTo($"/eliminar-tipo-activo/{Id}");
+        navigation.NavigateTo($"/eliminar-tipoActivo/{Id}");
     }
 
     private void UpdatePagination()
