@@ -9,7 +9,7 @@
     <div class="col-md-5">
         <!-- Selección de Activo -->
         <label for="Nombre" class="form-label">Activo</label>
-        <select class="form-control" @bind="detalle.ActivoId" required disabled>
+        <select class="form-control" @bind="detalle.ActivoId" required disabled="@(!isEditMode)">
             <option value="0">Seleccione un activo</option>
             @foreach (var activo in activos)
             {
@@ -19,21 +19,24 @@
         <ValidationMessage For="() => detalle.ActivoId" />
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         <!-- Cantidad del Detalle -->
         <label for="Cantidad" class="form-label">Cantidad</label>
-        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" disabled />
+        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" disabled="@(!isEditMode)" />
         <ValidationMessage For="() => detalle.Cantidad" />
     </div>
 
-    <div class="col-md-3 text-end">
+    <div class="col-md-2 text-end">
         <!-- Botón Eliminar -->
-        <button type="button" class="btn btn-danger mt-4" @onclick="EliminarDetalle" style="display: flex; align-items: center;">
-            <!-- SVG del icono -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
-                <path d="M21.063 15H13v2h9v-2zM4 7h11v2H4zm0 4h11v2H4zm0 4h7v2H4z"></path>
-            </svg>
-        </button>
+        @if (isEditMode)
+        {
+            <button type="button" class="btn btn-danger mt-4" @onclick="EliminarDetalle" style="float:right;">
+                <!-- SVG del icono -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
+                    <path d="M21.063 15H13v2h9v-2zM4 7h11v2H4zm0 4h11v2H4zm0 4h7v2H4z"></path>
+                </svg>
+            </button>
+        }
     </div>
 </div>
 
@@ -41,4 +44,5 @@
     [Parameter] public DetallePaqueteActivoDTO detalle { get; set; }
     [Parameter] public List<SearchResultActivoDTO.ActivoDTO> activos { get; set; }
     [Parameter] public EventCallback EliminarDetalle { get; set; }
+    [Parameter] public bool isEditMode { get; set; }
 }
