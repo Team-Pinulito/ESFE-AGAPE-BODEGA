@@ -66,7 +66,7 @@
                                 </nav>
                             </div>
                             <div class="col-md-3 m-3">
-                                <p>Total de registros: @searchResult.CountRow</p>
+                                <span>Total de registros: @searchResult.CountRow</span>
                             </div>
                         </div>
                     </EditForm>
@@ -128,6 +128,7 @@
     [Inject]
     NavigationManager navigation { get; set; }
 
+
     SearchResultTipoActivoDTO searchResult = new SearchResultTipoActivoDTO();
     SearchQueryTipoActivoDTO searchQuery = new SearchQueryTipoActivoDTO { Take = 10 };
     List<Pagination> paginations = new List<Pagination>();
@@ -137,7 +138,6 @@
     private async Task Search()
     {
         searchResult = await tipoActivoService.Buscar(searchQuery);
-        <script>console.log(@JsonSerializer.Serialize(searchResult)</script>
         // Asegúrate de que Buscar devuelva SearchResultTipoActivoDTO
     }
 

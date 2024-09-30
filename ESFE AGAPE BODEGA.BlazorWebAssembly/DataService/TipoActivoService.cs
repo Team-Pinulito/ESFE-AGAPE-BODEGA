@@ -13,16 +13,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         }
 
         // Obtener todos los tipos de activos
-        public async Task<List<GetIdResultTipoActivoDTO>> ObtenerTodos()
-        {
-            var response = await _httpClient.GetAsync("TipoActivo");
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<List<GetIdResultTipoActivoDTO>>();
-                return result ?? new List<GetIdResultTipoActivoDTO>();
-            }
-            return new List<GetIdResultTipoActivoDTO>();
-        }
+
 
         // Buscar tipos de activos con paginación y filtros
         public async Task<SearchResultTipoActivoDTO> Buscar(SearchQueryTipoActivoDTO searchQueryTipoActivoDTO)
@@ -32,7 +23,6 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             {
                 // Cambiamos para que devuelva SearchResultTipoActivoDTO en lugar de SearchQueryTipoActivoDTO
                 var result = await response.Content.ReadFromJsonAsync<SearchResultTipoActivoDTO>();
-                Console.WriteLine($"Total de datos: {result?.Data?.Count ?? 0}"); // Verificar cuántos datos se están obteniendo
                 return result ?? new SearchResultTipoActivoDTO();
             }
             return new SearchResultTipoActivoDTO();

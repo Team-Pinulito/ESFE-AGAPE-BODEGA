@@ -33,31 +33,49 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             }).ToList();
         }
 
-        // Obtener todos paginados
         [HttpPost("buscar")]
-        public async Task<IActionResult> Buscar(SearchQueryTipoActivoDTO tipoActivoDto)
+        public async Task<SearchResultTipoActivoDTO> Buscar(SearchQueryTipoActivoDTO tipoActivoDTO)
         {
 
             var tipoActivo = new TipoActivo
             {
-                Nombre = tipoActivoDto.Nombre_Like ?? string.Empty
+                Nombre = tipoActivoDTO.Nombre_Like != null ? tipoActivoDTO.Nombre_Like : string.Empty,
             };
 
-            var tipoActivos = await _tipoActivoDAL.BuscarPaginado(tipoActivo, tipoActivoDto.Skip, tipoActivoDto.Take);
-            var countRow = tipoActivoDto.SendRowCount == 2 ? await _tipoActivoDAL.ContarResultTipoActivo(tipoActivo) : 0;
+            var tipoActivos = new List<TipoActivo>();
+            var countRow = 0;
 
-            var tipoActivoResult = new
+            if (tipoActivoDTO.SendRowCount == 2)
             {
-                Data = tipoActivos.Select(item => new GetIdResultTipoActivoDTO
+                tipoActivos = await _tipoActivoDAL.BuscarPaginado(tipoActivo, skip: tipoActivoDTO.Skip, take: tipoActivoDTO.Take);
+                if (tipoActivos.Count > 0)
                 {
-                    Id = item.Id,
-                    Nombre = item.Nombre,
-                    Descripcion = item.Descripcion
-                }).ToList(),
+                    countRow = await _tipoActivoDAL.ContarResultTipoActivo(tipoActivo);
+                }
+            }
+            else
+            {
+                tipoActivos = await _tipoActivoDAL.BuscarPaginado(tipoActivo, skip: tipoActivoDTO.Skip, take: tipoActivoDTO.Take);
+            }
+
+            var tipoActivoResult = new SearchResultTipoActivoDTO
+            {
+                Data = new List<SearchResultTipoActivoDTO.TipoActivoDTO>(),
                 CountRow = countRow
             };
 
-            return Ok(tipoActivoResult);
+            foreach (var item in tipoActivos)
+            {
+                tipoActivoResult.Data.Add(new SearchResultTipoActivoDTO.TipoActivoDTO
+                {
+                    Id = item.Id,
+                    Nombre = item.Nombre,
+                    Descripcion = item.Descripcion,
+                });
+            }
+
+            return tipoActivoResult;
+
         }
 
         // Obtener por id
