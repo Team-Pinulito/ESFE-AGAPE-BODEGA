@@ -1,0 +1,93 @@
+﻿@page "/eliminar-paqueteActivo/{Id:int}"
+@using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1>Eliminar Paquete Activo</h1></div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="Correlativo" class="form-label">Correlativo</label>
+                                <input type="text" class="form-control" disabled @bind="paqueteActivo.Correlativo" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" disabled @bind="paqueteActivo.Nombre" />
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <h3>Detalles del Paquete</h3>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                @foreach (var detalle in paqueteActivo.DetallePaqueteActivos)
+                                {
+                                    <_DetallePaqueteActivo detalle="detalle" activos="activos" EliminarDetalle="() => EliminarDetalle(detalle)" />
+                                }
+                            </div>
+
+                            <div class="col-md-6 mt-3">
+                                <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <NavLink href="/lista-paqueteActivo" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            </div>
+                        </div>
+                    }
+                    else if (isSuccess)
+                    {
+                        <p class="alert alert-success">Paquete Activo eliminado con éxito.</p>
+                        <NavLink href="/lista-paqueteActivo" class="btn btn-success">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-danger">Ocurrió un error al intentar eliminar el paquete activo.</p>
+                        <NavLink href="/lista-paqueteActivo" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    [Inject] PaqueteActivoService paqueteActivoService { get; set; }
+
+    List<SearchResultActivoDTO.ActivoDTO> activos = new List<SearchResultActivoDTO.ActivoDTO>();
+    GetIdResultPaqueteActivoDTO paqueteActivo = new GetIdResultPaqueteActivoDTO();
+
+    bool isSuccess = false;
+    bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Cargar el paquete activo por ID
+        paqueteActivo = await paqueteActivoService.ObtenerPaqueteActivoPorId(Id);
+        activos = await paqueteActivoService.ObtenerActivos();
+    }
+
+    private async Task Delete()
+    {
+        // Eliminar el paquete activo y sus detalles
+        int result = await paqueteActivoService.EliminarPaqueteActivo(paqueteActivo.Id);
+        isSuccess = result != 0;
+        isError = !isSuccess;
+    }
+
+    private void EliminarDetalle(DetallePaqueteActivoDTO detalle)
+    {
+        paqueteActivo.DetallePaqueteActivos.Remove(detalle);
+    }
+}
