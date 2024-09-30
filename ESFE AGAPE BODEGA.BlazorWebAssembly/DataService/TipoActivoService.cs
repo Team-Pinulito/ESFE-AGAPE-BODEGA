@@ -32,6 +32,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             {
                 // Cambiamos para que devuelva SearchResultTipoActivoDTO en lugar de SearchQueryTipoActivoDTO
                 var result = await response.Content.ReadFromJsonAsync<SearchResultTipoActivoDTO>();
+                Console.WriteLine($"Total de datos: {result?.Data?.Count ?? 0}"); // Verificar cuántos datos se están obteniendo
                 return result ?? new SearchResultTipoActivoDTO();
             }
             return new SearchResultTipoActivoDTO();

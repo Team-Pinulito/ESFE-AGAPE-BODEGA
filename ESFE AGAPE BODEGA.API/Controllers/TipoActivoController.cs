@@ -37,6 +37,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         [HttpPost("buscar")]
         public async Task<IActionResult> Buscar(SearchQueryTipoActivoDTO tipoActivoDto)
         {
+
             var tipoActivo = new TipoActivo
             {
                 Nombre = tipoActivoDto.Nombre_Like ?? string.Empty

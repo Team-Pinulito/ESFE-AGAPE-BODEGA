@@ -12,6 +12,9 @@ namespace ESFE_AGAPE_BODEGA.DTOs.TipoActivoDTOs
 
             [Display(Name = "Nombre")]
             public string Nombre { get; set; }
+
+            [Display(Name = "Descripcion")]
+            public string Descripcion { get; set; }
         }
     }
 }

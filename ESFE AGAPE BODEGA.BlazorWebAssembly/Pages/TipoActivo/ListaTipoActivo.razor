@@ -35,7 +35,7 @@
                                     <button type="submit" class="btn btn-secondary" style="width:100%;">Buscar</button>
                                 </div>
                                 <div class="col-md-6 mt-1">
-                                    <NavLink href="/crear-tipo-activo" class="btn btn-success" style="width:100%;">Crear</NavLink>
+                                    <NavLink href="/crear-tipoActivo" class="btn btn-success" style="width:100%;">Crear</NavLink>
                                 </div>
                             </div>
                             <div class="row col-md-3" style="overflow:auto !important; max-width:600px; margin-top:5px;">
@@ -66,7 +66,7 @@
                                 </nav>
                             </div>
                             <div class="col-md-3 m-3">
-                                <span>Total de registros: @searchResult.CountRow</span>
+                                <p>Total de registros: @searchResult.CountRow</p>
                             </div>
                         </div>
                     </EditForm>
@@ -81,7 +81,7 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Descripción</th>
+                                    <th>Descripcion</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -90,6 +90,7 @@
                                 {
                                     <tr>
                                         <td>@tipoActivo.Nombre</td>
+                                        <td>@tipoActivo.Descripcion</td>
                                         <td>
                                             <table>
                                                 <tr>
@@ -135,22 +136,30 @@
 
     private async Task Search()
     {
-        searchResult = await tipoActivoService.Buscar(searchQuery); // Asegúrate de que Buscar devuelva SearchResultTipoActivoDTO
+        searchResult = await tipoActivoService.Buscar(searchQuery);
+        // Asegúrate de que Buscar devuelva SearchResultTipoActivoDTO
     }
 
     protected override async Task OnInitializedAsync()
     {
+
         searchQuery.SendRowCount = 2;
         searchQuery.Skip = 0;
-        await Search();
+        await Search(); // Realizas una búsqueda inicial
+        Console.WriteLine($"Data count: {searchResult.Data?.Count ?? 0}");
         UpdatePagination();
     }
 
     private async Task SubmitSearch()
     {
+        // Configuración de la búsqueda
         searchQuery.SendRowCount = 2;
         searchQuery.Skip = 0;
+
+        // Realizar la búsqueda
         await Search();
+
+        // Actualizar la paginación
         UpdatePagination();
     }
 
@@ -166,7 +175,7 @@
 
     private void GoEdit(int Id)
     {
-        navigation.NavigateTo($"/editar-tipo-activo/{Id}");
+        navigation.NavigateTo($"/editar-tipoActivo/{Id}");
     }
 
     private void GoDetails(int Id)
@@ -181,27 +190,30 @@
 
     private void UpdatePagination()
     {
+        // Inicializa la paginación
         paginations = new List<Pagination>();
-        int totalPages = (int)Math.Ceiling((double)searchResult.CountRow / searchQuery.Take);
-        skipAnte = searchQuery.Skip > 0 ? searchQuery.Skip - searchQuery.Take : 0;
-        int skipMax = 0;
 
+        // Calcula el número total de páginas
+        int totalPages = (int)Math.Ceiling((double)searchResult.CountRow / searchQuery.Take);
+
+        // Evitar que skipAnte sea negativo
+        skipAnte = Math.Max(searchQuery.Skip - searchQuery.Take, 0);
+
+        // Evitar que skipSi exceda el número máximo de registros
+        skipSi = Math.Min(searchQuery.Skip + searchQuery.Take, searchResult.CountRow);
+
+        // Crear las páginas
         for (var i = 0; i < totalPages; i++)
         {
-            var pagination = new Pagination()
+            paginations.Add(new Pagination
                 {
                     Skip = i * searchQuery.Take,
                     NumPage = i + 1
-                };
-
-            paginations.Add(pagination);
-            skipMax = pagination.Skip;
+                });
         }
-
-        skipSi = searchQuery.Skip + searchQuery.Take;
-        skipSi = skipSi > skipMax ? skipSi - searchQuery.Take : skipSi;
     }
 
+    // Clase para representar la información de paginación
     class Pagination
     {
         public int NumPage { get; set; }
