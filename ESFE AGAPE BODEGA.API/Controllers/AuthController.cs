@@ -36,7 +36,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             Usuario admin;
             try
             {
-                admin = await _usuarioDAL.GetUser(loginUsuario);
+                admin = await _usuarioDAL.ObtenerUsuarioPorDUIyPassword(loginUsuario);
             }
             catch (Exception ex)
             {
