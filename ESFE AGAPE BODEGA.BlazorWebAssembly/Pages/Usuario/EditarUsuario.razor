@@ -7,7 +7,10 @@
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-
+     <div class="row m-4">
+        <div class="card col-md-12">
+            <div class="card-header row"><h1>Editar Rol</h1></div>
+            <div class="card-body">
 @if (isSuccess == false && isError == false)
 {
     <h3>Modificar Usuario</h3>
@@ -41,7 +44,8 @@
             <div class="col-4">
                 <div class="form-group">
                     <label for="Telefono">Telefono:</label>
-                    <InputText class="form-control"  @bind-Value="usuario.Telefono" />
+                                        <InputText class="form-control" @bind-Value="usuario.Telefono" maxlength="8" pattern="\d*"
+                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <ValidationMessage For="() => usuario.Telefono" />
                 </div>
             </div>
@@ -63,7 +67,8 @@
             <div class="col-4">
                 <div class="form-group">
                     <label for="DUI">DUI:</label>
-                    <InputText class="form-control"  @bind-Value="usuario.DUI" />
+                                        <InputText class="form-control" @bind-Value="usuario.DUI" maxlength="9" pattern="\d*"
+                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                     <ValidationMessage For="() => usuario.DUI" />
                 </div>
             </div>
@@ -112,6 +117,9 @@ else if (isError)
     <p class="alert alert-error">Sucedio un error al intentar modificar. o no ha realizado ninguna modificacion al registro actual</p>
     <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
 }
+</div>
+        </div>
+    </div>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {

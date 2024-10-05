@@ -6,85 +6,91 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-<h3>Ver Usuario</h3>
-<div class="row">
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Nombre">Nombre:</label>
-                <input type="text" class="form-control" disabled @bind="usuario.Nombre" />
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1 class="col-md-12">Detalles de Usuario</h1></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="Nombre">Nombre:</label>
+                                    <input type="text" class="form-control" disabled @bind="usuario.Nombre" />
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="Apellido">Apellido:</label>
+                                    <input type="text" class="form-control" disabled @bind="usuario.Apellido" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="Email">Email:</label>
+                                    <input type="text" class="form-control" disabled @bind="usuario.Email" />
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="Telefono">Telefono:</label>
+                                    <input type="text" class="form-control" disabled @bind="usuario.Telefono" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="RolId">Rol:</label>
+                                    <select class="form-control" @bind="usuario.RolId" disabled>
+                                        <option value="">Seleccione un rol</option>
+                                        @foreach (var rol in roles)
+                                        {
+                                            <option value="@rol.Id">@rol.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="DUI">DUI:</label>
+                                    <input type="text" class="form-control" disabled @bind="usuario.DUI" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="Codigo">Codigo:</label>
+                                    <input type="text" class="form-control" disabled @bind="usuario.Codigo" />
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="Direccion">Direccion:</label>
+                                    <input type="text" class="form-control" disabled @bind="usuario.Direccion" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="Password">Contraseña:</label>
+                                <input type="text" class="form-control" disabled @bind="usuario.Password" />
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-12">
+                            <NavLink href="/lista-usuario" class="btn btn-primary">Ir a buscar usuarios</NavLink>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Apellido">Apellido:</label>
-                <input type="text" class="form-control" disabled @bind="usuario.Apellido" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Email">Email:</label>
-                <input type="text" class="form-control" disabled @bind="usuario.Email" />
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Telefono">Telefono:</label>
-                <input type="text" class="form-control" disabled @bind="usuario.Telefono" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
-                <label for="RolId">Rol:</label>
-                <select class="form-control" @bind="usuario.RolId" disabled>
-                    <option value="">Seleccione un rol</option>
-                    @foreach (var rol in roles)
-                    {
-                        <option value="@rol.Id">@rol.Nombre</option>
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label for="DUI">DUI:</label>
-                <input type="text" class="form-control" disabled @bind="usuario.DUI" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Codigo">Codigo:</label>
-                <input type="text" class="form-control" disabled @bind="usuario.Codigo" />
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label for="Direccion">Direccion:</label>
-                <input type="text" class="form-control" disabled @bind="usuario.Direccion" />
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-group">
-            <label for="Password">Contraseña:</label>
-            <input type="text" class="form-control" disabled @bind="usuario.Password" />
-        </div>
-    </div>
-</div>
-<br>
-<div class="row">
-    <div class="col-12">
-        <NavLink href="/lista-usuario" class="btn btn-primary">Ir a buscar usuarios</NavLink>
-    </div>
-</div>
-</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     // Parámetro para recibir el ID del cliente desde la llamada al componente

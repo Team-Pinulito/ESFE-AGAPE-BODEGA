@@ -7,103 +7,122 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
- <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-<h3>Buscar Usuario</h3>
-<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
-    <div class="row">
-        <div class="col-3">
-            <div class="form-group">
-                <label for="Nombre">Nombre:</label>
-                <InputText class="form-control" @bind-Value="searchQuery.Nombre_Like" />
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="form-group">
-                <label for="Take">CantReg X Pagina:</label>
-                <select class="form-control" @bind="searchQuery.Take">
-                    @for (var i = 10; i < 1000; i += 10)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
-            </div>
-        </div>
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary">Buscar</button>
-    <NavLink href="/crear-usuario" class="btn btn-secondary">Ir a crear</NavLink>
-    <br />
-</EditForm>
-<br />
-<h3>Lista de Usuario</h3>
-<div class="row" style="overflow:auto !important;max-width:600px">
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item">
-                <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
-            </li>
-            @foreach (var item in paginations)
-            {
-                if (item.Skip != searchQuery.Skip)
-                {
-                    <li class="page-item">
-                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item active">
-                        <NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
-                    </li>
-                }
-            }
-            <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
-        </ul>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1 class="col-md-12">Lista de Usuarios</h1></div>
+                <div class="card-body">
+                    <EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="Nombre">Nombre:</label>
+                                    <InputText class="form-control" @bind-Value="searchQuery.Nombre_Like" />
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="Take">CantReg X Pagina:</label>
+                                    <select class="form-control" @bind="searchQuery.Take">
+                                        @for (var i = 10; i < 1000; i += 10)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6 row">
+                                    <div class="col-md-6 mt-1">
+                                        <button type="submit" class="btn btn-secondary" style="width:100%;">Buscar</button>
+                                    </div>
+                                    <div class="col-md-6 mt-1">
+                                        <NavLink href="/crear-usuario" class="btn btn-success" style="width:100%;">Crear</NavLink>
+                                    </div>
+                                </div>
+                                <div class="row col-md-3" style="overflow:auto !important;max-width:600px; margin-top:5px;">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item">
+                                                <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
+                                            </li>
+                                            @foreach (var item in paginations)
+                                            {
+                                                if (item.Skip != searchQuery.Skip)
+                                                {
+                                                    <li class="page-item">
+                                                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="page-item active">
+                                                        <NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                                                    </li>
+                                                }
+                                            }
+                                            <li class="page-item">
+                                                <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
+                                            </li>
+                                        </ul>
 
-    </nav>
-</div>
-<div class="row-cols-6">
-    <span>Total registros: @searchResult.CountRow</span>
-</div>
-@if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Email</th>
-                <th>Telefono</th>
-                <th>DUI</th>
-                <th>Codigo</th>
-                <th>Direccion</th>
-                <th>Rol</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var usuario in searchResult.Data)
-            {
-                <tr>
-                    <td>@usuario.Nombre</td>
-                    <td>@usuario.Apellido</td>
-                    <td>@usuario.Email</td>
-                    <td>@usuario.Telefono</td>
-                    <td>@usuario.DUI</td>
-                    <td>@usuario.Codigo</td>
-                    <td>@usuario.Direccion</td>
-                    <td>@GetRoleName(usuario.RolId)</td>
-                    <td>
-                        <button class="btn btn-dark" @onclick="() => GoEdit(usuario.Id)">Editar</button>
-                        <button class="btn btn-info" @onclick="() => GoDetails(usuario.Id)">Ver</button>
-                        <button class="btn btn-danger" @onclick="() => GoDelete(usuario.Id)">Eliminar</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+                                    </nav>
+                                </div>
+                                <div class="col-md-3 m-3">
+                                    <span>Total de registros: @searchResult.CountRow</span>
+                                </div>
+                            </div>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+
+            <div class="card col-md-12">
+                <div class="card-header row"><h1 class="col-md-12">Lista de Roles</h1></div>
+                <div class="card-body">
+                    @if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>Email</th>
+                                    <th>Telefono</th>
+                                    <th>DUI</th>
+                                    <th>Codigo</th>
+                                    <th>Direccion</th>
+                                    <th>Rol</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var usuario in searchResult.Data)
+                                {
+                                    <tr>
+                                        <td>@usuario.Nombre</td>
+                                        <td>@usuario.Apellido</td>
+                                        <td>@usuario.Email</td>
+                                        <td>@usuario.Telefono</td>
+                                        <td>@usuario.DUI</td>
+                                        <td>@usuario.Codigo</td>
+                                        <td>@usuario.Direccion</td>
+                                        <td>@GetRoleName(usuario.RolId)</td>
+                                        <td>
+                                            <button class="btn btn-dark" @onclick="() => GoEdit(usuario.Id)">Editar</button>
+                                            <button class="btn btn-info" @onclick="() => GoDetails(usuario.Id)">Ver</button>
+                                            <button class="btn btn-danger" @onclick="() => GoDelete(usuario.Id)">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     // Inyección de dependencias de CustomerService y NavigationManager

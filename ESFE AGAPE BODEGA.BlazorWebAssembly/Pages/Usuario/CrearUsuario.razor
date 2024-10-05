@@ -8,114 +8,125 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-@if (isSuccess == false && isError == false)
-{
-    <h3>Crear Nuevo Usuario</h3>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1 class="col-md-12">Crear Nuevo Usuario</h1>
+                </div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <h3>Crear Nuevo Usuario</h3>
 
-    <EditForm Model="usuario" OnValidSubmit="Create">
-        <DataAnnotationsValidator />
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Nombre">Nombre:</label>
-                    <InputText class="form-control" id="Nombre" @bind-Value="usuario.Nombre" />
-                    <ValidationMessage For="() => usuario.Nombre" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Apellido">Apellido:</label>
-                    <InputText class="form-control" id="Apellido" @bind-Value="usuario.Apellido" />
-                    <ValidationMessage For="() => usuario.Apellido" />
+                        <EditForm Model="usuario" OnValidSubmit="Create">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Nombre">Nombre:</label>
+                                        <InputText class="form-control" id="Nombre" @bind-Value="usuario.Nombre" />
+                                        <ValidationMessage For="() => usuario.Nombre" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Apellido">Apellido:</label>
+                                        <InputText class="form-control" id="Apellido" @bind-Value="usuario.Apellido" />
+                                        <ValidationMessage For="() => usuario.Apellido" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Email">Email:</label>
+                                        <InputText class="form-control" id="Email" @bind-Value="usuario.Email" />
+                                        <ValidationMessage For="() => usuario.Email" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Telefono">Telefono:</label>
+                                        <InputText class="form-control" id="Telefono" @bind-Value="usuario.Telefono" maxlength="8" pattern="\d*"
+                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                        <ValidationMessage For="() => usuario.Telefono" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="RolId">Rol:</label>
+                                        <select class="form-control" @bind="usuario.RolId" required>
+                                            <option value="">Seleccione un rol</option>
+                                            @foreach (var rol in roles)
+                                            {
+                                                <option value="@rol.Id">@rol.Nombre</option>
+                                            }
+                                        </select>
+                                        <ValidationMessage For="() => usuario.RolId" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="DUI">DUI:</label>
+                                        <InputText class="form-control" id="DUI" @bind-Value="usuario.DUI" maxlength="9" pattern="\d*"
+                                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                        <ValidationMessage For="() => usuario.DUI" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Codigo">Codigo:</label>
+                                        <InputText class="form-control" id="Codigo" @bind-Value="usuario.Codigo" />
+                                        <ValidationMessage For="() => usuario.Codigo" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Direccion">Direccion:</label>
+                                        <InputText class="form-control" id="Direccion" @bind-Value="usuario.Direccion" />
+                                        <ValidationMessage For="() => usuario.Direccion" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="Password">Contraseña:</label>
+                                    <InputText class="form-control" id="Password" @bind-Value="usuario.Password" />
+                                    <ValidationMessage For="() => usuario.Password" />
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <NavLink href="/lista-usuario" class="btn btn-secondary">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        usuario = new CrearUsuarioDTO();
+                        isError = false;
+                        <p class="alert alert-success">Usuario creado con éxito.</p>
+                        <button type="button" @onclick="GoCreate" class="btn btn-primary">Ir a crear</button>
+                        <NavLink href="/lista-usuario" class="btn btn-primary">Ir a buscar usuarios</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-success">sucedio un error al intentar registrar.</p>
+                        <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
+                    }
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Email">Email:</label>
-                    <InputText class="form-control" id="Email" @bind-Value="usuario.Email" />
-                    <ValidationMessage For="() => usuario.Email" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Telefono">Telefono:</label>
-                    <InputText class="form-control" id="Telefono" @bind-Value="usuario.Telefono" />
-                    <ValidationMessage For="() => usuario.Telefono" />
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="RolId">Rol:</label>
-                    <select class="form-control" @bind="usuario.RolId" required>
-                        <option value="">Seleccione un rol</option>
-                        @foreach (var rol in roles)
-                        {
-                            <option value="@rol.Id">@rol.Nombre</option>
-                        }
-                    </select>
-                    <ValidationMessage For="() => usuario.RolId" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="DUI">DUI:</label>
-                    <InputText class="form-control" id="DUI" @bind-Value="usuario.DUI" />
-                    <ValidationMessage For="() => usuario.DUI" />
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Codigo">Codigo:</label>
-                    <InputText class="form-control" id="Codigo" @bind-Value="usuario.Codigo" />
-                    <ValidationMessage For="() => usuario.Codigo" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Direccion">Direccion:</label>
-                    <InputText class="form-control" id="Direccion" @bind-Value="usuario.Direccion" />
-                    <ValidationMessage For="() => usuario.Direccion" />
-                </div>
-            </div>
-        </div>
-          <div class="row">
-              <div class="form-group">
-                <label for="Password">Contraseña:</label>
-                <InputText class="form-control" id="Password" @bind-Value="usuario.Password" />
-                <ValidationMessage For="() => usuario.Password" />
-            </div>
-          </div>
-                
-        <br>
-        <div class="row">
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <NavLink href="/lista-usuario" class="btn btn-secondary">Cancelar</NavLink>
-            </div>
-        </div>
-    </EditForm>
-}
-else if (isSuccess)
-{
-    usuario = new CrearUsuarioDTO();
-    isError = false;
-    <p class="alert alert-success">Usuario creado con éxito.</p>
-    <button type="button" @onclick="GoCreate" class="btn btn-primary">Ir a crear</button>
-    <NavLink href="/lista-usuario" class="btn btn-primary">Ir a buscar usuarios</NavLink>
-}
-else if (isError)
-{
-    <p class="alert alert-success">sucedio un error al intentar registrar.</p>
-    <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
-}
-</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
     [Inject]
@@ -130,7 +141,7 @@ else if (isError)
     {
         roles = await usuarioService.ObtenerRoles();
     }
-    
+
 
     private async Task Create()
     {

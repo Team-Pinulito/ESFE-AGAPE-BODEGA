@@ -7,7 +7,10 @@
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-<h3>Eliminar Usuario</h3>
+    <div class="row m-4">
+        <div class="card col-md-12">
+            <div class="card-header row"><h1>Eliminar Usuario</h1></div>
+            <div class="card-body">
 @if (isSuccess == false && isError == false)
 {
     <div class="row">
@@ -98,6 +101,9 @@ else if (isError)
     <p class="alert alert-error">Sucedio un error al intentar eliminar</p>
     <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
 }
+                </div>
+            </div>
+        </div>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
