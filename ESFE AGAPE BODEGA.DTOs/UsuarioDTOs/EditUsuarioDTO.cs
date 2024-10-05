@@ -46,15 +46,15 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
         public string Apellido { get; set; }
 
         [Required(ErrorMessage = "El campo Email es obligatorio.")]
-        [MaxLength(50, ErrorMessage = "El campo Email no puede tener más de 50 caracteres.")]
+        [EmailAddress(ErrorMessage = "El correo electrónico no es válido.")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "El campo Telefono es obligatorio.")]
-        [MaxLength(50, ErrorMessage = "El campo Telefono no puede tener más de 50 caracteres.")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "El teléfono debe tener exactamente 8 dígitos.")]
         public string Telefono { get; set; }
 
         [Required(ErrorMessage = "El campo DUI es obligatorio.")]
-        [MaxLength(50, ErrorMessage = "El campo DUI no puede tener más de 50 caracteres.")]
+        [RegularExpression(@"^\d{9}$", ErrorMessage = "El DUI debe tener exactamente 9 dígitos.")]
         public string DUI { get; set; }
 
         [Required(ErrorMessage = "El campo Password es obligatorio.")]
