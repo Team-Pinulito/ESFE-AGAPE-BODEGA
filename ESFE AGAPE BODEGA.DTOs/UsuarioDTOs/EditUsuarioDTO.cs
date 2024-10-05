@@ -58,7 +58,6 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
         public string DUI { get; set; }
 
         [Required(ErrorMessage = "El campo Password es obligatorio.")]
-        [MaxLength(50, ErrorMessage = "El campo Password no puede tener más de 50 caracteres.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "El campo Codigo es obligatorio.")]
