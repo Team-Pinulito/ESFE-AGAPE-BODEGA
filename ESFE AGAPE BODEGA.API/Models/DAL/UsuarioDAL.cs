@@ -37,9 +37,39 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
         public async Task<int> ActualizarUsuario(Usuario usuario)
         {
-            applicationDbContext.usuarios.Update(usuario);
-            var result = await applicationDbContext.SaveChangesAsync();
-            return result;
+            var usuarioExistente = await applicationDbContext.usuarios.FindAsync(usuario.Id);
+
+            if (usuarioExistente == null)
+            {
+                throw new Exception("Usuario no encontrado");
+            }
+
+            // Verifica si la contraseña ha cambiado
+            if (!string.IsNullOrWhiteSpace(usuario.Password) &&
+                usuario.Password != usuarioExistente.Password)
+            {
+                // Hashear la nueva contraseña
+                usuario.Password = BCrypt.Net.BCrypt.HashPassword(usuario.Password);
+            }
+            else
+            {
+                // Mantiene la contraseña original
+                usuario.Password = usuarioExistente.Password;
+            }
+
+            // Actualiza los otros campos del usuario
+            usuarioExistente.Nombre = usuario.Nombre; // Ejemplo de otro campo
+            usuarioExistente.Apellido = usuario.Apellido; // Ejemplo de otro campo
+            usuarioExistente.Email = usuario.Email;   // Ejemplo de otro campo
+            usuarioExistente.Telefono = usuario.Telefono; // Ejemplo de otro campo
+            usuarioExistente.DUI = usuario.DUI; // Ejemplo de otro campo
+            usuarioExistente.Password = usuario.Password; // Asumimos que 'Password' se ha manejado
+            usuarioExistente.Codigo = usuario.Codigo; // Ejemplo de otro campo
+            usuarioExistente.Direccion = usuario.Direccion; // Ejemplo de otro campo
+            usuarioExistente.RolId = usuario.RolId; // Ejemplo de otro campo
+
+            applicationDbContext.usuarios.Update(usuarioExistente);
+            return await applicationDbContext.SaveChangesAsync();
         }
 
         //eliminar rol
@@ -79,18 +109,13 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return await query.ToListAsync();
         }
 
-        public async Task<Usuario> GetUser(LoginUsuarioDTO login)
-        {
-            return await applicationDbContext.usuarios
-                .Include(u => u.Rol) // Incluir la entidad de Rol para acceder al ID del rol
-                .SingleOrDefaultAsync(x => x.DUI == login.DUI && x.Password == login.Password);
-        }
-
-        public async Task<Usuario> ObtenerUsuarioPorDUIyPassword(string dui, string password)
+        public async Task<Usuario> ObtenerUsuarioPorDUIyPassword(LoginUsuarioDTO login)
         {
             // Buscar al usuario por DUI
-            var user = await applicationDbContext.usuarios.FirstOrDefaultAsync(u => u.DUI == dui);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+            var user = await applicationDbContext.usuarios
+                 .Include(u => u.Rol) // Incluir la entidad de Rol para acceder al ID del rol
+                .FirstOrDefaultAsync(u => u.DUI == login.DUI);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
                 return null; // Usuario no encontrado o contraseña incorrecta
             }
