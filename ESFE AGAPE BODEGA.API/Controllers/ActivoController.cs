@@ -98,7 +98,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 EstanteId = crearActivoDTO.EstanteId,
                 TipoActivoId = crearActivoDTO.TipoActivoId,
                 Codigo = crearActivoDTO.Codigo,
-                CodigoBarra = crearActivoDTO.CodigoBarra
+                CodigoBarra = string.IsNullOrEmpty(crearActivoDTO.CodigoBarra)
+                      ? _activoDAL.GenerarCodigoBarra()
+                      : crearActivoDTO.CodigoBarra
             };
 
             int result = await _activoDAL.CrearActivo(activo);
@@ -156,6 +158,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 return StatusCode(500);
             }
         }
+
+       
     }
 
 }
