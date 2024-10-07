@@ -88,11 +88,7 @@
                                 <tr>
                                     <th>Nombre</th>
                                     <th>Apellido</th>
-                                    <th>Email</th>
-                                    <th>Telefono</th>
                                     <th>DUI</th>
-                                    <th>Codigo</th>
-                                    <th>Direccion</th>
                                     <th>Rol</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -103,11 +99,7 @@
                                     <tr>
                                         <td>@usuario.Nombre</td>
                                         <td>@usuario.Apellido</td>
-                                        <td>@usuario.Email</td>
-                                        <td>@usuario.Telefono</td>
                                         <td>@usuario.DUI</td>
-                                        <td>@usuario.Codigo</td>
-                                        <td>@usuario.Direccion</td>
                                         <td>@GetRoleName(usuario.RolId)</td>
                                         <td>
                                             <button class="btn btn-dark" @onclick="() => GoEdit(usuario.Id)">Editar</button>
