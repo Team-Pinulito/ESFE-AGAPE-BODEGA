@@ -9,11 +9,10 @@
     <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
         <div class="row m-4">
             <div class="card col-md-12">
-                <div class="card-header row"><h1>Editar Rol</h1></div>
+                <div class="card-header row"><h1>Modificar Usuario</h1></div>
                 <div class="card-body">
                     @if (isSuccess == false && isError == false)
                     {
-                        <h3>Modificar Usuario</h3>
 
                         <EditForm Model="usuario" OnValidSubmit="Edit">
                             <DataAnnotationsValidator />
