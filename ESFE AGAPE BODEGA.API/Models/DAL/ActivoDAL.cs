@@ -79,5 +79,11 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             return await query.ToListAsync();
         }
 
+        // Método para generar un código de barras simple
+        public string GenerarCodigoBarra()
+        {
+            // Puedes usar una lógica más avanzada para generar el código
+            return Guid.NewGuid().ToString().Substring(0, 10).ToUpper(); // Ejemplo: un código de 10 caracteres
+        }
     }
 }
