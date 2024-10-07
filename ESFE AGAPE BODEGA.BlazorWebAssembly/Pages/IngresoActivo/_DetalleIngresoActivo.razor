@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+
+@using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components
+
+<div class="row align-items-center">
+    <div class="col-md-4">
+        <!-- Selección de Inventario Activo -->
+        <label for="InventarioActivoId" class="form-label">Inventario Activo</label>
+        <select class="form-control" @bind="detalle.InventarioActivoId"required disabled="@(!isEditMode)">
+            <option value="0">Seleccione un activo</option>
+            @foreach (var activo in activos)
+            {
+                <option value="@activo.Id">@activo.Correlativo</option>
+            }
+        </select>
+        <ValidationMessage For="() => detalle.InventarioActivoId" />
+    </div>
+
+    <div class="col-md-4">
+        <!-- Cantidad del Detalle -->
+        <label for="Cantidad" class="form-label">Cantidad</label>
+        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" disabled="@(!isEditMode)" />
+        <ValidationMessage For="() => detalle.Cantidad" />
+    </div>
+
+    <div class="col-md-2 text-end">
+        <!-- Botón Eliminar -->
+        @if (isEditMode)
+        {
+            <button type="button" class="btn btn-danger mt-4" @onclick="EliminarDetalle" style="float:right;">
+                <!-- SVG del icono -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
+                    <path d="M21.063 15H13v2h9v-2zM4 7h11v2H4zm0 4h11v2H4zm0 4h7v2H4z"></path>
+                </svg>
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public DetalleIngresoActivoDTO detalle { get; set; }
+    [Parameter] public List<SearchResultIngresoActivoDTO.IngresoActivoDTO> activos { get; set; }
+    [Parameter] public EventCallback EliminarDetalle { get; set; }
+    [Parameter] public bool isEditMode { get; set; }
+}
