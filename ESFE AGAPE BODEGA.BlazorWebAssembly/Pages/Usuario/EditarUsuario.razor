@@ -6,166 +6,198 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
-     <div class="row m-4">
-        <div class="card col-md-12">
-            <div class="card-header row"><h1>Editar Rol</h1></div>
-            <div class="card-body">
-@if (isSuccess == false && isError == false)
-{
-    <h3>Modificar Usuario</h3>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1>Editar Rol</h1></div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <h3>Modificar Usuario</h3>
 
-    <EditForm Model="usuario" OnValidSubmit="Edit">
-        <DataAnnotationsValidator />
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Nombre">Nombre:</label>
-                    <InputText class="form-control"  @bind-Value="usuario.Nombre" />
-                    <ValidationMessage For="() => usuario.Nombre" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Apellido">Apellido:</label>
-                    <InputText class="form-control"  @bind-Value="usuario.Apellido" />
-                    <ValidationMessage For="() => usuario.Apellido" />
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Email">Email:</label>
-                    <InputText class="form-control" @bind-Value="usuario.Email" />
-                    <ValidationMessage For="() => usuario.Email" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Telefono">Telefono:</label>
+                        <EditForm Model="usuario" OnValidSubmit="Edit">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Nombre">Nombre:</label>
+                                        <InputText class="form-control" @bind-Value="usuario.Nombre" />
+                                        <ValidationMessage For="() => usuario.Nombre" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Apellido">Apellido:</label>
+                                        <InputText class="form-control" @bind-Value="usuario.Apellido" />
+                                        <ValidationMessage For="() => usuario.Apellido" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Email">Email:</label>
+                                        <InputText class="form-control" @bind-Value="usuario.Email" />
+                                        <ValidationMessage For="() => usuario.Email" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Telefono">Telefono:</label>
                                         <InputText class="form-control" @bind-Value="usuario.Telefono" maxlength="8" pattern="\d*"
                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-                    <ValidationMessage For="() => usuario.Telefono" />
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="RolId">Rol:</label>
-                    <select class="form-control" @bind="usuario.RolId" required>
-                        <option value="">Seleccione un rol</option>
-                        @foreach (var rol in roles)
-                        {
-                            <option value="@rol.Id">@rol.Nombre</option>
-                        }
-                    </select>
-                    <ValidationMessage For="() => usuario.RolId" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="DUI">DUI:</label>
+                                        <ValidationMessage For="() => usuario.Telefono" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="RolId">Rol:</label>
+                                        <select class="form-control" @bind="usuario.RolId" required>
+                                            <option value="">Seleccione un rol</option>
+                                            @foreach (var rol in roles)
+                                            {
+                                                <option value="@rol.Id">@rol.Nombre</option>
+                                            }
+                                        </select>
+                                        <ValidationMessage For="() => usuario.RolId" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="DUI">DUI:</label>
                                         <InputText class="form-control" @bind-Value="usuario.DUI" maxlength="9" pattern="\d*"
                                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
-                    <ValidationMessage For="() => usuario.DUI" />
+                                        <ValidationMessage For="() => usuario.DUI" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Codigo">Codigo:</label>
+                                        <InputText class="form-control" @bind-Value="usuario.Codigo" />
+                                        <ValidationMessage For="() => usuario.Codigo" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="Direccion">Direccion:</label>
+                                        <InputText class="form-control" @bind-Value="usuario.Direccion" />
+                                        <ValidationMessage For="() => usuario.Direccion" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-8">
+                                    @if (showPasswordInput)
+                                    {
+                                        <label for="Password">Contraseña:</label>
+                                        <InputText class="form-control" @bind-Value="usuario.Password" type="@passwordInputType" />
+                                        <ValidationMessage For="() => usuario.Password" />
+                                    }
+                                </div>
+                                <div class="form-group col-4 d-flex align-items-end">
+                                    @if (showPasswordInput)
+                                    {
+                                        <button type="button" class="btn btn-outline" @onclick="TogglePasswordVisibility" style="border: 0;">
+                                            @if (isPasswordVisible)
+                                            {
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);"><path d="M17 8V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2H9V7c0-1.654 1.346-3 3-3s3 1.346 3 3v1h2z"></path></svg>
+                                            }
+                                            else
+                                            {
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);"><path d="M20 12c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7z"></path></svg>
+                                            }
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Modificar</button>
+                                    <button type="button" class="btn btn-info" @onclick="TogglePasswordInput">
+                                        @if (showPasswordInput)
+                                        {
+                                            <span>No modificar Contraseña</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Modificar Contraseña</span>
+                                        }
+                                    </button>
+                                    <NavLink href="/lista-usuario" class="btn btn-secondary">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        usuario = new EditUsuarioDTO();
+                        isError = false;
+                        <p class="alert alert-success">Usuario se modifico con éxito.</p>
+                        <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-error">Sucedio un error al intentar modificar. o no ha realizado ninguna modificacion al registro actual</p>
+                        <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
+                    }
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Codigo">Codigo:</label>
-                    <InputText class="form-control"  @bind-Value="usuario.Codigo" />
-                    <ValidationMessage For="() => usuario.Codigo" />
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="Direccion">Direccion:</label>
-                    <InputText class="form-control"  @bind-Value="usuario.Direccion" />
-                    <ValidationMessage For="() => usuario.Direccion" />
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group">
-                <label for="Password">Contraseña:</label>
-                <InputText class="form-control"  @bind-Value="usuario.Password" />
-                <ValidationMessage For="() => usuario.Password" />
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Modificar</button>
-                <NavLink href="/lista-usuario" class="btn btn-secondary">Cancelar</NavLink>
-            </div>
-        </div>
-    </EditForm>
-}
-else if (isSuccess)
-{
-    usuario = new EditUsuarioDTO();
-    isError = false;
-    <p class="alert alert-success">Usuario se modifico con éxito.</p>
-    <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
-}
-else if (isError)
-{
-    <p class="alert alert-error">Sucedio un error al intentar modificar. o no ha realizado ninguna modificacion al registro actual</p>
-    <NavLink href="/lista-usuario" class="btn btn-primary">Aceptar</NavLink>
-}
-</div>
-        </div>
-    </div>
-</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
 @code {
-    // Declaración de un parámetro llamado "Id" que puede ser pasado al componente
     [Parameter]
     public int Id { get; set; }
 
-    // Inyección de dependencia de CustomerService para
-    // acceder a los servicios relacionados con los clientes
     [Inject]
     UsuarioService usuarioService { get; set; }
 
     List<BuscarRolResultadosDto.RolDto> roles = new List<BuscarRolResultadosDto.RolDto>();
-    // Declaración e inicialización de un objeto "customer"
-    //  para almacenar los detalles del cliente
     EditUsuarioDTO usuario = new EditUsuarioDTO();
 
-    // Declaración de variables booleanas para manejar el estado de éxito y error
     bool isSuccess = false;
     bool isError = false;
+    bool showPasswordInput = false; // Variable para controlar la visibilidad del campo de contraseña
+    string previousPassword; // Variable para almacenar la contraseña anterior
+    private bool isPasswordVisible = false;
+    private string passwordInputType => isPasswordVisible ? "text" : "password";
 
-    // Método que se llama cuando se inicializa el componente
     protected override async Task OnInitializedAsync()
     {
-        // Realiza una llamada asincrónica para obtener los
-        // detalles del cliente por su Id
         var usuarioDetail = await usuarioService.ObtenerUsuario(Id);
-
-        // Inicializa el objeto "customer" con los detalles del cliente obtenidos
         usuario = new EditUsuarioDTO(usuarioDetail);
-
         roles = await usuarioService.ObtenerRoles();
+        previousPassword = usuario.Password; // Capturar la contraseña inicial
     }
 
-    // Método para editar el cliente
+    private void TogglePasswordInput()
+    {
+        showPasswordInput = !showPasswordInput;
+        if (showPasswordInput)
+        {
+            usuario.Password = string.Empty; // Reiniciar el valor del campo de contraseña
+        }
+        else
+        {
+            usuario.Password = previousPassword; // Restaurar el valor anterior al ocultar
+        }
+    }
+
     private async Task Edit()
     {
-        // Realiza una llamada asincrónica para editar la información del cliente
         int result = await usuarioService.ActualizarUsuario(usuario);
-
-        // Verifica si el resultado de la edición es diferente
-        // de cero (éxito) o igual a cero (error)
-        if (result != 0)
-            isSuccess = true;
-        else
-            isError = true;
+        isSuccess = result != 0;
+        isError = result == 0;
     }
-
+    private void TogglePasswordVisibility()
+    {
+        isPasswordVisible = !isPasswordVisible;
+    }
 }
