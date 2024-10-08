@@ -21,7 +21,8 @@
 
                         <div class="form-group">
                             <label for="dui" class="control-label">DUI</label>
-                            <InputText id="dui" class="form-control" @bind-Value="@loginDto.DUI" style="border-radius: 30px;" />
+                            <InputText id="dui" class="form-control" @bind-Value="@loginDto.DUI" style="border-radius: 30px;" maxlength="9" pattern="\d*"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                             <ValidationMessage For="@(() => loginDto.DUI)" class="text-danger" />
                         </div>
 
