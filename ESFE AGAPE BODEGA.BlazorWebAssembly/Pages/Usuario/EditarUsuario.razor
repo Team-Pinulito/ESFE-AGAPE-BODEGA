@@ -118,6 +118,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary">Modificar</button>
+                                    @if (usuario.Id == authenticatedUserId) // Verifica si el usuario a editar es el mismo que el autenticado
+                                    {
                                     <button type="button" class="btn btn-info" @onclick="TogglePasswordInput">
                                         @if (showPasswordInput)
                                         {
@@ -128,6 +130,7 @@
                                             <span>Modificar Contraseña</span>
                                         }
                                     </button>
+                                    }
                                     <NavLink href="/lista-usuario" class="btn btn-secondary">Cancelar</NavLink>
                                 </div>
                             </div>
@@ -157,6 +160,8 @@
 
     [Inject]
     UsuarioService usuarioService { get; set; }
+    [Inject]
+    AuthService authService { get; set; } // Inyectar AuthService
 
     List<BuscarRolResultadosDto.RolDto> roles = new List<BuscarRolResultadosDto.RolDto>();
     EditUsuarioDTO usuario = new EditUsuarioDTO();
@@ -168,12 +173,17 @@
     private bool isPasswordVisible = false;
     private string passwordInputType => isPasswordVisible ? "text" : "password";
 
+    private int authenticatedUserId; // ID del usuario autenticado
+
     protected override async Task OnInitializedAsync()
     {
         var usuarioDetail = await usuarioService.ObtenerUsuario(Id);
         usuario = new EditUsuarioDTO(usuarioDetail);
         roles = await usuarioService.ObtenerRoles();
         previousPassword = usuario.Password; // Capturar la contraseña inicial
+
+        // Obtener el ID del usuario autenticado
+        authenticatedUserId = await authService.GetUserId(); // Método que deberías agregar en AuthService
     }
 
     private void TogglePasswordInput()
