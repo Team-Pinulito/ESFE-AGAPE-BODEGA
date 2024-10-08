@@ -2,6 +2,7 @@
 using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.TipoActivoDTOs;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 {
@@ -37,14 +38,15 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
         public async Task<SearchResultActivoDTO> Search(SearchQueryActivoDTO searchQuery)
         {
-            var response = await _httpClient.PostAsJsonAsync("Activo/buscar", searchQuery);
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<SearchResultActivoDTO>();
-                return result ?? new SearchResultActivoDTO();
-            }
-            return new SearchResultActivoDTO();
-        }
+			var response = await _httpClient.PostAsJsonAsync("Activo/buscar", searchQuery);
+			if (response.IsSuccessStatusCode)
+			{
+				var result = await response.Content.ReadFromJsonAsync<SearchResultActivoDTO>();
+				Console.WriteLine(JsonSerializer.Serialize(result)); // Depuración
+				return result ?? new SearchResultActivoDTO();
+			}
+			return new SearchResultActivoDTO();
+		}
 
         public async Task<GetIdResultActivoDTO> ObtenerActivoId(int id)
         {
