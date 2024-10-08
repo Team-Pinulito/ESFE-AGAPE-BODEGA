@@ -54,8 +54,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             return Ok(new
             {
                 token = jwtToken,
-                nombre = admin.Nombre,
-                apellido = admin.Apellido,
+                id = admin.Id,
                 rol = admin.Rol.Nombre
             });
         }
@@ -67,8 +66,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, usuario.Nombre),
-                new Claim("Apellido", usuario.Apellido),
+                new Claim("id", usuario.Id.ToString()),
                 new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
             };
 
