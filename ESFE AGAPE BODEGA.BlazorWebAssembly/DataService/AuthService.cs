@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using Blazored.LocalStorage;
+using Timer = System.Timers.Timer;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 {
@@ -12,6 +13,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _localStorage;
+        private Timer _logoutTimer;
 
         public AuthService(IHttpClientFactory httpClient, ILocalStorageService localStorage)
         {
@@ -30,7 +32,10 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
                 await _localStorage.SetItemAsync("nombre", responseData.nombre);
                 await _localStorage.SetItemAsync("apellido", responseData.apellido);
                 await _localStorage.SetItemAsync("rol", responseData.rol);
+                await _localStorage.SetItemAsync("loginTime", DateTime.UtcNow); // Guardar la hora de inicio de sesión
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", responseData.token);
+
+                StartLogoutTimer(); // Iniciar el temporizador de logout
 
                 return true;
             }
@@ -38,10 +43,22 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             return false;
         }
 
+        private void StartLogoutTimer()
+        {
+            _logoutTimer?.Stop(); // Detener cualquier temporizador existente
+
+            // Crear un nuevo temporizador que se dispare después de 8 horas (28800000 ms)
+            _logoutTimer = new Timer(28800000);
+            _logoutTimer.Elapsed += async (sender, e) => await Logout(); // Llamar al método Logout
+            _logoutTimer.AutoReset = false; // No reiniciar automáticamente
+            _logoutTimer.Start(); // Iniciar el temporizador
+        }
+
         public async Task Logout()
         {
             await _localStorage.ClearAsync();
             _httpClient.DefaultRequestHeaders.Authorization = null;
+            _logoutTimer?.Stop(); // Detener el temporizador al hacer logout
         }
 
         public async Task<string> GetUserRole()
@@ -51,7 +68,10 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         public async Task<bool> IsAuthenticated()
         {
             var token = await _localStorage.GetItemAsync<string>("authToken");
-            return !string.IsNullOrEmpty(token);
+            var loginTime = await _localStorage.GetItemAsync<DateTime>("loginTime");
+
+            // Verificar si el token no está vacío y si han pasado menos de 8 horas desde el inicio de sesión
+            return !string.IsNullOrEmpty(token) && (DateTime.UtcNow - loginTime).TotalHours < 8;
         }
 
         public async Task<ClaimsPrincipal> GetUserClaims()
