@@ -208,9 +208,17 @@
 
     private async Task Edit()
     {
+        bool passwordChanged = !string.IsNullOrEmpty(usuario.Password) && usuario.Password != previousPassword;
+
         int result = await usuarioService.ActualizarUsuario(usuario);
         isSuccess = result != 0;
         isError = result == 0;
+
+        // Si la contraseña fue cambiada y el rol no es "SusAdmin", ejecutar logout
+        if (passwordChanged && authenticatedUserRole != "SusAdmin")
+        {
+            await authService.Logout();
+        }
     }
     private void TogglePasswordVisibility()
     {
