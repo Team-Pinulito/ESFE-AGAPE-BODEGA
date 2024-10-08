@@ -29,8 +29,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             {
                 var responseData = await response.Content.ReadFromJsonAsync<LoginResponseDTO>();
                 await _localStorage.SetItemAsync("authToken", responseData.token);
-                await _localStorage.SetItemAsync("nombre", responseData.nombre);
-                await _localStorage.SetItemAsync("apellido", responseData.apellido);
+                await _localStorage.SetItemAsync("id", responseData.id);
                 await _localStorage.SetItemAsync("rol", responseData.rol);
                 await _localStorage.SetItemAsync("loginTime", DateTime.UtcNow); // Guardar la hora de inicio de sesión
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", responseData.token);
@@ -61,6 +60,10 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             _logoutTimer?.Stop(); // Detener el temporizador al hacer logout
         }
 
+        public async Task<int> GetUserId()
+        {
+            return await _localStorage.GetItemAsync<int>("id");
+        }
         public async Task<string> GetUserRole()
         {
             return await _localStorage.GetItemAsync<string>("rol");
@@ -92,8 +95,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         public class LoginResponseDTO
         {
             public string token { get; set; }
-            public string nombre { get; set; }
-            public string apellido { get; set; }
+            public int id { get; set; }
             public string rol { get; set; }
         }
     }
