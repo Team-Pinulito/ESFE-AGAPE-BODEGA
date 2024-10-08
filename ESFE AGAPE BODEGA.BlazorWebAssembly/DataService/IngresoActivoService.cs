@@ -13,16 +13,16 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         }
 
         // Obtener todos los IngresoActivo
-        public async Task<List<GetIdResultIngresoActivoDTO>> ObtenerTodos()
+        public async Task<List<SearchResultIngresoActivoDTO.IngresoActivoDTO>> ObtenerTodos()
         {
             var response = await _httpClient.GetAsync("IngresoActivo");
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadFromJsonAsync<List<GetIdResultIngresoActivoDTO>>();
-                return result ?? new List<GetIdResultIngresoActivoDTO>();
+                var result = await response.Content.ReadFromJsonAsync<List<SearchResultIngresoActivoDTO.IngresoActivoDTO>>();
+                return result ?? new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
             }
 
-            return new List<GetIdResultIngresoActivoDTO>();
+            return new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
         }
 
         // Obtener un IngresoActivo por su ID
@@ -70,15 +70,16 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         // Eliminar un IngresoActivo por su ID
         public async Task<int> EliminarIngresoActivo(int id)
         {
+            int result = 0;
             var response = await _httpClient.DeleteAsync($"IngresoActivo/{id}");
 
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadAsStringAsync();
-                return int.TryParse(result, out var parsedId) ? parsedId : 0;
+                var responseBody = await response.Content.ReadAsStringAsync();
+                if (int.TryParse(responseBody, out result) == false)
+                    return result = 0;
             }
-
-            return 0;
+            return result;
         }
 
         // Buscar IngresoActivo con parámetros de búsqueda y paginación

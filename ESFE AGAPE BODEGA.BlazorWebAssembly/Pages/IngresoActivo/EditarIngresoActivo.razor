@@ -7,7 +7,7 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol='new List<string> { "Admin", "SusAdmin" }'>
         <div class="row m-4">
             <div class="card col-md-12">
                 <div class="card-header row"><h1>Editar Ingreso Activo</h1></div>
@@ -61,7 +61,8 @@
                                     {
                                         @foreach (var detalle in ingresoActivo.DetalleIngresoActivos)
                                         {
-                                            <_DetalleIngresoActivo detalle="detalle" EliminarDetalle="() => EliminarDetalle(detalle)" />
+                                            <_DetalleIngresoActivo detalle="detalle" 
+                                              EliminarDetalle="() => EliminarDetalle(detalle)" />
                                         }
                                     }
                                     else
@@ -104,9 +105,11 @@
     [Inject]
     IngresoActivoService ingresoActivoService { get; set; }
 
+    List<SearchResultIngresoActivoDTO.IngresoActivoDTO> activos = new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
+
     EditIngresoActivoDTO ingresoActivo = new EditIngresoActivoDTO
         {
-            DetalleIngresoActivos = new List<CrearDetalleIngresoActivoDTO>()
+            DetalleIngresoActivos = new List<DetalleIngresoActivoDTO>()
         };
 
     bool isSuccess = false;
@@ -122,8 +125,10 @@
             if (ingresoActivoDetail != null)
             {
                 ingresoActivo = new EditIngresoActivoDTO(ingresoActivoDetail);
-                ingresoActivo.DetalleIngresoActivos ??= new List<CrearDetalleIngresoActivoDTO>();
+                ingresoActivo.DetalleIngresoActivos ??= new List<DetalleIngresoActivoDTO>();
             }
+
+            activos = await ingresoActivoService.ObtenerTodos() ?? new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
         }
         catch (Exception)
         {
@@ -148,11 +153,11 @@
 
     private void AgregarDetalle()
     {
-        ingresoActivo.DetalleIngresoActivos ??= new List<CrearDetalleIngresoActivoDTO>();
-        ingresoActivo.DetalleIngresoActivos.Add(new CrearDetalleIngresoActivoDTO());
+        ingresoActivo.DetalleIngresoActivos ??= new List<DetalleIngresoActivoDTO>();
+        ingresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivoDTO());
     }
 
-    private void EliminarDetalle(CrearDetalleIngresoActivoDTO detalle)
+    private void EliminarDetalle(DetalleIngresoActivoDTO detalle)
     {
         ingresoActivo.DetalleIngresoActivos?.Remove(detalle);
     }
