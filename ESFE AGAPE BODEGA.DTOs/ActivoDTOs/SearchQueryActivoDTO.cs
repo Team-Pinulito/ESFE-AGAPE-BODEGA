@@ -5,17 +5,18 @@ namespace ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
     public class SearchQueryActivoDTO
     {
         [Display(Name = "Nombre")]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
-        [Display(Name = "Descripción")]
-        public string Descripcion { get; set; }
+     
+		[Display(Name = "Pagina")]
+		public int Skip { get; set; }
 
-        [Display(Name = "Página")]
-        public int Skip { get; set; }
-
-        [Display(Name = "Cantidad")]
-        public int Take { get; set; }
-
-        public byte SendRowCount { get; set; }
-    }
+		[Display(Name = "Cantidad Reg.")]
+		public int Take { get; set; }
+		/// <summary>
+		/// 1 = No se cuenta los resultados de la busqueda
+		/// 2= Cuenta los resultados de la busqueda
+		/// </summary>
+		public byte SendRowCount { get; set; }
+	}
 }
