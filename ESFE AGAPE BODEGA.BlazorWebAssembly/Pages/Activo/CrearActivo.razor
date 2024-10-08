@@ -1,0 +1,121 @@
+﻿@page "/crear-activo"
+
+@using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.TipoActivoDTOs
+
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1 class="col-md-12">Crear Nuevo Activo</h1>
+                </div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="activo" OnValidSubmit="Create">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
+                                    <InputText class="form-control" id="Nombre" @bind-Value="activo.Nombre" />
+                                    <ValidationMessage For="() => activo.Nombre" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Descripcion" class="form-label">Descripción<span style="color:red;">*</span></label>
+                                    <InputTextArea class="form-control" id="Descripcion" @bind-Value="activo.Descripcion" />
+                                    <ValidationMessage For="() => activo.Descripcion" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Estante" class="form-label">Estante<span style="color:red;">*</span></label>
+                                    <select class="form-control" @bind="activo.EstanteId" required>
+                                        <option value="">Seleccione un estante</option>
+                                        @foreach (var estante in estantes)
+                                        {
+                                            <option value="@estante.Id">@estante.Nombre</option>
+                                        }
+                                    </select>
+                                    <ValidationMessage For="() => activo.EstanteId" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="TipoActivo" class="form-label">Tipo de Activo<span style="color:red;">*</span></label>
+                                    <select class="form-control" @bind="activo.TipoActivoId" required>
+                                        <option value="">Seleccione un tipo de activo</option>
+                                        @foreach (var tipoActivo in tiposActivos)
+                                        {
+                                            <option value="@tipoActivo.Id">@tipoActivo.Nombre</option>
+                                        }
+                                    </select>
+                                    <ValidationMessage For="() => activo.TipoActivoId" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Codigo" class="form-label">Código</label>
+                                    <InputText class="form-control" id="Codigo" @bind-Value="activo.Codigo" />
+                                    <ValidationMessage For="() => activo.Codigo" />
+                                </div>
+                             
+                                <div class="col-md-6 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <NavLink href="/lista-activo" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        activo = new CrearActivoDTO();
+                        isError = false;
+                        <p class="alert alert-success">Activo creado con éxito.</p>
+                        <NavLink href="/lista-activo" class="btn btn-success">Aceptar</NavLink>
+                        <button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-success">Ocurrió un error al intentar registrar el activo.</p>
+                        <NavLink href="/lista-activo" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
+@code {
+    [Inject]
+    ActivoService activoService { get; set; }
+
+    List<SearchResultEstanteDTO.EstanteDTO> estantes = new List<SearchResultEstanteDTO.EstanteDTO>();
+    List<SearchResultTipoActivoDTO.TipoActivoDTO> tiposActivos = new List<SearchResultTipoActivoDTO.TipoActivoDTO>();
+    CrearActivoDTO activo = new CrearActivoDTO();
+    bool isSuccess = false;
+    bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        estantes = await activoService.ObtenerEstante();
+        tiposActivos = await activoService.ObtenerTipoActivo();
+    }
+
+    private async Task Create()
+    {
+        int result = await activoService.CrearActivo(activo);
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+    private void GoCreate()
+    {
+        isSuccess = false;
+        isError = false;
+    }
+}
