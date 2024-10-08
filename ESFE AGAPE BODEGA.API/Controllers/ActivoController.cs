@@ -1,8 +1,11 @@
 ﻿using Bodega_Api_Esfe_Agape.Models.EN;
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
+using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs.SearchResultEstanteDTO;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
@@ -30,39 +33,56 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Descripcion = a.Descripcion,
                 EstanteId = a.EstanteId,
                 TipoActivoId = a.TipoActivoId,
-                Codigo = a.Codigo,
-                CodigoBarra = a.CodigoBarra
+                Codigo = a.Codigo
             }).ToList();
         }
-
-        [HttpPost("buscar")]
-        public async Task<SearchResultActivoDTO> Buscar(SearchQueryActivoDTO activoDTO)
+		[HttpPost("buscar")]
+		public async Task<SearchResultActivoDTO> Buscar(SearchQueryActivoDTO activoDTO)
         {
-            var activo = new Activo
-            {
-                Nombre = activoDTO.Nombre ?? string.Empty
-            };
+			var activo = new Activo
+			{
+				Nombre = activoDTO.Nombre != null ? activoDTO.Nombre : string.Empty,
+			};
+			var activos = new List<Activo>();
+			var countRow = 0;
 
-            var activos = await _activoDAL.BuscarPaginado(activo, activoDTO.Take, activoDTO.Skip);
-            var countRow = await _activoDAL.ContarResultActivo(activo);
+			if (activoDTO.SendRowCount == 2)
+			{
+				activos = await _activoDAL.BuscarPaginado(activo, skip: activoDTO.Skip, take: activoDTO.Take);
+				if (activos.Count > 0)
+				{
+					countRow = await _activoDAL.ContarResultActivo(activo);
+				}
+			}
+			else
+			{
+				activos = await _activoDAL.BuscarPaginado(activo, skip: activoDTO.Skip, take: activoDTO.Take);
+			}
 
-            return new SearchResultActivoDTO
-            {
-                Data = activos.Select(a => new SearchResultActivoDTO.ActivoDTO
-                {
-                    Id = a.Id,
-                    Nombre = a.Nombre,
-                    Descripcion = a.Descripcion,
-                    EstanteId = a.EstanteId,
-                    TipoActivoId = a.TipoActivoId,
-                    Codigo = a.Codigo,
-                    CodigoBarra = a.CodigoBarra
-                }).ToList(),
-                CountRow = countRow
-            };
-        }
+			var activoResult = new SearchResultActivoDTO
+			{
+				Data = new List<SearchResultActivoDTO.ActivoDTO>(),
+				CountRow = countRow
+			};
 
-        [HttpGet("{id}")]
+			foreach (var item in activos)
+			{
+				activoResult.Data.Add(new SearchResultActivoDTO.ActivoDTO
+				{
+					Id = item.Id,
+					Nombre = item.Nombre,
+					Descripcion = item.Descripcion,
+					EstanteId = item.EstanteId,
+					TipoActivoId = item.TipoActivoId,
+					Codigo = item.Codigo
+				});
+			}
+
+			return activoResult;
+
+		}
+
+		[HttpGet("{id}")]
         public async Task<ActionResult<GetIdResultActivoDTO>> ObtenerActivoId(int id)
         {
             var activo = await _activoDAL.ObtenerActivoPorId(id);
@@ -78,8 +98,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Descripcion = activo.Descripcion,
                 EstanteId = activo.EstanteId,
                 TipoActivoId = activo.TipoActivoId,
-                Codigo = activo.Codigo,
-                CodigoBarra = activo.CodigoBarra
+                Codigo = activo.Codigo
             };
         }
 
@@ -97,10 +116,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Descripcion = crearActivoDTO.Descripcion,
                 EstanteId = crearActivoDTO.EstanteId,
                 TipoActivoId = crearActivoDTO.TipoActivoId,
-                Codigo = crearActivoDTO.Codigo,
-                CodigoBarra = string.IsNullOrEmpty(crearActivoDTO.CodigoBarra)
-                      ? _activoDAL.GenerarCodigoBarra()
-                      : crearActivoDTO.CodigoBarra
+                Codigo = crearActivoDTO.Codigo
+             
             };
 
             int result = await _activoDAL.CrearActivo(activo);
@@ -130,7 +147,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             updateActivo.EstanteId = editActivoDTO.EstanteId;
             updateActivo.TipoActivoId = editActivoDTO.TipoActivoId;
             updateActivo.Codigo = editActivoDTO.Codigo;
-            updateActivo.CodigoBarra = editActivoDTO.CodigoBarra;
 
             int result = await _activoDAL.ActualizarActivo(updateActivo);
 
