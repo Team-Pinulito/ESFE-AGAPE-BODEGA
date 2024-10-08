@@ -3,7 +3,7 @@
 
 @code {
     [Parameter] public RenderFragment ChildContent { get; set; }
-    [Parameter] public string Rol { get; set; }
+    [Parameter] public List<string> Roles { get; set; } = new List<string>();
 
     private bool hasPermission = false;
     private bool isAuthenticated = false;
@@ -15,12 +15,12 @@
         if (isAuthenticated)
         {
             var userRole = await AuthService.GetUserRole();
-            hasPermission = userRole == Rol;
+            hasPermission = Roles.Contains(userRole);
         }
 
         if (!isAuthenticated || !hasPermission)
         {
-           Navigation.NavigateTo("/SinPermisos");
+            Navigation.NavigateTo("/SinPermisos");
         }
     }
 }

@@ -8,7 +8,7 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
         <div class="row m-4">
             <div class="card col-md-12">
                 <div class="card-header row">

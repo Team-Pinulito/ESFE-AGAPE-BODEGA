@@ -30,7 +30,7 @@
             <div class="sidebar-wrapper scrollbar scrollbar-inner">
                 <div class="sidebar-content">
                     <ul class="nav nav-secondary">
-                        @if (userRole == "Admin")
+                        @if (userRole == "Admin" || userRole == "SusAdmin")
                         {
                             <li class="nav-item">
                                 <NavLink class="nav-link" href="lista-rol">

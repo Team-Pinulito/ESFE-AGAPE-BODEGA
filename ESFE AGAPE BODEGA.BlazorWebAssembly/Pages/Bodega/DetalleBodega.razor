@@ -5,7 +5,7 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Rol="Admin">
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
         <h3>Ver Bodega</h3>
         <div class="row">
             <div class="col-4">
