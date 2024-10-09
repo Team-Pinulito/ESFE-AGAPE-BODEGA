@@ -7,9 +7,7 @@
 
 <div class="container mt-3">
     <div class="row justify-content-center" style="margin-top: 5px;">
-        <!-- Ajusta el margen superior -->
         <div class="col-md-4">
-            <!-- Reduce el ancho de la columna -->
             <div class="card">
                 <div class="card-header text-center">
                     <h1 class="card-text">Iniciar Sesión</h1>
@@ -17,21 +15,29 @@
                 <div class="card-body">
                     <EditForm Model="@loginDto" OnValidSubmit="@HandleLogin">
                         <DataAnnotationsValidator />
-                        <ValidationSummary />
+
+                        @if (isLoading)
+                        {
+                            <div class="overlay">
+                                <div class="spinner-container">
+                                    <div class="spinner"></div>
+                                </div>
+                            </div>
+                        }
 
                         <div class="form-group">
                             <label for="dui" class="control-label">DUI</label>
                             <InputText id="dui" class="form-control" @bind-Value="@loginDto.DUI" style="border-radius: 30px;" maxlength="9" pattern="\d*"
-                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" disabled="@isLoading" />
                             <ValidationMessage For="@(() => loginDto.DUI)" class="text-danger" />
                         </div>
 
                         <div class="form-group">
                             <label for="password" class="control-label">Contraseña</label>
                             <div class="input-group">
-                                <InputText id="password" type="@passwordInputType" class="form-control" @bind-Value="@loginDto.Password" style="border-radius: 30px;" />
+                                <InputText id="password" type="@passwordInputType" class="form-control" @bind-Value="@loginDto.Password" style="border-radius: 30px;" disabled="@isLoading" />
                                 <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline" @onclick="TogglePasswordVisibility" style="border: 0;">
+                                    <button type="button" class="btn btn-outline" @onclick="TogglePasswordVisibility" style="border: 0;" disabled="@isLoading">
                                         @if (isPasswordVisible)
                                         {
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);"><path d="M17 8V7c0-2.757-2.243-5-5-5S7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2H9V7c0-1.654 1.346-3 3-3s3 1.346 3 3v1h2z"></path></svg>
@@ -47,7 +53,7 @@
                         </div>
 
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary" style="border-radius: 30px; width: 100%;">Iniciar</button>
+                            <button type="submit" class="btn btn-primary" style="border-radius: 30px; width: 100%;" disabled="@isLoading">Iniciar</button>
                         </div>
 
                         @if (errorMessage != null)
@@ -65,10 +71,12 @@
     private LoginUsuarioDTO loginDto = new LoginUsuarioDTO();
     private string errorMessage;
     private bool isPasswordVisible = false;
+    private bool isLoading = false; // Estado de carga
     private string passwordInputType => isPasswordVisible ? "text" : "password";
 
     private async Task HandleLogin()
     {
+        isLoading = true; // Activar estado de carga
         try
         {
             var result = await AuthService.Login(loginDto);
@@ -84,6 +92,10 @@
         catch (Exception ex)
         {
             errorMessage = $"Error en el inicio de sesión: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false; // Desactivar estado de carga
         }
     }
 
@@ -104,5 +116,32 @@
 
     .btn {
         border-radius: 30px;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 1000; /* Asegúrate de que esté sobre el contenido */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner-container {
+        margin: 0;
+    }
+
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 5px solid rgba(0, 0, 0, 0.1);
+        border-top: 5px solid #007bff; /* Color del spinner */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
     }
 </style>
