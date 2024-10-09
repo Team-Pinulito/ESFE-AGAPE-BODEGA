@@ -12,16 +12,14 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             _httpClient = httpClientFactory.CreateClient("BodegaAPI");
         }
 
-        // Obtener todos los IngresoActivo
-        public async Task<List<SearchResultIngresoActivoDTO.IngresoActivoDTO>> ObtenerTodos()
+        public async Task<List<SearchResultIngresoActivoDTO.IngresoActivoDTO>> ObtenerActivos()
         {
-            var response = await _httpClient.GetAsync("IngresoActivo");
+            var response = await _httpClient.GetAsync("Activo");
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<List<SearchResultIngresoActivoDTO.IngresoActivoDTO>>();
                 return result ?? new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
             }
-
             return new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
         }
 

@@ -2,18 +2,19 @@
 
 @using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
 
 <div class="row align-items-center">
     <div class="col-md-4">
-        <!-- Selección de Inventario Activo -->
-        <label for="InventarioActivoId" class="form-label">Inventario Activo</label>
+        <!-- Selección de Existencia  -->
+        <label for="InventarioActivoId" class="form-label">Existencia</label>
         <select class="form-control" @bind="detalle.InventarioActivoId" required>
             <option value="0">Seleccione un activo</option>
             @foreach (var activo in activos)
             {
-                <option value="@activo.Id">@activo.Correlativo</option>
+                <option value="@activo.Id">@activo.Existencia</option>
             }
         </select>
         <ValidationMessage For="() => detalle.InventarioActivoId" />
@@ -50,7 +51,7 @@
 
 
 
-    [Parameter] public List<SearchResultIngresoActivoDTO.IngresoActivoDTO> activos { get; set; }
+    [Parameter] public List<GetIdResultInventarioActivoDTO.InventarioActivoDTO> activos { get; set; }
 
 
 
