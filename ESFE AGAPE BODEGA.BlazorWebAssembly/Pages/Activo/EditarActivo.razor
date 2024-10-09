@@ -1,0 +1,132 @@
+﻿@page "/editar-activo/{Id:int}"
+@using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.TipoActivoDTOs
+@using Microsoft.AspNetCore.Components.Forms;
+@using System.ComponentModel.DataAnnotations;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row"><h1>Editar Activo</h1></div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="activo" OnValidSubmit="Edit">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
+                                    <InputText class="form-control" id="Nombre" @bind-Value="activo.Nombre" />
+                                    <ValidationMessage For="() => activo.Nombre" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Descripcion" class="form-label">Descripción<span style="color:red;">*</span></label>
+                                    <InputTextArea class="form-control" id="Descripcion" @bind-Value="activo.Descripcion" />
+                                    <ValidationMessage For="() => activo.Descripcion" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Estante" class="form-label">Estante<span style="color:red;">*</span></label>
+                                    <select class="form-control" @bind="activo.EstanteId" required>
+                                        <option value="">Seleccione un estante</option>
+                                        @foreach (var estante in estantes)
+                                        {
+                                            <option value="@estante.Id">@estante.Nombre</option>
+                                        }
+                                    </select>
+                                    <ValidationMessage For="() => activo.EstanteId" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="TipoActivo" class="form-label">Tipo de Activo<span style="color:red;">*</span></label>
+                                    <select class="form-control" @bind="activo.TipoActivoId" required>
+                                        <option value="">Seleccione un tipo de activo</option>
+                                        @foreach (var tipoActivo in tipoActivos)
+                                        {
+                                            <option value="@tipoActivo.Id">@tipoActivo.Nombre</option>
+                                        }
+                                    </select>
+                                    <ValidationMessage For="() => activo.TipoActivoId" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="Codigo" class="form-label">Código<span style="color:red;">*</span></label>
+                                    <InputText class="form-control" id="Codigo" @bind-Value="activo.Codigo" />
+                                    <ValidationMessage For="() => activo.Codigo" />
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <NavLink href="/lista-activo" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        activo = new EditActivoDTO();
+                        isError = false;
+                        <p class="alert alert-success">Estante se modifico con éxito.</p>
+                        <NavLink href="/lista-activo" class="btn btn-success">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-error">Sucedio un error al intentar modificar.</p>
+                        <NavLink href="/lista-activo" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+@code {
+    // Declaración de un parámetro llamado "Id" que puede ser pasado al componente
+    [Parameter]
+    public int Id { get; set; }
+
+    // Inyección de dependencia de CustomerService para
+    // acceder a los servicios relacionados con los clientes
+    [Inject]
+    ActivoService activoService { get; set; }
+    List<SearchResultEstanteDTO.EstanteDTO> estantes = new List<SearchResultEstanteDTO.EstanteDTO>();
+    List<SearchResultTipoActivoDTO.TipoActivoDTO> tipoActivos = new List<SearchResultTipoActivoDTO.TipoActivoDTO>();
+
+    // Declaración e inicialización de un objeto "customer"
+    //  para almacenar los detalles del cliente
+    EditActivoDTO activo = new EditActivoDTO();
+
+    // Declaración de variables booleanas para manejar el estado de éxito y error
+    bool isSuccess = false;
+    bool isError = false;
+
+    // Método que se llama cuando se inicializa el componente
+    protected override async Task OnInitializedAsync()
+    {
+        // Realiza una llamada asincrónica para obtener los
+        // detalles del cliente por su Id
+        var activoDetail = await activoService.ObtenerActivoId(Id);
+
+        // Inicializa el objeto "customer" con los detalles del cliente obtenidos
+        activo = new EditActivoDTO(activoDetail);
+
+        estantes = await activoService.ObtenerEstante();
+        tipoActivos = await activoService.ObtenerTipoActivo();
+
+    }
+
+    // Método para editar el cliente
+    private async Task Edit()
+    {
+        // Realiza una llamada asincrónica para editar la información del cliente
+        int result = await activoService.ActualizarActivo(activo);
+
+        // Verifica si el resultado de la edición es diferente
+        // de cero (éxito) o igual a cero (error)
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+}
