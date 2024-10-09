@@ -1,0 +1,90 @@
+﻿@page "/activo-detalles/{Id:int}"
+@using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.TipoActivoDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs;
+
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+	<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+		<div class="row m-4">
+			<div class="card col-md-12">
+				<div class="card-header row"><h1 class="col-md-12">Detalles del Activo</h1></div>
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<label for="Nombre" class="form-label">Nombre</label>
+							<input type="text" class="form-control" disabled @bind="activo.Nombre" />
+						</div>
+						<div class="col-md-6">
+							<label for="Descripcion" class="form-label">Descripcion</label>
+							<textarea type="text" disabled class="form-control" @bind="activo.Descripcion" />
+						</div>
+						<div class="col-md-4">
+							<label for="Nombre" class="form-label">Estante</label>
+							<select class="form-control" disabled @bind="activo.EstanteId" required>
+								<option value="">Seleccione un estante</option>
+								@foreach (var estante in estantes)
+								{
+									<option value="@estante.Id">@estante.Nombre</option>
+								}
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label for="Nombre" class="form-label">Tipo de Activo</label>
+							<select class="form-control" disabled @bind="activo.TipoActivoId" required>
+								<option value="">Seleccione un tipo de activo</option>
+								@foreach (var tipoActivo in tipoActivos)
+								{
+									<option value="@tipoActivo.Id">@tipoActivo.Nombre</option>
+								}
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label for="Codigo" class="form-label">Código</label>
+							<input type="text" class="form-control" disabled @bind="activo.Codigo" />
+						</div>
+						<div class="col-md-12 mt-3">
+							<NavLink href="/lista-activo" class="btn btn-secondary w-100">Volver</NavLink>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+@code {
+	// Parámetro para recibir el ID del estante desde la llamada al componente
+	[Parameter]
+	public int Id { get; set; }
+
+	// Inyección de dependencia de CustomerService para acceder a sus métodos
+	[Inject]
+	ActivoService activoService { get; set; }
+
+	List<SearchResultTipoActivoDTO.TipoActivoDTO> tipoActivos = new List<SearchResultTipoActivoDTO.TipoActivoDTO>();
+	List<SearchResultEstanteDTO.EstanteDTO> estantes = new List<SearchResultEstanteDTO.EstanteDTO>();
+
+
+	GetIdResultActivoDTO activo = new GetIdResultActivoDTO();
+
+
+	/*
+			*  se utiliza para realizar inicializaciones o tareas
+			*  cuando se carga una página o componente de Blazor.
+			* Este método se llama automáticamente cuando el componente se está inicializando
+			*  antes de que se muestre en la interfaz de usuario.
+			*/
+	protected override async Task OnInitializedAsync()
+	{
+		// En el momento de inicialización del componente, llama al método GetById de
+		//  estanteService para obtener los datos del estante con el ID proporcionado
+		activo = await activoService.ObtenerActivoId(Id);
+		tipoActivos = await activoService.ObtenerTipoActivo();
+		estantes = await activoService.ObtenerEstante();
+
+	}
+
+}
