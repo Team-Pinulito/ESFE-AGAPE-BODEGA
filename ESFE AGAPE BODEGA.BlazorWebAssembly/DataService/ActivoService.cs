@@ -42,7 +42,6 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 			if (response.IsSuccessStatusCode)
 			{
 				var result = await response.Content.ReadFromJsonAsync<SearchResultActivoDTO>();
-				Console.WriteLine(JsonSerializer.Serialize(result)); // Depuración
 				return result ?? new SearchResultActivoDTO();
 			}
 			return new SearchResultActivoDTO();
@@ -50,7 +49,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
         public async Task<GetIdResultActivoDTO> ObtenerActivoId(int id)
         {
-            var rol = await _httpClient.GetAsync($"Estante/{id}");
+            var rol = await _httpClient.GetAsync($"Activo/{id}");
 
             if (rol.IsSuccessStatusCode)
             {
