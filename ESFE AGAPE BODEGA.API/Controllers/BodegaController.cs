@@ -32,12 +32,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
         {
             var bodegas = await _dal.ObtenerBodega();
 
-            var bodegaDto = bodegas.Select(r => new GetIdResultBodegaDTO
+            if (bodegas == null)
             {
-                Id = r.Id,
-                Nombre = r.Nombre,
-                Descripcion = r.Descripcion
-            }).ToList();
+                // Manejo del caso cuando la lista es nula
+                return new List<GetIdResultBodegaDTO>();
+            }
+            var bodegaDto = mapper.Map<List<GetIdResultBodegaDTO>>(bodegas);
 
             return bodegaDto;
         }
