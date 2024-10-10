@@ -14,7 +14,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
     {
         public CrearIngresoActivoDTO()
         {
-            DetalleIngresoActivos = new List<CrearDetalleIngresoActivoDTO>();
+            CrearDetalleIngresoActivos = new List<CrearDetalleIngresoActivoDTO>();
         }
 
         [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
@@ -33,7 +33,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
         [Required(ErrorMessage = "El campo Total es obligatorio.")]
         public decimal Total { get; set; }
 
-        public List<CrearDetalleIngresoActivoDTO> DetalleIngresoActivos { get; set; }
+        public List<CrearDetalleIngresoActivoDTO> CrearDetalleIngresoActivos { get; set; }
 
     }
 }
