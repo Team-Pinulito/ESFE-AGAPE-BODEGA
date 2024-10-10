@@ -1,4 +1,6 @@
 ﻿using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs;
+
 using System.Net.Http.Json;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
@@ -12,15 +14,15 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             _httpClient = httpClientFactory.CreateClient("BodegaAPI");
         }
 
-        public async Task<List<SearchResultIngresoActivoDTO.IngresoActivoDTO>> ObtenerActivos()
+        public async Task<List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>> ObtenerInventarioActivo()
         {
-            var response = await _httpClient.GetAsync("Activo");
+            var response = await _httpClient.GetAsync("InventarioActivo");
             if (response.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadFromJsonAsync<List<SearchResultIngresoActivoDTO.IngresoActivoDTO>>();
-                return result ?? new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
+                var result = await response.Content.ReadFromJsonAsync<List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>>();
+                return result ?? new List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>();
             }
-            return new List<SearchResultIngresoActivoDTO.IngresoActivoDTO>();
+            return new List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>();
         }
 
         // Obtener un IngresoActivo por su ID
