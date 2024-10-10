@@ -1,0 +1,102 @@
+﻿@page "/crear-ajusteInventario"
+
+@using ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1 class="col-md-12">Crear Nuevo Ajuste de Inventario</h1>
+                </div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <EditForm Model="ajusteInventario" OnValidSubmit="Create">
+                            <DataAnnotationsValidator />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="UsuarioId" class="form-label">Usuario<span style="color:red;">*</span></label>
+                                    <InputNumber class="form-control" id="UsuarioId" @bind-Value="ajusteInventario.UsuarioId" />
+                                    <ValidationMessage For="() => ajusteInventario.UsuarioId" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="FechaIngreso" class="form-label">Fecha de Ingreso<span style="color:red;">*</span></label>
+                                    <InputDate class="form-control" id="FechaIngreso" @bind-Value="ajusteInventario.FechaIngreso" />
+                                    <ValidationMessage For="() => ajusteInventario.FechaIngreso" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Correlativo" class="form-label">Correlativo<span style="color:red;">*</span></label>
+                                    <InputNumber class="form-control" id="Correlativo" @bind-Value="ajusteInventario.Correlativo" />
+                                    <ValidationMessage For="() => ajusteInventario.Correlativo" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Cantidad" class="form-label">Cantidad<span style="color:red;">*</span></label>
+                                    <InputNumber class="form-control" id="Cantidad" @bind-Value="ajusteInventario.Cantidad" />
+                                    <ValidationMessage For="() => ajusteInventario.Cantidad" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="TipoMantenimiento" class="form-label">Tipo de Mantenimiento<span style="color:red;">*</span></label>
+                                    <InputNumber class="form-control" id="TipoMantenimiento" @bind-Value="ajusteInventario.TipoMantenimiento" />
+                                    <ValidationMessage For="() => ajusteInventario.TipoMantenimiento" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="Comentario" class="form-label">Comentario<span style="color:red;">*</span></label>
+                                    <InputTextArea class="form-control" id="Comentario" @bind-Value="ajusteInventario.Comentario" />
+                                    <ValidationMessage For="() => ajusteInventario.Comentario" />
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <NavLink href="/lista-ajuste-inventario" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else if (isSuccess)
+                    {
+                        ajusteInventario = new CreateAjusteInvetarioDTO();
+                        isError = false;
+                        <p class="alert alert-success">Ajuste de Inventario creado con éxito.</p>
+                        <NavLink href="/lista-ajuste-inventario" class="btn btn-success">Aceptar</NavLink>
+                        <button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-danger">Sucedió un error al intentar registrar el ajuste de inventario.</p>
+                        <NavLink href="/lista-ajuste-inventario" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+
+@code {
+    [Inject]
+    AjusteInventarioService ajusteInventarioService { get; set; }
+
+    CreateAjusteInvetarioDTO ajusteInventario = new CreateAjusteInvetarioDTO();
+    bool isSuccess = false;
+    bool isError = false;
+
+    private async Task Create()
+    {
+        int result = await ajusteInventarioService.CrearAjusteInventario(ajusteInventario);
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
+
+    private void GoCreate()
+    {
+        isSuccess = false;
+        isError = false;
+    }
+}

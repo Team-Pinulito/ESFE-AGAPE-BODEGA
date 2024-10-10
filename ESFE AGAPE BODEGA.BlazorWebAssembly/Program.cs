@@ -1,5 +1,4 @@
 using Blazored.LocalStorage;
-using Blazored.SessionStorage;
 using ESFE_AGAPE_BODEGA.BlazorWebAssembly;
 using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
 using Microsoft.AspNetCore.Components.Web;
@@ -18,7 +17,7 @@ builder.Services.AddHttpClient("BodegaAPI", client =>
 
 builder.Services.AddScoped<RolService>();
 builder.Services.AddScoped<BodegaService>();
-
+builder.Services.AddScoped<AjusteInventarioService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<EstanteService>();
 builder.Services.AddScoped<PaqueteActivoService>();
