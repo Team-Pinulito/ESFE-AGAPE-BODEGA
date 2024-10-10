@@ -68,9 +68,17 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 }).ToList()
             };
 
-            var result = await _ativoDAL.CrearIngresoActivo(nuevoIngresoActivo);
-            return result > 0 ? Ok() : StatusCode(500, "Error al crear el ingreso activo.");
-        }
+			int result = await _ativoDAL.CrearIngresoActivo(nuevoIngresoActivo);
+
+			if (result > 0)
+			{
+				return Ok(result);
+			}
+			else
+			{
+				return StatusCode(500);
+			}
+		}
 
 
         [HttpPost("buscar")]
