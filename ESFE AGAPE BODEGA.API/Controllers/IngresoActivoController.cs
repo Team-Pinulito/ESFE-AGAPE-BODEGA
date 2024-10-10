@@ -1,11 +1,11 @@
-﻿using Bodega_Api_Esfe_Agape.Models.EN;
+﻿using AutoMapper;
+using Bodega_Api_Esfe_Agape.Models.EN;
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -19,10 +19,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
     {
 
         private IngresoAtivoDAL _ativoDAL;
+        private IMapper mapper;
 
-        public IngresoActivoController(IngresoAtivoDAL ativoDAL)
+        public IngresoActivoController(IngresoAtivoDAL ativoDAL, IMapper mapper)
         {
             _ativoDAL = ativoDAL;
+            this.mapper = mapper;
         }
 
 
@@ -38,26 +40,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 // Manejo del caso cuando la lista es nula
                 return new List<GetIdResultIngresoActivoDTO>();
             }
+            var ingresoActivoDto = mapper.Map<List<GetIdResultIngresoActivoDTO>>(ingresoActivos);
 
-            // Mapear la lista de PaqueteActivo a GetIdResultPaqueteActivoDTO
-            var ingresoActivoDTO = ingresoActivos.Select(ingreso => new GetIdResultIngresoActivoDTO
-            {
-                Id = ingreso.Id,
-                Correlativo = ingreso.Correlativo,
-                UsuarioId = ingreso.UsuarioId,
-                FechaIngreso = ingreso.FechaIngreso,
-                NumeroDocRelacionado = ingreso.NumeroDocRelacionado,
-                Total = ingreso.Total,
-                DetalleIngresoActivos = ingreso.DetalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
-                {
-                    Id = detalle.Id,
-                    InventarioActivoId = detalle.InventarioActivoId,
-                    Cantidad = detalle.Cantidad,
-                    Precio = detalle.Precio
-                }).ToList() ?? new List<DetalleIngresoActivoDTO>() // Manejo de nulidad
-            }).ToList();
-
-            return ingresoActivoDTO;
+            return ingresoActivoDto;
         }
 
         [HttpPost]
