@@ -68,6 +68,7 @@
                                 </div>
                             </div>
                         </EditForm>
+                        <LoadingSpinner IsLoading="@isLoading" />
                     }
                     else if (isSuccess)
                     {
@@ -98,19 +99,37 @@
     bool isSuccess = false;
     bool isError = false;
 
+    bool isLoading = false; // Estado de carga
+
     protected override async Task OnInitializedAsync()
     {
-        estantes = await activoService.ObtenerEstante();
-        tiposActivos = await activoService.ObtenerTipoActivo();
+        isLoading = true;
+        try
+        {
+            estantes = await activoService.ObtenerEstante();
+            tiposActivos = await activoService.ObtenerTipoActivo();
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     private async Task Create()
     {
-        int result = await activoService.CrearActivo(activo);
-        if (result != 0)
-            isSuccess = true;
-        else
-            isError = true;
+        isLoading = true;
+        try
+        {
+            int result = await activoService.CrearActivo(activo);
+            if (result != 0)
+                isSuccess = true;
+            else
+                isError = true;
+        }
+        finally
+        {
+            isLoading = isLoading = false;
+        }
     }
 
     private void GoCreate()

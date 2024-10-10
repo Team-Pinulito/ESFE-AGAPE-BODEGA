@@ -62,6 +62,7 @@
                                 </div>
                             </div>
                         </EditForm>
+                        <LoadingSpinner IsLoading="@isLoading" />
                     }
                     else if (isSuccess)
                     {
@@ -100,33 +101,52 @@
     bool isSuccess = false;
     bool isError = false;
 
+    bool isLoading = false; // Estado de carga
+
+
     // Método que se llama cuando se inicializa el componente
     protected override async Task OnInitializedAsync()
     {
-        // Realiza una llamada asincrónica para obtener los
-        // detalles del cliente por su Id
-        var activoDetail = await activoService.ObtenerActivoId(Id);
+        isLoading = true;
+        try
+        {
+            // Realiza una llamada asincrónica para obtener los
+            // detalles del cliente por su Id
+            var activoDetail = await activoService.ObtenerActivoId(Id);
 
-        // Inicializa el objeto "customer" con los detalles del cliente obtenidos
-        activo = new EditActivoDTO(activoDetail);
+            // Inicializa el objeto "customer" con los detalles del cliente obtenidos
+            activo = new EditActivoDTO(activoDetail);
 
-        estantes = await activoService.ObtenerEstante();
-        tipoActivos = await activoService.ObtenerTipoActivo();
+            estantes = await activoService.ObtenerEstante();
+            tipoActivos = await activoService.ObtenerTipoActivo();
+        }
+        finally
+        {
+            isLoading = false;
+        }
 
     }
 
     // Método para editar el cliente
     private async Task Edit()
     {
-        // Realiza una llamada asincrónica para editar la información del cliente
-        int result = await activoService.ActualizarActivo(activo);
+        isLoading = true;
+        try
+        {
+            // Realiza una llamada asincrónica para editar la información del cliente
+            int result = await activoService.ActualizarActivo(activo);
 
-        // Verifica si el resultado de la edición es diferente
-        // de cero (éxito) o igual a cero (error)
-        if (result != 0)
-            isSuccess = true;
-        else
-            isError = true;
+            // Verifica si el resultado de la edición es diferente
+            // de cero (éxito) o igual a cero (error)
+            if (result != 0)
+                isSuccess = true;
+            else
+                isError = true;
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
 }

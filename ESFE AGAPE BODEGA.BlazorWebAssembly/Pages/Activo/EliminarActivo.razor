@@ -53,6 +53,7 @@
                                 <NavLink href="/lista-activo" class="btn btn-secondary w-100">Cancelar</NavLink>
                             </div>
                         </div>
+                        <LoadingSpinner IsLoading="@isLoading" />
                     }
                     else if (isSuccess)
                     {
@@ -87,28 +88,44 @@
     bool isSuccess = false;
     bool isError = false;
 
-    // Método que se llama cuando se inicializa el componente
+    bool isLoading = false; // Estado de carga
+                            // Método que se llama cuando se inicializa el componente
     protected override async Task OnInitializedAsync()
     {
-        // Realiza una llamada asincrónica para obtener la información del cliente por su Id
-        activo = await activoService.ObtenerActivoId(Id);
+        isLoading = true;
+        try
+        {
+            // Realiza una llamada asincrónica para obtener la información del cliente por su Id
+            activo = await activoService.ObtenerActivoId(Id);
 
-        estantes = await activoService.ObtenerEstante();
-        tipoActivos = await activoService.ObtenerTipoActivo();
-
+            estantes = await activoService.ObtenerEstante();
+            tipoActivos = await activoService.ObtenerTipoActivo();
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     // Método para eliminar el cliente
     private async Task Delete()
     {
-        // Realiza una llamada asincrónica para eliminar el cliente por su Id
-        int result = await activoService.EliminarActivo(activo.Id);
+        isLoading = true;
+        try
+        {
+            // Realiza una llamada asincrónica para eliminar el cliente por su Id
+            int result = await activoService.EliminarActivo(activo.Id);
 
-        // Verifica si el resultado de la eliminación es diferente de cero (éxito) o igual a cero (error)
-        if (result != 0)
-            isSuccess = true;
-        else
-            isError = true;
+            // Verifica si el resultado de la eliminación es diferente de cero (éxito) o igual a cero (error)
+            if (result != 0)
+                isSuccess = true;
+            else
+                isError = true;
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
 }

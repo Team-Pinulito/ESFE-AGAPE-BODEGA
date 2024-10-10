@@ -49,10 +49,12 @@
 							<NavLink href="/lista-activo" class="btn btn-secondary w-100">Volver</NavLink>
 						</div>
 					</div>
+					
 				</div>
 			</div>
 
 		</div>
+		<LoadingSpinner IsLoading="@isLoading" />
 	</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 @code {
@@ -64,6 +66,8 @@
 	[Inject]
 	ActivoService activoService { get; set; }
 
+	bool isLoading = false; // Estado de carga
+
 	List<SearchResultTipoActivoDTO.TipoActivoDTO> tipoActivos = new List<SearchResultTipoActivoDTO.TipoActivoDTO>();
 	List<SearchResultEstanteDTO.EstanteDTO> estantes = new List<SearchResultEstanteDTO.EstanteDTO>();
 
@@ -71,19 +75,27 @@
 	GetIdResultActivoDTO activo = new GetIdResultActivoDTO();
 
 
-	/*
-			*  se utiliza para realizar inicializaciones o tareas
-			*  cuando se carga una página o componente de Blazor.
-			* Este método se llama automáticamente cuando el componente se está inicializando
-			*  antes de que se muestre en la interfaz de usuario.
-			*/
+			/*
+	*  se utiliza para realizar inicializaciones o tareas
+	*  cuando se carga una página o componente de Blazor.
+	* Este método se llama automáticamente cuando el componente se está inicializando
+	*  antes de que se muestre en la interfaz de usuario.
+	*/
 	protected override async Task OnInitializedAsync()
 	{
-		// En el momento de inicialización del componente, llama al método GetById de
-		//  estanteService para obtener los datos del estante con el ID proporcionado
-		activo = await activoService.ObtenerActivoId(Id);
-		tipoActivos = await activoService.ObtenerTipoActivo();
-		estantes = await activoService.ObtenerEstante();
+		isLoading = true;
+		try
+		{
+			// En el momento de inicialización del componente, llama al método GetById de
+			//  estanteService para obtener los datos del estante con el ID proporcionado
+			activo = await activoService.ObtenerActivoId(Id);
+			tipoActivos = await activoService.ObtenerTipoActivo();
+			estantes = await activoService.ObtenerEstante();
+		}
+		finally
+		{
+			isLoading = false;
+		}
 
 	}
 
