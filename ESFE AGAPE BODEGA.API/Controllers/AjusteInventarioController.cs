@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ESFE_AGAPE_BODEGA.API.Models.DAL;
-using ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs;
+﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
-using System.Threading.Tasks;
 using ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs;
-using static ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs.GetIdResultUsuarioDTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
