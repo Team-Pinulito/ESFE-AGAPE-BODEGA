@@ -1,0 +1,41 @@
+﻿@code {
+    [Parameter] public bool IsLoading { get; set; }
+}
+
+@if (IsLoading)
+{
+    <div class="overlay">
+        <div class="spinner-container">
+            <div class="spinner"></div>
+        </div>
+    </div>
+}
+
+<style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+        z-index: 9999; /* Asegúrate de que esté sobre el contenido */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .spinner-container {
+        margin: 0;
+    }
+
+    .spinner {
+        width: 60px;
+        height: 60px;
+        border: 5px solid rgba(0, 0, 0, 0.1);
+        border-top: 5px solid #007bff; /* Color del spinner */
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+</style>

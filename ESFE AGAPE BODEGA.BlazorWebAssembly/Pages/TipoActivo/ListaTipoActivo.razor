@@ -70,6 +70,9 @@
                             </div>
                         </div>
                     </EditForm>
+
+                    <LoadingSpinner IsLoading="@isLoading" />
+
                 </div>
             </div>
             <div class="card col-md-12">
@@ -135,9 +138,20 @@
     int skipAnte = 0;
     int skipSi = 0;
 
+    bool isLoading = false; // Estado de carga
+
+
     private async Task Search()
     {
-        searchResult = await tipoActivoService.Buscar(searchQuery);
+        isLoading = true;
+        try
+        {
+            searchResult = await tipoActivoService.Buscar(searchQuery);
+        }
+        finally
+        {
+            isLoading = false;
+        }
         // Asegúrate de que Buscar devuelva SearchResultTipoActivoDTO
     }
 

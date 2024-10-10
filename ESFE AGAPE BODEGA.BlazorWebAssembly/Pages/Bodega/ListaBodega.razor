@@ -69,6 +69,9 @@
                             </div>
                         </div>
                     </EditForm>
+
+                    <LoadingSpinner IsLoading="@isLoading" />
+
                 </div>
             </div>
             <div class="card col-md-12">
@@ -126,9 +129,19 @@
     int skipAnte = 0;
     int skipSi = 0;
 
+    bool isLoading = false; // Estado de carga
+
     private async Task Search()
     {
-        searchResult = await bodegaService.Search(searchQuery);
+        isLoading = true;
+        try
+        {
+            searchResult = await bodegaService.Search(searchQuery);
+        }
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     protected override async Task OnInitializedAsync()

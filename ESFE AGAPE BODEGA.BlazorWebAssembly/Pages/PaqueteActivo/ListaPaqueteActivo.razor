@@ -83,6 +83,7 @@
 
 					</EditForm>
 
+					<LoadingSpinner IsLoading="@isLoading" />
 
 				</div>
 			</div>
@@ -147,10 +148,19 @@
 	int skipAnte = 0;
 	int skipSi = 0;
 
-	// Método para realizar una búsqueda
+	bool isLoading = false; // Estado de carga
+							// Método para realizar una búsqueda
 	private async Task Search()
 	{
-		searchResult = await paqueteActivoService.Search(searchQuery);
+		isLoading = true;
+		try
+		{
+			searchResult = await paqueteActivoService.Search(searchQuery);
+		}
+		finally
+		{
+			isLoading = false;
+		}
 	}
 
 	// Método que se llama cuando se inicializa el componente
