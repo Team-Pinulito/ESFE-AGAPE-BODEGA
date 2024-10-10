@@ -60,10 +60,10 @@
                             </div>
 
                             <div class="row">
-                                @foreach (var detalle in ingresoActivo.DetalleIngresoActivos)
+                                @foreach (var detalle in ingresoActivo.CrearDetalleIngresoActivos)
                                 {
                                     <_CrearDetalleIngresoActivo detalle="detalle"
-                                        activos="activos"
+                                        inventarios="inventarios"
                                         EliminarDetalle="() => EliminarDetalle(detalle)" />
                                 }
                             </div>
@@ -101,10 +101,15 @@
     [Inject]
     IngresoActivoService ingresoActivoService { get; set; }
 
-    List<GetIdResultInventarioActivoDTO.InventarioActivoDTO> activos = new List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>();
+    List<GetIdResultInventarioActivoDTO.InventarioActivoDTO> inventarios = new List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>();
     CrearIngresoActivoDTO ingresoActivo = new CrearIngresoActivoDTO();
     bool isSuccess = false;
     bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+	{
+        inventarios = await ingresoActivoService.ObtenerInventarioActivo();
+	}
 
     private async Task Create()
     {
@@ -123,11 +128,11 @@
 
     private void AgregarDetalle()
     {
-        ingresoActivo.DetalleIngresoActivos.Add(new CrearDetalleIngresoActivoDTO());
+        ingresoActivo.CrearDetalleIngresoActivos.Add(new CrearDetalleIngresoActivoDTO());
     }
 
     private void EliminarDetalle(CrearDetalleIngresoActivoDTO detalle)
     {
-        ingresoActivo.DetalleIngresoActivos.Remove(detalle);
+        ingresoActivo.CrearDetalleIngresoActivos.Remove(detalle);
     }
 }
