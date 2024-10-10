@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Bodega_Api_Esfe_Agape.Models.EN;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleSolicitudActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
 
 namespace ESFE_AGAPE_BODEGA.API.Mapping
@@ -23,6 +26,15 @@ namespace ESFE_AGAPE_BODEGA.API.Mapping
             CreateMap<Bodega, GetIdResultBodegaDTO>();
             CreateMap<Bodega, SearchResultBodegaDTO>();
             CreateMap<Bodega, SearchQueryBodegaDTO>();
+
+            CreateMap<IngresoActivo, CrearIngresoActivoDTO>();
+            CreateMap<IngresoActivo, EditIngresoActivoDTO>();
+            CreateMap<IngresoActivo, GetIdResultIngresoActivoDTO>().ForMember(dest => dest.DetalleIngresoActivos, opt => opt.MapFrom(src =>
+            src.DetalleIngresoActivos));
+            CreateMap<IngresoActivo, SearchResultIngresoActivoDTO>();
+            CreateMap<IngresoActivo, SearchQueryIngresoActivoDTO>();
+            CreateMap<DetalleIngresoActivo, DetalleIngresoActivoDTO>();
+            CreateMap<DetalleIngresoActivo, CrearDetalleIngresoActivoDTO>();
 
         }
     }
