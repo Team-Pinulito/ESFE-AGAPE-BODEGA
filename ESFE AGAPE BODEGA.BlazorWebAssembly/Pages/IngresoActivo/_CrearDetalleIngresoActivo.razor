@@ -1,7 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
 @using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
-@using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
@@ -9,12 +8,12 @@
 <div class="row align-items-center">
     <div class="col-md-4">
         <!-- Selección de Existencia  -->
-        <label for="InventarioActivoId" class="form-label">Existencia</label>
+        <label for="InventarioActivoId" class="form-label">Inventario Activo</label>
         <select class="form-control" @bind="detalle.InventarioActivoId" required>
             <option value="0">Seleccione un activo</option>
-            @foreach (var activo in activos)
+            @foreach (var inventario in inventarios)
             {
-                <option value="@activo.Id">@activo.Existencia</option>
+                <option value="@inventario.Id">@inventario.Existencia</option>
             }
         </select>
         <ValidationMessage For="() => detalle.InventarioActivoId" />
@@ -49,12 +48,7 @@
     [Parameter] public CrearDetalleIngresoActivoDTO detalle  { get; set; }
     [Parameter] public DetalleIngresoActivoDTO  detalles { get; set; }
 
-
-
-    [Parameter] public List<GetIdResultInventarioActivoDTO.InventarioActivoDTO> activos { get; set; }
-
-
-
+    [Parameter] public List<GetIdResultInventarioActivoDTO.InventarioActivoDTO> inventarios { get; set; }
 
     [Parameter] public EventCallback EliminarDetalle { get; set; }
 }
