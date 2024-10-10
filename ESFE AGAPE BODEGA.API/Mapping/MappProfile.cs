@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
+using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleSolicitudActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
 
@@ -16,6 +17,13 @@ namespace ESFE_AGAPE_BODEGA.API.Mapping
             CreateMap<SolicitudActivo, SearchResultSolicitudActivoDTO>();
             CreateMap<DetalleSolicitudActivo, DetalleSolicitudActivoDTO>();
             CreateMap<DetalleSolicitudActivo, CrearDetalleSolicitudActivoDTO>();
+
+            CreateMap<Bodega, CrearBodegaDTO>();
+            CreateMap<Bodega, EditBodegaDTO>();
+            CreateMap<Bodega, GetIdResultBodegaDTO>();
+            CreateMap<Bodega, SearchResultBodegaDTO>();
+            CreateMap<Bodega, SearchQueryBodegaDTO>();
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
+﻿using AutoMapper;
+using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -16,9 +17,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
     {
         private readonly BodegaDAL _dal;
 
-        public BodegaController(BodegaDAL dal)
+        private readonly IMapper mapper;
+
+        public BodegaController(BodegaDAL dal, IMapper mapper)
         {
             _dal = dal;
+            this.mapper = mapper;
         }
 
         //obtener todos
