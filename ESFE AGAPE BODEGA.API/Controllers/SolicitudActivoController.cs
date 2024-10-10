@@ -1,4 +1,5 @@
-﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
+﻿using AutoMapper;
+using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleSolicitudActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
@@ -15,10 +16,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
     public class SolicitudActivoController : ControllerBase
     {
         private readonly SolicitudActivoDAL _solicitudActivoDAL;
+        private readonly IMapper mapper;
 
-        public SolicitudActivoController(SolicitudActivoDAL solicitudActivoDAL)
+        public SolicitudActivoController(SolicitudActivoDAL solicitudActivoDAL, IMapper mapper)
         {
             _solicitudActivoDAL = solicitudActivoDAL;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -32,30 +35,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 // Manejo del caso cuando la lista es nula
                 return new List<GetIdResultSolicitudActivoDTO>();
             }
-
-            // Mapear la lista de SolicitudActivo a GetIdResultSolicitudActivoDTO
-            var solicitudActivoDto = solicitudesActivos.Select(solicitud => new GetIdResultSolicitudActivoDTO
-            {
-                Id = solicitud.Id,
-                UsuarioId = solicitud.UsuarioId,    
-                BodegueroEntregaId = solicitud.UsuarioIdBodegueroEntregaId,
-                BodegueroRecibeId = solicitud.UsuarioIdBodegueroRecibeId,
-                Correlativo = solicitud.Correlativo,
-                Fecha = solicitud.Fecha,
-                FechaEntrega = solicitud.FechaEntrega,
-                FechaRecepcion = solicitud.FechaRecepcion,
-                FechaEntregaEsperada = solicitud.FechaEntregaEsperada,
-                FechaRecepcionEsperada = solicitud.FechaRecepcionEsperada,
-                Comentario = solicitud.Comentario,
-                DetalleSolicitudActivoDTOs = solicitud.DetalleSolicitudActivos?.Select(detalle => new DetalleSolicitudActivoDTO
-                {
-                    Id = detalle.Id,
-                    ActivoId = detalle.ActivoId,
-                    PaqueteActivoId = detalle.PaqueteActivoId,
-                    Cantidad = detalle.Cantidad,
-                    Status = detalle.Status
-                }).ToList() ?? new List<DetalleSolicitudActivoDTO>() // Manejo de nulidad
-            }).ToList();
+            var solicitudActivoDto = mapper.Map<List<GetIdResultSolicitudActivoDTO>>(solicitudesActivos);
 
             return solicitudActivoDto;
         }
