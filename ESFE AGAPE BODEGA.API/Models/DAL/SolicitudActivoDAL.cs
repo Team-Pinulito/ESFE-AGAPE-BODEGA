@@ -15,7 +15,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
         public async Task<List<SolicitudActivo>> ObtenerSolicitudActivos()
         {
-            return await applicationDbContext.solicitudActivos.ToListAsync();
+            return await applicationDbContext.solicitudActivos.Include(e => e.DetalleSolicitudActivos).ToListAsync();
         }
 
         public async Task<SolicitudActivo> ObtenerSolicitudActivoId(int id)

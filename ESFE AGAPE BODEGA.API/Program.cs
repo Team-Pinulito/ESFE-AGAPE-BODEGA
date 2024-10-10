@@ -1,3 +1,4 @@
+using ESFE_AGAPE_BODEGA.API.Mapping;
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("conn"));
 });
 
+builder.Services.AddAutoMapper(typeof(MappProfile));
 builder.Services.AddScoped<RolDAL>();
 builder.Services.AddScoped<KardexActivoDAL>();
 builder.Services.AddScoped<ActivoDAL>();
