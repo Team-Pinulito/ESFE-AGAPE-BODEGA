@@ -75,7 +75,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 FechaIngreso = crearIngresoActivoDTO.FechaIngreso,
                 NumeroDocRelacionado = crearIngresoActivoDTO.NumeroDocRelacionado,
                 Total = crearIngresoActivoDTO.Total,
-                DetalleIngresoActivos = crearIngresoActivoDTO.DetalleIngresoActivos.Select(detalle => new DetalleIngresoActivo
+                DetalleIngresoActivos = crearIngresoActivoDTO.CrearDetalleIngresoActivos.Select(detalle => new DetalleIngresoActivo
                 {
                     InventarioActivoId = detalle.InventarioActivoId,
                     Cantidad = detalle.Cantidad,
