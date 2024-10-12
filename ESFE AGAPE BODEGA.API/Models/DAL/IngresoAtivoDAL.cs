@@ -25,16 +25,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
         public async Task<int> CrearIngresoActivo(IngresoActivo ingresoActivo)
         {
-            // Primero, asegúrate de que los detalles sean válidos.
-            foreach (var detalle in ingresoActivo.DetalleIngresoActivos)
-            {
-                // Verifica si el InventarioActivoId es válido
-                if (!await applicationDbContext.inventarioActivos.AnyAsync(i => i.Id == detalle.InventarioActivoId))
-                {
-                    throw new Exception($"El InventarioActivoId {detalle.InventarioActivoId} no existe.");
-                }
-            }
-
+           
             // Agrega el IngresoActivo y sus detalles
             applicationDbContext.ingresoactivos.Add(ingresoActivo);
             var result = await applicationDbContext.SaveChangesAsync();
