@@ -62,7 +62,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Total = crearIngresoActivoDTO.Total,
                 DetalleIngresoActivos = crearIngresoActivoDTO.CrearDetalleIngresoActivos.Select(detalle => new DetalleIngresoActivo
                 {
-                    InventarioActivoId = detalle.InventarioActivoId,
                     Cantidad = detalle.Cantidad,
                     Precio = detalle.Precio
                 }).ToList()
@@ -121,7 +120,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                     DetalleIngresoActivoDTO = item.DetalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
                     {
                         Id = detalle.Id,
-                        InventarioActivoId = detalle.InventarioActivoId,
                         Cantidad = detalle.Cantidad,
                         Precio = detalle.Precio,
                     }).ToList() ?? new List<DetalleIngresoActivoDTO>() // Manejo de nulidad
@@ -155,7 +153,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 DetalleIngresoActivos = ingresoActivo.DetalleIngresoActivos.Select(detalle => new DetalleIngresoActivoDTO
                 {
                     Id = detalle.Id,
-                    InventarioActivoId = detalle.InventarioActivoId,
                     Cantidad = detalle.Cantidad,
                     Precio = detalle.Precio,
                 }).ToList() // Mapear los detalles a DetallePaqueteActivoDTO
@@ -186,7 +183,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
                 if (existingDetalle != null)
                 {
-                    existingDetalle.InventarioActivoId = detalle.InventarioActivoId;
                     existingDetalle.Cantidad = detalle.Cantidad;
                     existingDetalle.Precio = detalle.Precio;
                 }
@@ -194,7 +190,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 {
                     existingIngresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivo
                     {
-                        InventarioActivoId = detalle.InventarioActivoId,
                         Cantidad = detalle.Cantidad,
                         Precio = detalle.Precio
                     });
