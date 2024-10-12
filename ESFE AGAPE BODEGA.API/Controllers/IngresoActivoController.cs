@@ -116,8 +116,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 ingresoActivoResult.Data.Add(new SearchResultIngresoActivoDTO.IngresoActivoDTO
                 {
                     Id = item.Id,
-                    Correlativo = item.Correlativo,            
-                    DetalleIngresoActivoDTO = item.DetalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
+                    Correlativo = item.Correlativo,
+					UsuarioId = item.UsuarioId,
+					FechaIngreso = item.FechaIngreso,
+					NumeroDocRelacionado = item.NumeroDocRelacionado,
+					Total = item.Total,
+					DetalleIngresoActivoDTO = item.DetalleIngresoActivos?.Select(detalle => new DetalleIngresoActivoDTO
                     {
                         Id = detalle.Id,
                         Cantidad = detalle.Cantidad,
