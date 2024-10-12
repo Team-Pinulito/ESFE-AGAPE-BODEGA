@@ -1,6 +1,6 @@
 ﻿using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs;
-
+using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using System.Net.Http.Json;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
@@ -12,6 +12,17 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         public IngresoActivoService(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient("BodegaAPI");
+        }
+
+        public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuario()
+        {
+            var response = await _httpClient.GetAsync("Usuario");
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<List<GetIdResultUsuarioDTO.UsuarioDTO>>();
+                return result ?? new List<GetIdResultUsuarioDTO.UsuarioDTO>();
+            }
+            return new List<GetIdResultUsuarioDTO.UsuarioDTO>();
         }
 
         public async Task<List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>> ObtenerInventarioActivo()
@@ -45,10 +56,10 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
             var response = await _httpClient.PostAsJsonAsync("IngresoActivo", crearIngresoActivoDTO);
 
             if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadAsStringAsync();
-                return int.TryParse(result, out var id) ? id : 0;
-            }
+			{
+				var result = await response.Content.ReadAsStringAsync();
+				return int.TryParse(result, out var id) ? id : 0;
+			}
 
             return 0;
         }
