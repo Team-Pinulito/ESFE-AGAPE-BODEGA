@@ -59,7 +59,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 UsuarioId = crearIngresoActivoDTO.UsuarioId,
                 FechaIngreso = crearIngresoActivoDTO.FechaIngreso,
                 NumeroDocRelacionado = crearIngresoActivoDTO.NumeroDocRelacionado,
-                Total = crearIngresoActivoDTO.Total,
                 DetalleIngresoActivos = crearIngresoActivoDTO.CrearDetalleIngresoActivos.Select(detalle => new DetalleIngresoActivo
                 {
                     Cantidad = detalle.Cantidad,
@@ -67,6 +66,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 }).ToList()
             };
 
+			// Calcular el total dinámicamente en base a los detalles
+			nuevoIngresoActivo.Total = nuevoIngresoActivo.DetalleIngresoActivos.Sum(d => d.Cantidad * d.Precio);
 			int result = await _ativoDAL.CrearIngresoActivo(nuevoIngresoActivo);
 
 			if (result > 0)
@@ -178,7 +179,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             existingIngresoActivo.UsuarioId = editIngresoActivoDTO.UsuarioId;
             existingIngresoActivo.FechaIngreso = editIngresoActivoDTO.FechaIngreso;
             existingIngresoActivo.NumeroDocRelacionado = editIngresoActivoDTO.NumeroDocRelacionado;
-            existingIngresoActivo.Total = editIngresoActivoDTO.Total;
 
             foreach (var detalle in editIngresoActivoDTO.DetalleIngresoActivos)
             {
@@ -207,8 +207,10 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                     existingIngresoActivo.DetalleIngresoActivos.Remove(existingDetalle);
                 }
             }
+			// Recalcular el total basado en los detalles actualizados
+			existingIngresoActivo.Total = existingIngresoActivo.DetalleIngresoActivos.Sum(d => d.Cantidad * d.Precio);
 
-            var result = await _ativoDAL.ActualizaringresoActivo(existingIngresoActivo);
+			var result = await _ativoDAL.ActualizaringresoActivo(existingIngresoActivo);
 
             if (result == 0)
             {
