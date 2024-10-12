@@ -14,13 +14,13 @@
 				<div class="card-body">
 					<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-6">
 
 								<label for="Correlativo">Correlativo:</label>
 								<InputText class="form-control" @bind-Value="searchQuery.Correlativo_Like" />
 
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 
 								<label for="Take">CantReg X Pagina</label>
 								<select class="form-control" @bind="searchQuery.Take">
@@ -99,7 +99,7 @@
 								{
 									<tr>
 										<td>@ingresoActivo.Correlativo</td>
-										<td>@ingresoActivo.FechaIngreso.ToString("dd/MM/yyyy")</td> <!-- Corregido -->
+										<td>@ingresoActivo.FechaIngreso.ToString("dd/MM/yyyy")</td>
 										<td>
 											<table>
 												<tr>
