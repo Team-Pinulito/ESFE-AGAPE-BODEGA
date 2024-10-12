@@ -74,7 +74,10 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                     }
                 }
 
-                return await applicationDbContext.SaveChangesAsync();
+				
+
+
+				return await applicationDbContext.SaveChangesAsync();
             }
 
             // Si no se encuentra el IngresoActivo, devolver 0
