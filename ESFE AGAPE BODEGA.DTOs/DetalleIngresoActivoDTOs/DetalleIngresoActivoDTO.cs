@@ -10,9 +10,6 @@ namespace ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
     public class DetalleIngresoActivoDTO
     {
         public int Id { get; set; }
-        [Display(Name = "Inventario Activo")]
-        [Required(ErrorMessage = "El campo ActivoId es obligatorio.")]
-        public int InventarioActivoId { get; set; }
 
         [Required(ErrorMessage = "El campo Cantidad es obligatorio.")]
         public int Cantidad { get; set; }
