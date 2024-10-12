@@ -10,138 +10,146 @@
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
-    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+	<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
 
-        <div class="row m-4">
-            <div class="card col-md-12">
-                <div class="card-header row">
-                    <h1 class="col-md-12">Crear Nuevo Ingreso Activo</h1>
-                </div>
-                <div class="card-body">
-                    @if (isSuccess == false && isError == false)
-                    {
-                        <EditForm Model="ingresoActivo" OnValidSubmit="Create">
-                            <DataAnnotationsValidator />
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="Correlativo" class="form-label">Correlativo<span style="color:red;">*</span></label>
-                                    <InputText class="form-control" id="Correlativo" @bind-Value="ingresoActivo.Correlativo" />
-                                    <ValidationMessage For="() => ingresoActivo.Correlativo" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="NumeroDocRelacionado" class="form-label">Número Documento Relacionado<span style="color:red;">*</span></label>
-                                    <InputText class="form-control" id="NumeroDocRelacionado" @bind-Value="ingresoActivo.NumeroDocRelacionado" />
-                                    <ValidationMessage For="() => ingresoActivo.NumeroDocRelacionado" />
-                                </div>
-                            </div>
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <label for="FechaIngreso" class="form-label">Fecha de Ingreso<span style="color:red;">*</span></label>
-                                    <InputDate class="form-control" id="FechaIngreso" @bind-Value="ingresoActivo.FechaIngreso" />
-                                    <ValidationMessage For="() => ingresoActivo.FechaIngreso" />
-                                </div>      
-                                <div class="col-md-6">
-                                    <label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
-                                    <select class="form-control" @bind="ingresoActivo.UsuarioId" required>
-                                        <option value="">Seleccione un usuario</option>
-                                        @foreach (var usuario in usuarios)
-                                        {
-                                            <option value="@usuario.Id">@usuario.Nombre</option>
-                                        }
-                                    </select>
-                                    <ValidationMessage For="() => ingresoActivo.UsuarioId" />
-                                </div>
-                            </div>
+		<div class="row m-4">
+			<div class="card col-md-12">
+				<div class="card-header row">
+					<h1 class="col-md-12">Crear Nuevo Ingreso Activo</h1>
+				</div>
+				<div class="card-body">
+					@if (isSuccess == false && isError == false)
+					{
+						<EditForm Model="ingresoActivo" OnValidSubmit="Create">
+							<DataAnnotationsValidator />
+							<div class="row">
+								<div class="col-md-6">
+									<label for="Correlativo" class="form-label">Correlativo<span style="color:red;">*</span></label>
+									<InputText class="form-control" id="Correlativo" @bind-Value="ingresoActivo.Correlativo" />
+									<ValidationMessage For="() => ingresoActivo.Correlativo" />
+								</div>
+								<div class="col-md-6">
+									<label for="NumeroDocRelacionado" class="form-label">Número Documento Relacionado<span style="color:red;">*</span></label>
+									<InputText class="form-control" id="NumeroDocRelacionado" @bind-Value="ingresoActivo.NumeroDocRelacionado" />
+									<ValidationMessage For="() => ingresoActivo.NumeroDocRelacionado" />
+								</div>
+							</div>
+							<div class="row mt-3">
+								<div class="col-md-4">
+									<label for="FechaIngreso" class="form-label">Fecha de Ingreso<span style="color:red;">*</span></label>
+									<input type="datetime-local" class="form-control" id="FechaIngreso" @bind-value="ingresoActivo.FechaIngreso" />
+									<ValidationMessage For="() => ingresoActivo.FechaIngreso" />
+								</div>
+								<div class="col-md-4">
+									<label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
+									<select class="form-control" @bind="ingresoActivo.UsuarioId" required>
+										<option value="">Seleccione un usuario</option>
+										@foreach (var usuario in usuarios)
+										{
+											<option value="@usuario.Id">@usuario.Nombre</option>
+										}
+									</select>
+									<ValidationMessage For="() => ingresoActivo.UsuarioId" />
+								</div>
+								<div class="col-md-4">
+									<label for="Total" class="form-label">Total<span style="color:red;">*</span></label>
+									<InputNumber class="form-control" id="Total" @bind-Value="ingresoActivo.Total" />
+									<ValidationMessage For="() => ingresoActivo.Total" />
+								</div>
+							</div>
 
-                            <div class="row mt-3 align-items-center">
-                                <div class="col-md-6">
-                                    <h3>Detalles del Ingreso</h3>
-                                </div>
-                                <div class="col-md-6 text-end">
-                                    <button type="button" class="btn btn-primary mt-4" @onclick="AgregarDetalle">
-                                        <!-- SVG del icono para añadir detalles -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
-                                            <path d="M19 15v-3h-2v3h-3v2h3v3h2v-3h3v-2h-.937zM4 7h11v2H4zm0 4h11v2H4zm0 4h8v2H4z"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
+							<div class="row mt-3 align-items-center">
+								<div class="col-md-6">
+									<h3>Detalles del Ingreso</h3>
+								</div>
+								<div class="col-md-6 text-end">
+									<button type="button" class="btn btn-primary mt-4" @onclick="AgregarDetalle">
+										<!-- SVG del icono para añadir detalles -->
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
+											<path d="M19 15v-3h-2v3h-3v2h3v3h2v-3h3v-2h-.937zM4 7h11v2H4zm0 4h11v2H4zm0 4h8v2H4z"></path>
+										</svg>
+									</button>
+								</div>
+							</div>
 
-                            <div class="row">
-                                @foreach (var detalle in ingresoActivo.CrearDetalleIngresoActivos)
-                                {
-                                    <_CrearDetalleIngresoActivo detalle="detalle"
-                                        EliminarDetalle="() => EliminarDetalle(detalle)" />
-                                }
-                            </div>
+							<div class="row">
+								@foreach (var detalle in ingresoActivo.CrearDetalleIngresoActivos)
+								{
+									<_CrearDetalleIngresoActivo detalle="detalle"
+																EliminarDetalle="() => EliminarDetalle(detalle)" />
+								}
+							</div>
 
-                            <div class="row mt-4">
-                                <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
-                                </div>
-                                <div class="col-md-6">
-                                    <NavLink href="/lista-ingresoActivo" class="btn btn-secondary w-100">Cancelar</NavLink>
-                                </div>
-                            </div>
-                        </EditForm>
-                    }
-                    else if (isSuccess)
-                    {
-                        ingresoActivo = new CrearIngresoActivoDTO();
-                        isError = false;
-                        <p class="alert alert-success">Ingreso Activo creado con éxito.</p>
-                        <NavLink href="/lista-ingresoActivo" class="btn btn-success">Aceptar</NavLink>
-                        <button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
-                    }
-                    else if (isError)
-                    {
-                        <p class="alert alert-danger">Ocurrió un error al intentar registrar el ingreso activo. @isError</p>
-                        <NavLink href="/lista-ingresoActivo" class="btn btn-danger">Aceptar</NavLink>
-                    }
-                </div>
-            </div>
-        </div>
-    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+							<div class="row mt-4">
+								<div class="col-md-6">
+									<button type="submit" class="btn btn-primary w-100">Guardar</button>
+								</div>
+								<div class="col-md-6">
+									<NavLink href="/lista-ingresoActivo" class="btn btn-secondary w-100">Cancelar</NavLink>
+								</div>
+							</div>
+						</EditForm>
+					}
+					else if (isSuccess)
+					{
+						ingresoActivo = new CrearIngresoActivoDTO();
+						isError = false;
+						<p class="alert alert-success">Ingreso Activo creado con éxito.</p>
+						<NavLink href="/lista-ingresoActivo" class="btn btn-success">Aceptar</NavLink>
+						<button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
+					}
+					else if (isError)
+					{
+						<p class="alert alert-danger">Ocurrió un error al intentar registrar el ingreso activo. @isError</p>
+						<NavLink href="/lista-ingresoActivo" class="btn btn-danger">Aceptar</NavLink>
+					}
+				</div>
+			</div>
+		</div>
+	</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
 </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 
 @code {
-    [Inject]
-    IngresoActivoService ingresoActivoService { get; set; }
+	[Inject]
+	IngresoActivoService ingresoActivoService { get; set; }
 
-    List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
+	List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
 
-    CrearIngresoActivoDTO ingresoActivo = new CrearIngresoActivoDTO();
-    bool isSuccess = false;
-    bool isError = false;
+	CrearIngresoActivoDTO ingresoActivo = new CrearIngresoActivoDTO();
+	bool isSuccess = false;
+	bool isError = false;
 
-    protected override async Task OnInitializedAsync()
+	protected override async Task OnInitializedAsync()
 	{
-        usuarios = await ingresoActivoService.ObtenerUsuario();
+		// Inicializa la fecha de ingreso con la fecha y hora actual
+		ingresoActivo.FechaIngreso = DateTime.Now;
+		usuarios = await ingresoActivoService.ObtenerUsuario();
 
 	}
 
-    private async Task Create()
-    {
-        int result = await ingresoActivoService.CrearIngresoActivo(ingresoActivo);
-        if (result != 0)
-            isSuccess = true;
-        else
-            isError = true;
-    }
+	private async Task Create()
+	{
 
-    private void GoCreate()
-    {
-        isSuccess = false;
-        isError = false;
-    }
+		int result = await ingresoActivoService.CrearIngresoActivo(ingresoActivo);
+		if (result != 0)
+			isSuccess = true;
+		else
+			isError = true;
+	}
 
-    private void AgregarDetalle()
-    {
-        ingresoActivo.CrearDetalleIngresoActivos.Add(new CrearDetalleIngresoActivoDTO());
-    }
+	private void GoCreate()
+	{
+		isSuccess = false;
+		isError = false;
+	}
 
-    private void EliminarDetalle(CrearDetalleIngresoActivoDTO detalle)
-    {
-        ingresoActivo.CrearDetalleIngresoActivos.Remove(detalle);
-    }
+	private void AgregarDetalle()
+	{
+		ingresoActivo.CrearDetalleIngresoActivos.Add(new CrearDetalleIngresoActivoDTO());
+	}
+
+	private void EliminarDetalle(CrearDetalleIngresoActivoDTO detalle)
+	{
+		ingresoActivo.CrearDetalleIngresoActivos.Remove(detalle);
+	}
 }
