@@ -16,8 +16,17 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 			[Display(Name = "Correlativo")]
 			public string Correlativo { get; set; }
 
+
+			[Display(Name = "Usuario")]
+			public int UsuarioId { get; set; }
+
 			[Display(Name = "Fecha de Ingreso")]
 			public DateTime FechaIngreso { get; set; }
+
+			[Display(Name = "Número Documento Relacionado")]
+			public string NumeroDocRelacionado { get; set; }
+
+			public decimal Total { get; set; }
 
 
 			public List<DetalleIngresoActivoDTO> DetalleIngresoActivoDTO { get; set; }
