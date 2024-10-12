@@ -6,27 +6,15 @@
 @using Microsoft.AspNetCore.Components
 
 <div class="row align-items-center">
-    <div class="col-md-4">
-        <!-- Selección de Existencia  -->
-        <label for="InventarioActivoId" class="form-label">Inventario Activo</label>
-        <select class="form-control" @bind="detalle.InventarioActivoId" required>
-            <option value="0">Seleccione un activo</option>
-            @foreach (var inventario in inventarios)
-            {
-                <option value="@inventario.Id">@inventario.Existencia</option>
-            }
-        </select>
-        <ValidationMessage For="() => detalle.InventarioActivoId" />
-    </div>
-
-    <div class="col-md-3">
+  
+    <div class="col-md-5">
         <!-- Cantidad del Detalle -->
         <label for="Cantidad" class="form-label">Cantidad</label>
         <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" />
         <ValidationMessage For="() => detalle.Cantidad" />
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-5">
         <!-- Precio del Activo -->
         <label for="Precio" class="form-label">Precio</label>
         <InputNumber class="form-control" id="Precio" @bind-Value="detalle.Precio" step="0.01" />
@@ -48,7 +36,6 @@
     [Parameter] public CrearDetalleIngresoActivoDTO detalle  { get; set; }
     [Parameter] public DetalleIngresoActivoDTO  detalles { get; set; }
 
-    [Parameter] public List<GetIdResultInventarioActivoDTO.InventarioActivoDTO> inventarios { get; set; }
 
     [Parameter] public EventCallback EliminarDetalle { get; set; }
 }
