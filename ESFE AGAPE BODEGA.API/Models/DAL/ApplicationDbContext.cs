@@ -75,10 +75,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
                 .WithMany(i => i.DetalleIngresoActivos)
                 .HasForeignKey(d => d.IngresoActivoId);
 
-            modelBuilder.Entity<DetalleIngresoActivo>()
-                .HasOne(d => d.inventarioActivo)
-                .WithMany(i => i.DetalleIngresoActivos)
-                .HasForeignKey(d => d.InventarioActivoId);
+           
         }
     }
 }
