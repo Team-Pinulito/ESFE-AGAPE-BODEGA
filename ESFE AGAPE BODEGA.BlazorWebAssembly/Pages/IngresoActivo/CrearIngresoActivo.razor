@@ -3,6 +3,8 @@
 @using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
+
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
@@ -37,10 +39,16 @@
                                     <label for="FechaIngreso" class="form-label">Fecha de Ingreso<span style="color:red;">*</span></label>
                                     <InputDate class="form-control" id="FechaIngreso" @bind-Value="ingresoActivo.FechaIngreso" />
                                     <ValidationMessage For="() => ingresoActivo.FechaIngreso" />
-                                </div>
+                                </div>      
                                 <div class="col-md-6">
-                                    <label for="UsuarioId" class="form-label">Usuario<span style="color:red;">*</span></label>
-                                    <InputNumber class="form-control" id="UsuarioId" @bind-Value="ingresoActivo.UsuarioId" />
+                                    <label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
+                                    <select class="form-control" @bind="ingresoActivo.UsuarioId" required>
+                                        <option value="">Seleccione un usuario</option>
+                                        @foreach (var usuario in usuarios)
+                                        {
+                                            <option value="@usuario.Id">@usuario.Nombre</option>
+                                        }
+                                    </select>
                                     <ValidationMessage For="() => ingresoActivo.UsuarioId" />
                                 </div>
                             </div>
@@ -63,7 +71,6 @@
                                 @foreach (var detalle in ingresoActivo.CrearDetalleIngresoActivos)
                                 {
                                     <_CrearDetalleIngresoActivo detalle="detalle"
-                                        inventarios="inventarios"
                                         EliminarDetalle="() => EliminarDetalle(detalle)" />
                                 }
                             </div>
@@ -88,7 +95,7 @@
                     }
                     else if (isError)
                     {
-                        <p class="alert alert-danger">Ocurrió un error al intentar registrar el ingreso activo.</p>
+                        <p class="alert alert-danger">Ocurrió un error al intentar registrar el ingreso activo. @isError</p>
                         <NavLink href="/lista-ingresoActivo" class="btn btn-danger">Aceptar</NavLink>
                     }
                 </div>
@@ -101,14 +108,16 @@
     [Inject]
     IngresoActivoService ingresoActivoService { get; set; }
 
-    List<GetIdResultInventarioActivoDTO.InventarioActivoDTO> inventarios = new List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>();
+    List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
+
     CrearIngresoActivoDTO ingresoActivo = new CrearIngresoActivoDTO();
     bool isSuccess = false;
     bool isError = false;
 
     protected override async Task OnInitializedAsync()
 	{
-        inventarios = await ingresoActivoService.ObtenerInventarioActivo();
+        usuarios = await ingresoActivoService.ObtenerUsuario();
+
 	}
 
     private async Task Create()
