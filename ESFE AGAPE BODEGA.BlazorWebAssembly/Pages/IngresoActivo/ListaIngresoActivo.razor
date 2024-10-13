@@ -1,5 +1,7 @@
 ﻿@page "/lista-ingresoActivo"
 @using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+
 @using System.Text.Json;
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.AspNetCore.Components.Forms;
@@ -14,13 +16,20 @@
 				<div class="card-body">
 					<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-4">
 
 								<label for="Correlativo">Correlativo:</label>
 								<InputText class="form-control" @bind-Value="searchQuery.Correlativo_Like" />
 
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-4">
+
+								<label for="FechaIngreso">Fecha Ingreso:</label>
+								<InputDate class="form-control" @bind-Value="searchQuery.Fecha_Like" />
+
+							</div>
+
+							<div class="col-md-4">
 
 								<label for="Take">CantReg X Pagina</label>
 								<select class="form-control" @bind="searchQuery.Take">
@@ -90,7 +99,10 @@
 							<thead>
 								<tr>
 									<th>Correlativo</th>
+									<th>Número Documento Relacionado</th>
 									<th>Fecha Ingreso</th>
+									<th>Usuario</th>								
+									<th>Total</th>
 									<th>Acciones</th>
 								</tr>
 							</thead>
@@ -99,7 +111,10 @@
 								{
 									<tr>
 										<td>@ingresoActivo.Correlativo</td>
-										<td>@ingresoActivo.FechaIngreso.ToString("dd/MM/yyyy")</td>
+										<td>@ingresoActivo.NumeroDocRelacionado</td>
+										<td>@ingresoActivo.FechaIngreso.ToString("dd/MM/yyyy HH:mm")</td>
+										<td>@GetUsuarioName(ingresoActivo.UsuarioId)</td>
+										<td>@ingresoActivo.Total</td>
 										<td>
 											<table>
 												<tr>
@@ -143,6 +158,7 @@
 
 	bool isLoading = false; // Estado de carga
 							// Método para realizar una búsqueda de IngresoActivo
+	List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
 	private async Task Search()
 	{
 		isLoading = true;
@@ -165,11 +181,16 @@
 
 		// Realizar la búsqueda inicial
 		await Search();
-
+		usuarios = await ingresoActivoService.ObtenerUsuario();
 		// Actualizar la paginación
 		UpdatePagination();
 	}
 
+	private string GetUsuarioName(int usuarioId)
+	{
+		var usuario = usuarios.FirstOrDefault(r => r.Id == usuarioId);
+		return usuario != null ? usuario.Nombre : "Desconocido";
+	}
 	// Método para realizar la búsqueda cuando se envía el formulario de búsqueda
 	private async Task SubmitSearch()
 	{
