@@ -87,7 +87,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             var ingreso = new IngresoActivo
             {
                 
-                Correlativo = ingresoActivoDTO.Correlativo_Like ?? string.Empty
+                Correlativo = ingresoActivoDTO.Correlativo_Like ?? string.Empty,
+                FechaIngreso = ingresoActivoDTO.Fecha_Like ?? default(DateTime)
             };
 
             var ingresos = new List<IngresoActivo>();
