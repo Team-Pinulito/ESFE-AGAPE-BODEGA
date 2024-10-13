@@ -98,7 +98,15 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             {
                 query = query.Where(x => x.Correlativo.Contains(ingresoActivo.Correlativo));
             }
-           
+
+            // Búsqueda por fecha (si está presente)
+            if (ingresoActivo.FechaIngreso != default(DateTime))
+            {
+                // Comparar solo la parte de la fecha, ignorando la hora
+                query = query.Where(x => x.FechaIngreso.Date == ingresoActivo.FechaIngreso.Date);
+            }
+            // Comparar solo la parte de la fecha, ignorando la hora
+
 
             return query;
         }
