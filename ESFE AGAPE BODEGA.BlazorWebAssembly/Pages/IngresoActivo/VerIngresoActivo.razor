@@ -1,6 +1,8 @@
 ﻿@page "/ver-ingresoActivo/{Id:int}"
 @using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
+
 @using Microsoft.AspNetCore.Components.Forms
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 
@@ -15,29 +17,37 @@
                     @if (isSuccess == false && isError == false)
                     {
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-3">
                                 <label for="Correlativo" class="form-label">Correlativo</label>
                                 <input type="text" class="form-control" disabled @bind="ingresoActivo.Correlativo" />
-                            </div>
-                            <div class="col-md-6">
-                                <label for="UsuarioId" class="form-label">Usuario ID</label>
-                                <input type="text" class="form-control" disabled @bind="ingresoActivo.UsuarioId" />
-                            </div>
-                            <div class="col-md-6 mt-3">
-                                <label for="FechaIngreso" class="form-label">Fecha de Ingreso</label>
-                                <input type="date" class="form-control" disabled @bind="ingresoActivo.FechaIngreso" />
                             </div>
                             <div class="col-md-6 mt-3">
                                 <label for="NumeroDocRelacionado" class="form-label">Número de Documento Relacionado</label>
                                 <input type="text" class="form-control" disabled @bind="ingresoActivo.NumeroDocRelacionado" />
                             </div>
-                            <div class="col-md-6 mt-3">
+                            <div class="col-md-4 mt-3">
+                                <label for="FechaIngreso" class="form-label">Fecha de Ingreso</label>
+                                <input type="datetime-local" class="form-control" disabled @bind="ingresoActivo.FechaIngreso" />
+
+                            </div>
+
+                            <div class="col-md-4 mt-3">
+                                <label for="UsuarioId" class="form-label">Usuario ID</label>
+                                <select class="form-control" disabled @bind="ingresoActivo.UsuarioId" required>
+                                    <option value="">Seleccione una usuario</option>
+                                    @foreach (var usuario in usuarios)
+                                    {
+                                        <option value="@usuario.Id">@usuario.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-4 mt-3">
                                 <label for="Total" class="form-label">Total</label>
                                 <input type="text" class="form-control" disabled @bind="ingresoActivo.Total" />
                             </div>
 
                             <div class="row mt-4">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <h3>Detalles del Ingreso Activo</h3>
                                 </div>
                             </div>
@@ -56,7 +66,12 @@
                                 }
                                 else
                                 {
-                                    <p>No hay detalles disponibles.</p>
+                                    <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Cargando...</span>
+                                        </div>
+                                        <p class="ms-3">Cargando...</p>
+                                    </div>
                                 }
                             </div>
                             <div class="col-md-12 mt-4">
@@ -66,7 +81,12 @@
                     }
                     else if (isError)
                     {
-                        <p>Error al cargar los datos del Ingreso Activo.</p>
+                        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="ms-3">Cargando...</p>
+                        </div>
                     }
                 </div>
             </div>
@@ -79,20 +99,14 @@
 
     [Inject] IngresoActivoService ingresoActivoService { get; set; }
 
+    List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
     GetIdResultIngresoActivoDTO ingresoActivo = new GetIdResultIngresoActivoDTO();
     bool isSuccess = false;
     bool isError = false;
 
     protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            ingresoActivo = await ingresoActivoService.ObtenerIngresoActivoPorId(Id);
-            isSuccess = ingresoActivo != null;
-        }
-        catch (Exception)
-        {
-            isError = true;
-        }
+    {  // Cargar el paquete activo por ID
+        ingresoActivo = await ingresoActivoService.ObtenerIngresoActivoPorId(Id);
+        usuarios = await ingresoActivoService.ObtenerUsuario();
     }
 }
