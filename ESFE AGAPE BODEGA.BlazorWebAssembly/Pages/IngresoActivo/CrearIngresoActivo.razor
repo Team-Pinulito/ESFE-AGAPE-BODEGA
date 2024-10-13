@@ -52,9 +52,8 @@
 									<ValidationMessage For="() => ingresoActivo.UsuarioId" />
 								</div>
 								<div class="col-md-4">
-									<label for="Total" class="form-label">Total<span style="color:red;">*</span></label>
-									<InputNumber class="form-control" id="Total" @bind-Value="ingresoActivo.Total" />
-									<ValidationMessage For="() => ingresoActivo.Total" />
+									<label for="Total" class="form-label">Total</label>
+									<input type="number" class="form-control" disabled @bind="ingresoActivo.Total" />
 								</div>
 							</div>
 
@@ -73,11 +72,14 @@
 							</div>
 
 							<div class="row">
+
 								@foreach (var detalle in ingresoActivo.CrearDetalleIngresoActivos)
 								{
 									<_CrearDetalleIngresoActivo detalle="detalle"
-																EliminarDetalle="() => EliminarDetalle(detalle)" />
+																EliminarDetalle="() => EliminarDetalle(detalle)"
+																OnDetalleChanged="CalcularTotal" />
 								}
+
 							</div>
 
 							<div class="row mt-4">
@@ -151,5 +153,10 @@
 	private void EliminarDetalle(CrearDetalleIngresoActivoDTO detalle)
 	{
 		ingresoActivo.CrearDetalleIngresoActivos.Remove(detalle);
+	}
+
+	private void CalcularTotal()
+	{
+		ingresoActivo.Total = ingresoActivo.CrearDetalleIngresoActivos.Sum(d => d.Cantidad * d.Precio);
 	}
 }
