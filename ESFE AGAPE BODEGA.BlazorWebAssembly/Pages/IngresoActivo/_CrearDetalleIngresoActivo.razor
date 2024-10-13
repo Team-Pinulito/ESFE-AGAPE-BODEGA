@@ -10,14 +10,14 @@
     <div class="col-md-5">
         <!-- Cantidad del Detalle -->
         <label for="Cantidad" class="form-label">Cantidad</label>
-        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" />
+        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" @oninput="OnCantidadChanged" />
         <ValidationMessage For="() => detalle.Cantidad" />
     </div>
 
     <div class="col-md-5">
         <!-- Precio del Activo -->
         <label for="Precio" class="form-label">Precio</label>
-        <InputNumber class="form-control" id="Precio" @bind-Value="detalle.Precio" step="0.01" />
+        <InputNumber class="form-control" id="Precio" @bind-Value="detalle.Precio" step="0.01" @oninput="OnPrecioChanged" />
         <ValidationMessage For="() => detalle.Precio" />
     </div>
 
@@ -37,4 +37,16 @@
 
 
     [Parameter] public EventCallback EliminarDetalle { get; set; }
+
+    [Parameter] public EventCallback OnDetalleChanged { get; set; }
+
+    private void OnCantidadChanged(ChangeEventArgs e)
+    {
+        OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
+    }
+
+    private void OnPrecioChanged(ChangeEventArgs e)
+    {
+        OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
+    }
 }
