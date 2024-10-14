@@ -12,7 +12,9 @@ namespace ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
             EstanteId = getIdResultActivoDTO.EstanteId;
             TipoActivoId = getIdResultActivoDTO.TipoActivoId;
             Codigo = getIdResultActivoDTO.Codigo;
-        }
+			CodigoBarra = getIdResultActivoDTO.CodigoBarra;
+
+		}
 
         public EditActivoDTO()
         {
