@@ -39,6 +39,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
         [MaxLength(50, ErrorMessage = "El campo Código no puede tener más de 50 caracteres.")]
         public string Codigo { get; set; }
 
-       
-    }
+		public string CodigoBarra { get; set; }
+
+
+	}
 }
