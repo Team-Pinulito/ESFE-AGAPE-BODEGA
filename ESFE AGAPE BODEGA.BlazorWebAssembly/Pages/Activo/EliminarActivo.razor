@@ -46,6 +46,10 @@
                                 <label for="Codigo" class="form-label">Código</label>
                                 <input type="text" class="form-control" disabled @bind="activo.Codigo" />
                             </div>
+                            <div class="col-md-4">
+                                <label for="CodigoBarra" class="form-label">Código de barra</label>
+                                <input type="text" class="form-control" disabled @bind="activo.CodigoBarra" />
+                            </div>
                             <div class="col-md-6 mt-3">
                                 <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
                             </div>
