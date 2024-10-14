@@ -27,6 +27,11 @@ namespace ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
             [Display(Name = "Código")]
             public string Codigo { get; set; }
 
-        }
-    }
+			[Display(Name = "Código de Barra")]
+
+			public string CodigoBarra { get; set; }
+
+
+		}
+	}
 }
