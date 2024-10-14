@@ -33,8 +33,10 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Descripcion = a.Descripcion,
                 EstanteId = a.EstanteId,
                 TipoActivoId = a.TipoActivoId,
-                Codigo = a.Codigo
-            }).ToList();
+                Codigo = a.Codigo,
+				CodigoBarra = a.CodigoBarra
+
+			}).ToList();
         }
 		[HttpPost("buscar")]
 		public async Task<SearchResultActivoDTO> Buscar(SearchQueryActivoDTO activoDTO)
@@ -74,7 +76,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 					Descripcion = item.Descripcion,
 					EstanteId = item.EstanteId,
 					TipoActivoId = item.TipoActivoId,
-					Codigo = item.Codigo
+					Codigo = item.Codigo,
+					CodigoBarra = item.CodigoBarra
 				});
 			}
 
@@ -98,8 +101,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Descripcion = activo.Descripcion,
                 EstanteId = activo.EstanteId,
                 TipoActivoId = activo.TipoActivoId,
-                Codigo = activo.Codigo
-            };
+                Codigo = activo.Codigo,
+				CodigoBarra = activo.CodigoBarra
+			};
         }
 
         [HttpPost]
@@ -116,9 +120,10 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Descripcion = crearActivoDTO.Descripcion,
                 EstanteId = crearActivoDTO.EstanteId,
                 TipoActivoId = crearActivoDTO.TipoActivoId,
-                Codigo = crearActivoDTO.Codigo
-             
-            };
+                Codigo = crearActivoDTO.Codigo,
+				CodigoBarra = crearActivoDTO.CodigoBarra
+
+			};
 
             int result = await _activoDAL.CrearActivo(activo);
 
@@ -147,8 +152,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             updateActivo.EstanteId = editActivoDTO.EstanteId;
             updateActivo.TipoActivoId = editActivoDTO.TipoActivoId;
             updateActivo.Codigo = editActivoDTO.Codigo;
+			updateActivo.CodigoBarra = editActivoDTO.CodigoBarra;
 
-            int result = await _activoDAL.ActualizarActivo(updateActivo);
+			int result = await _activoDAL.ActualizarActivo(updateActivo);
 
             if (result > 0)
             {
