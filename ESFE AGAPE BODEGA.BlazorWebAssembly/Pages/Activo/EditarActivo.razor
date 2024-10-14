@@ -17,12 +17,12 @@
                         <EditForm Model="activo" OnValidSubmit="Edit">
                             <DataAnnotationsValidator />
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
                                     <InputText class="form-control" id="Nombre" @bind-Value="activo.Nombre" />
                                     <ValidationMessage For="() => activo.Nombre" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="Descripcion" class="form-label">Descripción<span style="color:red;">*</span></label>
                                     <InputTextArea class="form-control" id="Descripcion" @bind-Value="activo.Descripcion" />
                                     <ValidationMessage For="() => activo.Descripcion" />
