@@ -11,7 +11,10 @@ namespace Bodega_Api_Esfe_Agape.Models.EN
         public int TipoActivoId { get; set; }
         public string Codigo { get; set; }
 
-        public Estante estante { get; set; }
+
+		public string CodigoBarra { get; set; }
+
+		public Estante estante { get; set; }
 
         public TipoActivo tipoactivo { get; set; }
 
