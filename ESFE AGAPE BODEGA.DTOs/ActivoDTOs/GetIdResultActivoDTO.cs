@@ -9,5 +9,8 @@
         public int TipoActivoId { get; set; }
         public string Codigo { get; set; }
 
-    }
+		public string CodigoBarra { get; set; }
+
+
+	}
 }
