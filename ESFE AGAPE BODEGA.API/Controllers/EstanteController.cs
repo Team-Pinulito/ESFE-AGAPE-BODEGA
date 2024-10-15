@@ -4,6 +4,8 @@ using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
 
 namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
@@ -13,25 +15,28 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
     public class EstanteController : ControllerBase
 	{
 		private readonly EstanteDAL _estanteDAL;
-		public EstanteController(EstanteDAL estanteDAL)
+        private readonly IMapper mapper;
+
+
+        public EstanteController(EstanteDAL estanteDAL, IMapper mapper)
 		{
 			_estanteDAL = estanteDAL;
-		}
+            this.mapper = mapper;
+        }
 
 		[HttpGet]
 		public async Task<List<GetIdResultEstanteDTO>> ObtenerTodos()
 		{
 			var estantes = await _estanteDAL.ObtenerEstantes();
 
-			var estanteDto = estantes.Select(r => new GetIdResultEstanteDTO
-			{
-				Id = r.Id,
-				Nombre = r.Nombre,
-				Descripcion = r.Descripcion,
-				BodegaId = r.BodegaId
-			}).ToList();
+            if (estantes == null)
+            {
+                // Manejo del caso cuando la lista es nula
+                return new List<GetIdResultEstanteDTO>();
+            }
+            var estanteDto = mapper.Map<List<GetIdResultEstanteDTO>>(estantes);
 
-			return estanteDto;
+            return estanteDto;
 		}
 
 
