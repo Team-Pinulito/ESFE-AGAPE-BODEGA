@@ -6,6 +6,11 @@ using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleSolicitudActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs;
+
+
 
 namespace ESFE_AGAPE_BODEGA.API.Mapping
 {
@@ -36,6 +41,20 @@ namespace ESFE_AGAPE_BODEGA.API.Mapping
             CreateMap<DetalleIngresoActivo, DetalleIngresoActivoDTO>();
             CreateMap<DetalleIngresoActivo, CrearDetalleIngresoActivoDTO>();
 
+            CreateMap<Estante, CrearEstanteDTO>();
+            CreateMap<Estante, EditEstanteDTO>();
+            CreateMap<Estante, GetIdResultEstanteDTO>();
+            CreateMap<Estante, SearchResultEstanteDTO>();
+            CreateMap<Estante, SearchQueryEstanteDTO>();
+
+            CreateMap<PaqueteActivo, CrearPaqueteActivoDTO>();
+            CreateMap<PaqueteActivo, EditPaqueteActivoDTO>();
+            CreateMap<PaqueteActivo, GetIdResultPaqueteActivoDTO>().ForMember(dest => dest.DetallePaqueteActivos, opt => opt.MapFrom(src =>
+            src.DetallePaqueteActivos));
+            CreateMap<PaqueteActivo, SearchResultPaqueteActivoDTO>();
+            CreateMap<PaqueteActivo, SearchQueryPaqueteActivoDTO>();
+            CreateMap<PaqueteActivo, DetallePaqueteActivoDTO>();
+            CreateMap<PaqueteActivo, CrearDetallePaqueteActivoDTO>();
         }
     }
 }
