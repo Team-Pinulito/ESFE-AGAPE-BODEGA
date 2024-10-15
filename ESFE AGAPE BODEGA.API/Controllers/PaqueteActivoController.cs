@@ -1,7 +1,9 @@
-﻿using ESFE_AGAPE_BODEGA.API.Models.DAL;
+﻿using AutoMapper;
+using ESFE_AGAPE_BODEGA.API.Models.DAL;
 using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,12 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 
 
 		private readonly PaqueteActivoDAL _paqueteActivoDAL;
-		public PaqueteActivoController(PaqueteActivoDAL paqueteActivoDAL)
+        private readonly IMapper mapper;
+        public PaqueteActivoController(PaqueteActivoDAL paqueteActivoDAL, IMapper mapper)
 		{
 			_paqueteActivoDAL = paqueteActivoDAL;
-		}
+            this.mapper = mapper;
+        }
 
 
 		[HttpGet]
@@ -28,27 +32,14 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 			// Obtener la lista de PaqueteActivo desde el DAL
 			var paquetesActivos = await _paqueteActivoDAL.ObtenerPaqueteActivos();
 
-			if (paquetesActivos == null)
-			{
-				// Manejo del caso cuando la lista es nula
-				return new List<GetIdResultPaqueteActivoDTO>();
-			}
+            if (paquetesActivos == null)
+            {
+                // Manejo del caso cuando la lista es nula
+                return new List<GetIdResultPaqueteActivoDTO>();
+            }
+            var paqueteActivoDto = mapper.Map<List<GetIdResultPaqueteActivoDTO>>(paquetesActivos);
 
-			// Mapear la lista de PaqueteActivo a GetIdResultPaqueteActivoDTO
-			var paqueteActivoDto = paquetesActivos.Select(paquete => new GetIdResultPaqueteActivoDTO
-			{
-				Id = paquete.Id,
-				Correlativo = paquete.Correlativo,
-				Nombre = paquete.Nombre,
-				DetallePaqueteActivos = paquete.DetallePaqueteActivos?.Select(detalle => new DetallePaqueteActivoDTO
-				{
-					Id = detalle.Id,
-					ActivoId = detalle.ActivoId,
-					Cantidad = detalle.Cantidad
-				}).ToList() ?? new List<DetallePaqueteActivoDTO>() // Manejo de nulidad
-			}).ToList();
-
-			return paqueteActivoDto;
+            return paqueteActivoDto;
 		}
 
 		[HttpPost]
