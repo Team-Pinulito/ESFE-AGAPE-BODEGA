@@ -9,13 +9,13 @@
     <div class="col-md-5">
         <!-- Cantidad del Detalle -->
         <label for="Cantidad" class="form-label">Cantidad</label>
-        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" disabled="@(!isEditMode)" @oninput="OnPrecioChanged" />
+        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" disabled="@(!isEditMode)" @oninput="OnCantidadChanged" />
         <ValidationMessage For="() => detalle.Cantidad" />
     </div>
     <div class="col-md-5">
         <!-- Cantidad del Detalle -->
         <label for="Precio" class="form-label">Precio</label>
-        <InputNumber class="form-control" id="Precio" @bind-Value="detalle.Precio" disabled="@(!isEditMode)" @oninput="OnPrecioChanged" />
+        <InputNumber class="form-control" id="Precio" @bind-Value="detalle.Precio" step="0.01" disabled="@(!isEditMode)" @oninput="OnPrecioChanged" />
         <ValidationMessage For="() => detalle.Precio" />
     </div>
    
@@ -41,11 +41,13 @@
 
     private void OnCantidadChanged(ChangeEventArgs e)
     {
+        detalle.Cantidad = Convert.ToInt32(e.Value); // Actualiza la cantidad
         OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
     }
 
     private void OnPrecioChanged(ChangeEventArgs e)
     {
+        detalle.Precio = Convert.ToDecimal(e.Value); // Actualiza el precio
         OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
     }
 }

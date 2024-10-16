@@ -15,9 +15,8 @@
     </div>
 
     <div class="col-md-5">
-        <!-- Precio del Activo -->
         <label for="Precio" class="form-label">Precio</label>
-        <InputNumber class="form-control" id="Precio" @bind-Value="detalle.Precio" step="0.01" @oninput="OnPrecioChanged" />
+        <input type="text" class="form-control" id="Precio" @bind="detalle.Precio" @oninput="OnPrecioChanged" />
         <ValidationMessage For="() => detalle.Precio" />
     </div>
 
@@ -40,13 +39,16 @@
 
     [Parameter] public EventCallback OnDetalleChanged { get; set; }
 
+
     private void OnCantidadChanged(ChangeEventArgs e)
     {
+        detalle.Cantidad = Convert.ToInt32(e.Value); // Actualiza la cantidad
         OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
     }
 
     private void OnPrecioChanged(ChangeEventArgs e)
     {
-        OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
+        detalle.Precio = Convert.ToDecimal(e.Value); // Actualiza la cantidad
+        OnDetalleChanged.InvokeAsync(null);
     }
 }

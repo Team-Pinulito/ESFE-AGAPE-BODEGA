@@ -176,6 +176,7 @@
 	private void EliminarDetalle(DetalleIngresoActivoDTO detalle)
 	{
 		ingresoActivo.DetalleIngresoActivos?.Remove(detalle);
+		CalcularTotal();
 	}
 
 	private void CalcularTotal()
