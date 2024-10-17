@@ -1,5 +1,58 @@
-﻿<h3>DetalleAjusteInventario</h3>
+﻿@page "/ajusteinventario-detalles/{Id:int}"
+@using ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs;
+@using Microsoft.AspNetCore.Components;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1 class="col-md-12">Detalles del Ajuste de Inventario</h1>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="Correlativo" class="form-label">Correlativo</label>
+                            <input type="text" class="form-control" disabled @bind="ajusteInventario.Correlativo" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="Cantidad" class="form-label">Cantidad</label>
+                            <input type="text" class="form-control" disabled @bind="ajusteInventario.Cantidad" />
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="TipoMantenimiento" class="form-label">Tipo de Mantenimiento</label>
+                            <input type="text" class="form-control" disabled @bind="ajusteInventario.TipoMantenimiento" />
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label for="FechaIngreso" class="form-label">Fecha de Ingreso</label>
+                            <input type="text" class="form-control" disabled value="@ajusteInventario.FechaIngreso.ToString("dd/MM/yyyy")" />
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <label for="Comentario" class="form-label">Comentario</label>
+                            <textarea class="form-control" disabled @bind="ajusteInventario.Comentario"></textarea>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <NavLink href="/lista-ajuste-inventario" class="btn btn-secondary w-100">Volver</NavLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    [Inject]
+    AjusteInventarioService ajusteInventarioService { get; set; }
+
+    GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO ajusteInventario = new GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ajusteInventario = await ajusteInventarioService.ObtenerAjusteInventarioId(Id);
+    }
 }
