@@ -25,6 +25,7 @@ builder.Services.AddScoped<TipoActivoService>();
 builder.Services.AddScoped<KardexActivoService>();
 builder.Services.AddScoped<IngresoActivoService>();
 builder.Services.AddScoped<ActivoService>();
+builder.Services.AddScoped<SolicitudActivoService>();
 
 
 builder.Services.AddScoped<AuthService>();

@@ -1,0 +1,279 @@
+﻿@page "/lista-solicitudActivo"
+@using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
+@using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+@using System.Text.Json;
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+	<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+
+		<div class="row m-4">
+			<div class="card col-md-12">
+				<div class="card-header row"><h1 class="col-md-12">Lista de Solicitud Activo</h1></div>
+				<div class="card-body">
+					<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
+						<div class="row">
+							<div class="col-md-4">
+								<label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
+								<select class="form-control" @bind="searchQuery.UsuarioId_Like" >
+									<option value="">Seleccione un usuario</option>
+									@foreach (var usuario in usuarios)
+									{
+										<option value="@usuario.Id">@usuario.Nombre</option>
+									}
+								</select>
+							</div>
+							<div class="col-md-4">
+
+								<label for="Take">CantReg X Pagina</label>
+								<select class="form-control" @bind="searchQuery.Take">
+									@for (var i = 10; i < 1000; i += 10)
+									{
+										<option value="@i">@i</option>
+									}
+								</select>
+
+							</div>
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-md-6 row">
+								<div class="col-md-6 mt-1">
+									<button type="submit" class="btn btn-secondary" style="width:100%;">Buscar</button>
+								</div>
+								<div class="col-md-6 mt-1">
+									<NavLink href="/crear-solicitudActivo" class="btn btn-success" style="width:100%;">Crear</NavLink>
+								</div>
+							</div>
+							<div class="row col-md-3" style="overflow:auto !important;max-width:600px; margin-top:5px;">
+								<nav aria-label="Page navigation example">
+									<ul class="pagination">
+										<li class="page-item">
+											<NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
+										</li>
+										@foreach (var item in paginations)
+										{
+											if (item.Skip != searchQuery.Skip)
+											{
+												<li class="page-item">
+													<NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+												</li>
+											}
+											else
+											{
+												<li class="page-item active">
+													<NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+												</li>
+											}
+										}
+										<li class="page-item">
+											<NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
+										</li>
+									</ul>
+
+								</nav>
+							</div>
+							<div class="col-md-3 m-3">
+								<span>Total de registros: @searchResult.CountRow</span>
+							</div>
+						</div>
+
+					</EditForm>
+
+					<LoadingSpinner IsLoading="@isLoading" />
+
+				</div>
+			</div>
+			<div class="card col-md-12">
+				<div class="card-header row"><h1 class="col-md-12">Lista de Paquete Activos</h1></div>
+				<div class="card-body">
+					@if (searchResult != null && searchResult.Data != null && searchResult.Data.Count > 0)
+					{
+						<table class="table">
+							<thead>
+								<tr>
+									<th>Correlativo</th>
+									<th>Usuario</th>
+									<th>Fecha</th>
+									<th>Acciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var solicitudActivo in searchResult.Data)
+								{
+									<tr>
+										<td>@solicitudActivo.Correlativo</td>
+										<td>@solicitudActivo.UsuarioId</td>
+										<td>@solicitudActivo.Fecha</td>
+										<td>
+											<table>
+												<tr>
+													<td>
+														<button class="btn btn-dark" @onclick="() => GoEdit(solicitudActivo.Id)">Editar</button>
+													</td>
+													<td>
+														<button class="btn btn-info" @onclick="() => GoDetails(solicitudActivo.Id)">Ver</button>
+													</td>
+													<td>
+														<button class="btn btn-danger" @onclick="() => GoDelete(solicitudActivo.Id)">Eliminar</button>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					}
+				</div>
+			</div>
+		</div>
+
+
+
+	</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+@code {
+	// Inyección de dependencias de CustomerService y NavigationManager
+	[Inject]
+	SolicitudActivoService solicitudActivoService { get; set; }
+	[Inject]
+	NavigationManager navigation { get; set; }
+
+	List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
+	// Declaración e inicialización de objetos y variables
+	SearchResultSolicitudActivoDTO searchResult = new SearchResultSolicitudActivoDTO();
+	SearchQuerySolicitudActivoDTO searchQuery = new SearchQuerySolicitudActivoDTO { Take = 10 };
+	List<Pagination> paginations = new List<Pagination>();
+	int skipAnte = 0;
+	int skipSi = 0;
+
+	bool isLoading = false; // Estado de carga
+							// Método para realizar una búsqueda
+	private async Task Search()
+	{
+		isLoading = true;
+		try
+		{
+			searchResult = await solicitudActivoService.Search(searchQuery);
+		}
+		finally
+		{
+			isLoading = false;
+		}
+	}
+
+	// Método que se llama cuando se inicializa el componente
+	/*
+			*  se utiliza para realizar inicializaciones o tareas
+			*  cuando se carga una página o componente de Blazor.
+			* Este método se llama automáticamente cuando el componente se está inicializando
+			*  antes de que se muestre en la interfaz de usuario.
+			*/
+	protected override async Task OnInitializedAsync()
+	{
+		// Configuración inicial de la búsqueda
+		searchQuery.SendRowCount = 2;
+		searchQuery.Skip = 0;
+
+		// Realizar la búsqueda inicial
+		await Search();
+
+		usuarios = await solicitudActivoService.ObtenerUsuarios();
+		// Actualizar la paginación
+		UpdatePagination();
+	}
+
+
+
+	// Método para realizar una búsqueda después de una acción de búsqueda
+	private async Task SubmitSearch()
+	{
+		// Configuración de la búsqueda
+		searchQuery.SendRowCount = 2;
+		searchQuery.Skip = 0;
+
+		// Realizar la búsqueda
+		await Search();
+
+		// Actualizar la paginación
+		UpdatePagination();
+	}
+
+	// Método para realizar una búsqueda paginada
+	private async Task PaginationSearch(int skip)
+	{
+		// Almacenar temporalmente la cantidad de filas de resultados
+		int countRowTemp = searchResult.CountRow;
+
+		// Configuración de la búsqueda paginada
+		searchQuery.SendRowCount = 1;
+		searchQuery.Skip = skip;
+
+		// Realizar la búsqueda paginada
+		await Search();
+
+		// Restaurar la cantidad de filas original
+		searchResult.CountRow = countRowTemp;
+
+		// Actualizar la paginación
+		UpdatePagination();
+	}
+
+	// Métodos para navegar a las páginas de edición, detalles y eliminación
+	private void GoEdit(int Id)
+	{
+		navigation.NavigateTo($"/editar-solicitudActivo/{Id}");
+	}
+
+	private void GoDetails(int Id)
+	{
+		navigation.NavigateTo($"/ver-solicitudActivo/{Id}");
+	}
+
+	private void GoDelete(int Id)
+	{
+		navigation.NavigateTo($"/eliminar-solicitudActivo/{Id}");
+	}
+
+	// Método para actualizar la lista de paginación
+	private void UpdatePagination()
+	{
+		// Inicializar la lista de paginación
+		paginations = new List<Pagination>();
+
+		// Calcular el número total de páginas
+		int totalPages = (int)Math.Ceiling((double)searchResult.CountRow / searchQuery.Take);
+
+		// Calcular el valor de skipAnte y skipSi
+		skipAnte = searchQuery.Skip > 0 ? searchQuery.Skip - searchQuery.Take : 0;
+		int skipMax = 0;
+
+		// Generar objetos de paginación y agregarlos a la lista
+		for (var i = 0; i < totalPages; i++)
+		{
+			var pagination = new Pagination()
+				{
+					Skip = i * searchQuery.Take,
+					NumPage = i + 1
+				};
+
+			paginations.Add(pagination);
+			skipMax = pagination.Skip;
+		}
+
+		// Calcular el valor de skipSi
+		skipSi = searchQuery.Skip + searchQuery.Take;
+		skipSi = skipSi > skipMax ? skipSi - searchQuery.Take : skipSi;
+	}
+
+	// Clase para representar la información de paginación
+	class Pagination
+	{
+		public int NumPage { get; set; }
+		public int Skip { get; set; }
+	}
+
+}
