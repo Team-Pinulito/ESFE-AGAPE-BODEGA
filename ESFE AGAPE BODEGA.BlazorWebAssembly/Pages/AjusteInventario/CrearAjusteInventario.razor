@@ -53,7 +53,7 @@
                                     <button type="submit" class="btn btn-primary w-100">Guardar</button>
                                 </div>
                                 <div class="col-md-6 mt-3">
-                                    <NavLink href="/lista-ajuste-inventario" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                    <NavLink href="/lista-ajusteInventario" class="btn btn-secondary w-100">Cancelar</NavLink>
                                 </div>
                             </div>
                         </EditForm>
@@ -63,13 +63,13 @@
                         ajusteInventario = new CreateAjusteInvetarioDTO();
                         isError = false;
                         <p class="alert alert-success">Ajuste de Inventario creado con éxito.</p>
-                        <NavLink href="/lista-ajuste-inventario" class="btn btn-success">Aceptar</NavLink>
+                        <NavLink href="/lista-ajusteInventario" class="btn btn-success">Aceptar</NavLink>
                         <button type="button" @onclick="GoCreate" class="btn btn-secondary">Crear otro</button>
                     }
                     else if (isError)
                     {
                         <p class="alert alert-danger">Sucedió un error al intentar registrar el ajuste de inventario.</p>
-                        <NavLink href="/lista-ajuste-inventario" class="btn btn-danger">Aceptar</NavLink>
+                        <NavLink href="/lista-ajusteInventario" class="btn btn-danger">Aceptar</NavLink>
                     }
                 </div>
             </div>
@@ -81,9 +81,16 @@
     [Inject]
     AjusteInventarioService ajusteInventarioService { get; set; }
 
+    List<GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO> AjusteInventario = new List<GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO>();
     CreateAjusteInvetarioDTO ajusteInventario = new CreateAjusteInvetarioDTO();
     bool isSuccess = false;
     bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        AjusteInventario = await ajusteInventarioService.ObtenerTodos();
+    }
+
 
     private async Task Create()
     {

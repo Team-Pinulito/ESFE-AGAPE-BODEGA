@@ -38,6 +38,8 @@
                                 </div>
                             </div>
                         </EditForm>
+                        
+
                     }
                     else if (isSuccess)
                     {
@@ -65,6 +67,8 @@
     CrearBodegaDTO bodega = new CrearBodegaDTO();
     bool isSuccess = false;
     bool isError = false;
+
+    bool isLoading = false; // Estado de carga
 
     private async Task Create()
     {

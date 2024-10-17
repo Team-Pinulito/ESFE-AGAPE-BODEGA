@@ -1,5 +1,6 @@
 ﻿using ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs;
 using System.Net.Http.Json;
+using static ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs.GetIdResultAjusteInvetarioDTO;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 {
@@ -39,61 +40,60 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         // Obtener un ajuste de inventario por su ID
         public async Task<GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO> ObtenerAjusteInventarioId(int id)
         {
-            var response = await _httpClient.GetAsync($"AjusteInventario/{id}");
-            if (response.IsSuccessStatusCode)
+            var rol = await _httpClient.GetAsync($"AjusteInventario/{id}");
+
+            if (rol.IsSuccessStatusCode)
             {
-                var result = await response.Content.ReadFromJsonAsync<GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO>();
-                return result ?? new GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO();
+                var result = await rol.Content.ReadFromJsonAsync<AjusteInventarioDTO>();
+                return result ?? new AjusteInventarioDTO();
             }
-            return new GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO();
+            else
+                return new AjusteInventarioDTO(); ;
         }
 
         // Crear un nuevo ajuste de inventario
         public async Task<int> CrearAjusteInventario(CreateAjusteInvetarioDTO crearAjusteInventarioDTO)
         {
+            int result = 0;
             var response = await _httpClient.PostAsJsonAsync("AjusteInventario", crearAjusteInventarioDTO);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                if (int.TryParse(responseBody, out int result))
-                {
-                    return result;
-                }
+                if (int.TryParse(responseBody, out result) == false)
+                    return result = 0;
             }
-            return 0;
+            return result;
         }
 
         // Actualizar un ajuste de inventario existente
         public async Task<int> ActualizarAjusteInventario(EditAjusteInvetarioDTO editAjusteInventarioDTO)
         {
+            int result = 0;
             var response = await _httpClient.PutAsJsonAsync($"AjusteInventario/{editAjusteInventarioDTO.Id}", editAjusteInventarioDTO);
 
             if (response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                if (int.TryParse(responseBody, out int result))
-                {
-                    return result;
-                }
+                if (int.TryParse(responseBody, out result) == false)
+                    return result = 0;
             }
-            return 0;
+            return result;
         }
 
         // Eliminar un ajuste de inventario
         public async Task<int> EliminarAjusteInventario(int id)
         {
+            int result = 0;
             var response = await _httpClient.DeleteAsync($"AjusteInventario/{id}");
 
             if (response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
-                if (int.TryParse(responseBody, out int result))
-                {
-                    return result;
-                }
+                if (int.TryParse(responseBody, out result) == false)
+                    return result = 0;
             }
-            return 0;
+            return result;
         }
     }
 }
