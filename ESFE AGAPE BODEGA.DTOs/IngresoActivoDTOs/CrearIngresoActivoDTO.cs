@@ -15,7 +15,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
         public CrearIngresoActivoDTO()
         {
             CrearDetalleIngresoActivos = new List<CrearDetalleIngresoActivoDTO>();
-        }
+			Total = 0;
+		}
 
         [Required(ErrorMessage = "El campo Correlativo es obligatorio.")]
         [MaxLength(50, ErrorMessage = "El campo Correlativo no puede tener más de 50 caracteres.")]

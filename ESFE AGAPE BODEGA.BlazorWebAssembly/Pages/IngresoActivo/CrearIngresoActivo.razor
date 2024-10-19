@@ -77,7 +77,7 @@
 								{
 									<_CrearDetalleIngresoActivo detalle="detalle"
 																EliminarDetalle="() => EliminarDetalle(detalle)"
-																OnDetalleChanged="CalcularTotal" />
+																ActualizarTotal="ActualizarTotal" />
 								}
 
 							</div>
@@ -102,7 +102,7 @@
 					}
 					else if (isError)
 					{
-						<p class="alert alert-danger">Ocurrió un error al intentar registrar el ingreso activo. @isError</p>
+						<p class="alert alert-danger">Ocurrió un error al intentar registrar el ingreso activo.</p>
 						<NavLink href="/lista-ingresoActivo" class="btn btn-danger">Aceptar</NavLink>
 					}
 				</div>
@@ -128,15 +128,32 @@
 		usuarios = await ingresoActivoService.ObtenerUsuario();
 
 	}
-
 	private async Task Create()
 	{
+		if (!ValidarDetalles())
+		{
+			isError = true;
+			return;
+		}
 
 		int result = await ingresoActivoService.CrearIngresoActivo(ingresoActivo);
 		if (result != 0)
 			isSuccess = true;
 		else
 			isError = true;
+	}
+
+	private bool ValidarDetalles()
+	{
+		foreach (var detalle in ingresoActivo.CrearDetalleIngresoActivos)
+		{
+			if (detalle.Cantidad <= 0 || detalle.Precio <= 0)
+			{
+				isError = true;
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void GoCreate()
@@ -153,11 +170,12 @@
 	private void EliminarDetalle(CrearDetalleIngresoActivoDTO detalle)
 	{
 		ingresoActivo.CrearDetalleIngresoActivos.Remove(detalle);
-		CalcularTotal();
+		ActualizarTotal();
 	}
 
-	private void CalcularTotal()
+	private void ActualizarTotal()
 	{
 		ingresoActivo.Total = ingresoActivo.CrearDetalleIngresoActivos.Sum(d => d.Cantidad * d.Precio);
 	}
+	
 }

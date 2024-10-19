@@ -2,53 +2,85 @@
 
 @using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
+
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
+@using System.Globalization
 
 <div class="row align-items-center">
-  
-    <div class="col-md-5">
-        <!-- Cantidad del Detalle -->
-        <label for="Cantidad" class="form-label">Cantidad</label>
-        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" @oninput="OnCantidadChanged" />
-        <ValidationMessage For="() => detalle.Cantidad" />
-    </div>
+	<DataAnnotationsValidator />
+	<div class="col-md-5">
+		<!-- Cantidad del Detalle -->
+		<label for="Cantidad" class="form-label">Cantidad</label>
+		<InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" @oninput="OnCantidadChanged" />
+		<ValidationMessage For="() => detalle.Cantidad" />
+	</div>
 
-    <div class="col-md-5">
-        <label for="Precio" class="form-label">Precio</label>
-        <input type="text" class="form-control" id="Precio" @bind="detalle.Precio" @oninput="OnPrecioChanged" />
-        <ValidationMessage For="() => detalle.Precio" />
-    </div>
+	<div class="col-md-5">
+		<label for="Precio" class="form-label">Precio</label>
+		<InputText class="form-control" id="Precio" @bind-Value="precioInput" @oninput="OnPrecioChanged" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46" />
+		<ValidationMessage For="() => detalle.Precio" />
+	</div>
 
-    <div class="col-md-2 text-end">
-        <!-- Botón Eliminar -->
-        <button type="button" class="btn btn-danger mt-4" @onclick="EliminarDetalle" style="display: flex; align-items: center;">
-            <!-- SVG del icono -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
-                <path d="M21.063 15H13v2h9v-2zM4 7h11v2H4zm0 4h11v2H4zm0 4h7v2H4z"></path>
-            </svg>
-        </button>
-    </div>
+	<div class="col-md-2 text-end">
+		<!-- Botón Eliminar -->
+		<button type="button" class="btn btn-danger mt-4" @onclick="EliminarDetalle" style="display: flex; align-items: center;">
+			<!-- SVG del icono -->
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
+				<path d="M21.063 15H13v2h9v-2zM4 7h11v2H4zm0 4h11v2H4zm0 4h7v2H4z"></path>
+			</svg>
+		</button>
+	</div>
 </div>
 
 @code {
-    [Parameter] public CrearDetalleIngresoActivoDTO detalle  { get; set; }
+	[Parameter] public CrearDetalleIngresoActivoDTO detalle { get; set; }
 
 
-    [Parameter] public EventCallback EliminarDetalle { get; set; }
+	[Parameter] public EventCallback EliminarDetalle { get; set; }
 
-    [Parameter] public EventCallback OnDetalleChanged { get; set; }
+	[Parameter] public EventCallback ActualizarTotal { get; set; }
 
 
-    private void OnCantidadChanged(ChangeEventArgs e)
-    {
-        detalle.Cantidad = Convert.ToInt32(e.Value); // Actualiza la cantidad
-        OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
-    }
+	private bool cantidadError = false;
+	private bool precioError = false;
 
-    private void OnPrecioChanged(ChangeEventArgs e)
-    {
-        detalle.Precio = Convert.ToDecimal(e.Value); // Actualiza la cantidad
-        OnDetalleChanged.InvokeAsync(null);
-    }
+	private string precioInput = "";
+
+
+
+
+	protected override void OnInitialized()
+	{
+		precioInput = detalle.Precio.ToString(CultureInfo.InvariantCulture);
+	}
+
+	private void OnCantidadChanged(ChangeEventArgs e)
+	{
+
+		if (int.TryParse(e.Value.ToString(), out int cantidad))
+		{
+			detalle.Cantidad = cantidad;
+			ActualizarTotal.InvokeAsync(null);
+		}
+		else
+		{
+			cantidadError = true;
+		}
+	}
+
+	private void OnPrecioChanged(ChangeEventArgs e)
+	{
+		precioInput = e.Value.ToString();
+		if (decimal.TryParse(precioInput, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precio))
+		{
+			detalle.Precio = precio;
+			ActualizarTotal.InvokeAsync();
+		}
+		else
+		{
+			precioError = true;
+		}
+	}
 }
