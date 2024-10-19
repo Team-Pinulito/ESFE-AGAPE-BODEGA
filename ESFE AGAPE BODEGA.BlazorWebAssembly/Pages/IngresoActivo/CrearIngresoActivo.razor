@@ -8,6 +8,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
 @using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
+@inject ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService.AuthService AuthService
 
 <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 	<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
@@ -41,15 +42,8 @@
 									<ValidationMessage For="() => ingresoActivo.FechaIngreso" />
 								</div>
 								<div class="col-md-4">
-									<label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
-									<select class="form-control" @bind="ingresoActivo.UsuarioId" required>
-										<option value="">Seleccione un usuario</option>
-										@foreach (var usuario in usuarios)
-										{
-											<option value="@usuario.Id">@usuario.Nombre</option>
-										}
-									</select>
-									<ValidationMessage For="() => ingresoActivo.UsuarioId" />
+										<label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
+										<input type="text" class="form-control" disabled value="@GetUserName(currentUserId)" />
 								</div>
 								<div class="col-md-4">
 									<label for="Total" class="form-label">Total</label>
@@ -120,12 +114,18 @@
 	CrearIngresoActivoDTO ingresoActivo = new CrearIngresoActivoDTO();
 	bool isSuccess = false;
 	bool isError = false;
-
+	private int currentUserId;
 	protected override async Task OnInitializedAsync()
 	{
 		// Inicializa la fecha de ingreso con la fecha y hora actual
 		ingresoActivo.FechaIngreso = DateTime.Now;
 		usuarios = await ingresoActivoService.ObtenerUsuario();
+
+		// Get the current user's ID
+		currentUserId = await AuthService.GetUserId();
+
+		// Set the UsuarioId property to the current user's ID
+		ingresoActivo.UsuarioId = currentUserId;
 
 	}
 	private async Task Create()
@@ -177,5 +177,9 @@
 	{
 		ingresoActivo.Total = ingresoActivo.CrearDetalleIngresoActivos.Sum(d => d.Cantidad * d.Precio);
 	}
-	
+	private string GetUserName(int userId)
+	{
+		var user = usuarios.FirstOrDefault(u => u.Id == userId);
+		return user?.Nombre ?? "Usuario no encontrado";
+	}
 }
