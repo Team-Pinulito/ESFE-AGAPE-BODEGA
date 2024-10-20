@@ -49,7 +49,7 @@
                                     <button type="submit" class="btn btn-primary w-100">Guardar</button>
                                 </div>
                                 <div class="col-md-6 mt-3">
-                                    <NavLink href="/lista-ajuste-inventario" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                    <NavLink href="/lista-ajusteInventario" class="btn btn-secondary w-100">Cancelar</NavLink>
                                 </div>
                             </div>
                         </EditForm>
@@ -59,12 +59,12 @@
                         ajusteInventario = new EditAjusteInvetarioDTO();
                         isError = false;
                         <p class="alert alert-success">Ajuste de inventario modificado con éxito.</p>
-                        <NavLink href="/lista-ajuste-inventario" class="btn btn-success">Aceptar</NavLink>
+                        <NavLink href="/lista-ajusteInventario" class="btn btn-success">Aceptar</NavLink>
                     }
                     else if (isError)
                     {
                         <p class="alert alert-error">Ocurrió un error al intentar modificar.</p>
-                        <NavLink href="/lista-ajuste-inventario" class="btn btn-danger">Aceptar</NavLink>
+                        <NavLink href="/lista-ajusteInventario" class="btn btn-danger">Aceptar</NavLink>
                     }
                 </div>
             </div>

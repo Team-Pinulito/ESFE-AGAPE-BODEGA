@@ -21,7 +21,7 @@
                             <div class="col-md-6">
                                 <label for="Take">CantReg X Pagina</label>
                                 <select class="form-control" @bind="searchQuery.Take">
-                                    @for (var i = 10; i < 1000; i += 10)
+                                    @for (var i = 10; i < 50; i += 10)
                                     {
                                         <option value="@i">@i</option>
                                     }
@@ -182,17 +182,17 @@
 
     private void GoEdit(int Id)
     {
-        navigation.NavigateTo($"/editar-ajuste-inventario/{Id}");
+        navigation.NavigateTo($"/editar-ajusteinventario/{Id}");
     }
 
     private void GoDetails(int Id)
     {
-        navigation.NavigateTo($"/ajuste-inventario-detalles/{Id}");
+        navigation.NavigateTo($"/ajusteinventario-detalles/{Id}");
     }
 
     private void GoDelete(int Id)
     {
-        navigation.NavigateTo($"/eliminar-ajuste-inventario/{Id}");
+        navigation.NavigateTo($"/ajusteinventario-eliminar/{Id}");
     }
 
     private void UpdatePagination()

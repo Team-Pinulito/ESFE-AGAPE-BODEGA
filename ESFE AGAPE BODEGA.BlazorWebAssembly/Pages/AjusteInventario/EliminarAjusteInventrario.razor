@@ -1,5 +1,91 @@
-﻿<h3>EliminarAjusteInventrario</h3>
+﻿@page "/eliminar-ajuste-inventario/{Id:int}"
+@using ESFE_AGAPE_BODEGA.DTOs.AjustesInventarioDTOs;
+@using Microsoft.AspNetCore.Components.Forms;
+@using ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService;
+
+<ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
+    <ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol Roles='new List<string> { "Admin", "SusAdmin" }'>
+        <div class="row m-4">
+            <div class="card col-md-12">
+                <div class="card-header row">
+                    <h1>Eliminar Ajuste de Inventario</h1>
+                </div>
+                <div class="card-body">
+                    @if (isSuccess == false && isError == false)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="UsuarioId" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" disabled @bind="ajusteInventario.UsuarioId" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="FechaIngreso" class="form-label">Fecha de Ingreso</label>
+                                <input type="date" class="form-control" disabled @bind="ajusteInventario.FechaIngreso" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Correlativo" class="form-label">Correlativo</label>
+                                <input type="number" class="form-control" disabled @bind="ajusteInventario.Correlativo" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Cantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" disabled @bind="ajusteInventario.Cantidad" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="TipoMantenimiento" class="form-label">Tipo de Mantenimiento</label>
+                                <input type="text" class="form-control" disabled @bind="ajusteInventario.TipoMantenimiento" />
+                            </div>
+                            <div class="col-md-12">
+                                <label for="Comentario" class="form-label">Comentario</label>
+                                <textarea type="text" disabled class="form-control" @bind="ajusteInventario.Comentario" />
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <NavLink href="/lista-ajusteInventario" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            </div>
+                        </div>
+                    }
+                    else if (isSuccess)
+                    {
+                        <p class="alert alert-success">Ajuste de Inventario eliminado con éxito.</p>
+                        <NavLink href="/lista-ajusteInventario" class="btn btn-success">Aceptar</NavLink>
+                    }
+                    else if (isError)
+                    {
+                        <p class="alert alert-error">Sucedió un error al intentar eliminar el ajuste de inventario.</p>
+                        <NavLink href="/lista-ajusteInventario" class="btn btn-danger">Aceptar</NavLink>
+                    }
+                </div>
+            </div>
+        </div>
+    </ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AutorizacionPorRol>
+</ESFE_AGAPE_BODEGA.BlazorWebAssembly.Pages.Login.AuthGuard>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    [Inject]
+    AjusteInventarioService ajusteInventarioService { get; set; }
+
+    GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO ajusteInventario = new GetIdResultAjusteInvetarioDTO.AjusteInventarioDTO();
+
+    bool isSuccess = false;
+    bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ajusteInventario = await ajusteInventarioService.ObtenerAjusteInventarioId(Id);
+    }
+
+    private async Task Delete()
+    {
+        int result = await ajusteInventarioService.EliminarAjusteInventario(ajusteInventario.Id);
+
+        if (result != 0)
+            isSuccess = true;
+        else
+            isError = true;
+    }
 }
