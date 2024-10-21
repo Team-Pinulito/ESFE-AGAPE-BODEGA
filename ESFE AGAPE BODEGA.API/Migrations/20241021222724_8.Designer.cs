@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ESFE_AGAPE_BODEGA.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241020045519_8")]
+    [Migration("20241021222724_8")]
     partial class _8
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,8 +115,9 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Correlativo")
-                        .HasColumnType("int");
+                    b.Property<string>("Correlativo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FechaIngreso")
                         .HasColumnType("datetime2");
@@ -191,6 +192,34 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("bodegas");
+                });
+
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Correlativo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AliasFinal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AliasInicial")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Entidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Valor")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("correlativos");
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.DetallePaqueteActivo", b =>

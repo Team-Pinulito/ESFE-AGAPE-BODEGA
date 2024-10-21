@@ -192,6 +192,34 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.ToTable("bodegas");
                 });
 
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Correlativo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AliasFinal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AliasInicial")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Entidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Valor")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("correlativos");
+                });
+
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.DetallePaqueteActivo", b =>
                 {
                     b.Property<int>("Id")
