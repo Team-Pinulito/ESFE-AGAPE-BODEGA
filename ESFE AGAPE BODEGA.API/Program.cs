@@ -76,6 +76,8 @@ builder.Services.AddScoped<AjusteInventarioDAL>();
 builder.Services.AddScoped<InventarioActivoDAL>();
 builder.Services.AddScoped<IngresoAtivoDAL>();
 builder.Services.AddScoped<SolicitudActivoDAL>();
+builder.Services.AddScoped<CorrelativoDAL>();
+
 
 // Configuración de autenticación JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
