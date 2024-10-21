@@ -44,7 +44,6 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         public IQueryable<AjusteInventario> BuscarAjusteInventario(AjusteInventario ajusteInventario)
         {
             var query = applicationDbContext.ajusteInventarios.AsQueryable();
-            // Ajusta este filtro según las propiedades relevantes de AjusteInventario
             if (ajusteInventario.FechaIngreso != default)
             {
                 query = query.Where(x => x.FechaIngreso == ajusteInventario.FechaIngreso);
