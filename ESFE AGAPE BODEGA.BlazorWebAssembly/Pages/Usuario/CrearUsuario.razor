@@ -21,14 +21,14 @@
                         <EditForm Model="usuario" OnValidSubmit="Create">
                             <DataAnnotationsValidator />
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="Nombre">Nombre:</label>
                                         <InputText class="form-control" id="Nombre" @bind-Value="usuario.Nombre" />
                                         <ValidationMessage For="() => usuario.Nombre" />
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="Apellido">Apellido:</label>
                                         <InputText class="form-control" id="Apellido" @bind-Value="usuario.Apellido" />
@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="Email">Email:</label>
                                         <InputText class="form-control" id="Email" @bind-Value="usuario.Email" />
@@ -75,8 +75,6 @@
                                         <ValidationMessage For="() => usuario.DUI" />
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label for="Codigo">Codigo:</label>
@@ -84,15 +82,18 @@
                                         <ValidationMessage For="() => usuario.Codigo" />
                                     </div>
                                 </div>
-                                <div class="col-4">
+                            </div>
+                            <div class="row">
+                                
+                                <div class="col-12">
                                     <div class="form-group">
                                         <label for="Direccion">Direccion:</label>
-                                        <InputText class="form-control" id="Direccion" @bind-Value="usuario.Direccion" />
+                                        <InputTextArea class="form-control" id="Direccion" @bind-Value="usuario.Direccion" />
                                         <ValidationMessage For="() => usuario.Direccion" />
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="col-12">
                                 <div class="form-group">
                                     <label for="Password">Contraseña:</label>
                                     <InputText class="form-control" id="Password" @bind-Value="usuario.Password" />
