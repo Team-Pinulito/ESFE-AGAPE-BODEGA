@@ -103,7 +103,7 @@
                                         <td>@usuario.Nombre</td>
                                         <td>@usuario.Apellido</td>
                                         <td>@usuario.DUI</td>
-                                        <td>@GetRoleName(usuario.RolId)</td>
+                                        <td>@usuario.RolNombre</td>
                                         <td>
                                             <button class="btn btn-dark" @onclick="() => GoEdit(usuario.Id)">Editar</button>
                                             <button class="btn btn-info" @onclick="() => GoDetails(usuario.Id)">Ver</button>
@@ -125,6 +125,8 @@
     UsuarioService usuarioService { get; set; }
     [Inject]
     NavigationManager navigation { get; set; }
+    [Inject]
+    RolService rolService { get; set; }
 
     // Declaración e inicialización de objetos y variables
     GetIdResultUsuarioDTO searchResult = new GetIdResultUsuarioDTO();
@@ -135,8 +137,6 @@
 
     bool isLoading = false; // Estado de carga
 
-    List<BuscarRolResultadosDto.RolDto> roles = new List<BuscarRolResultadosDto.RolDto>();
-
     // Método para realizar una búsqueda
     private async Task Search()
     {
@@ -144,6 +144,12 @@
         try
         {
             searchResult = await usuarioService.Search(searchQuery);
+            // Obtener el nombre del rol para cada usuario
+            foreach (var usuario in searchResult.Data)
+            {
+                var rol = await rolService.ObtenerRol(usuario.RolId);
+                usuario.RolNombre = rol?.Nombre ?? "Desconocido"; // Asignar nombre del rol
+            }
         }
         finally
         {
@@ -168,18 +174,8 @@
         // Realizar la búsqueda inicial
         await Search();
 
-        // Obtener los roles
-        roles = await usuarioService.ObtenerRoles();
-
         // Actualizar la paginación
         UpdatePagination();
-    }
-
-    // Método para obtener el nombre del rol por su ID
-    private string GetRoleName(int roleId)
-    {
-        var role = roles.FirstOrDefault(r => r.Id == roleId);
-        return role != null ? role.Nombre : "Desconocido";
     }
 
     // Método para realizar una búsqueda después de una acción de búsqueda
