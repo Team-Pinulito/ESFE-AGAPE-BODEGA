@@ -30,43 +30,9 @@
                         </div>
                         <br />
                         <div class="row">
-                            <div class="col-md-6 row">
-                                <div class="col-md-6 mt-1">
-                                    <button type="submit" class="btn btn-secondary" style="width:100%;">Buscar</button>
-                                </div>
-                                <div class="col-md-6 mt-1">
-                                    <NavLink href="/crear-tipoActivo" class="btn btn-success" style="width:100%;">Crear</NavLink>
-                                </div>
-                            </div>
-                            <div class="row col-md-3" style="overflow:auto !important; max-width:600px; margin-top:5px;">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
-                                        </li>
-                                        @foreach (var item in paginations)
-                                        {
-                                            if (item.Skip != searchQuery.Skip)
-                                            {
-                                                <li class="page-item">
-                                                    <NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
-                                                    </li>
-                                            }
-                                            else
-                                            {
-                                                <li class="page-item active">
-                                                    <NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
-                                                    </li>
-                                            }
-                                        }
-                                        <li class="page-item">
-                                            <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                            <div class="col-md-3 m-3">
-                                <span>Total de registros: @searchResult.CountRow</span>
+                            <div class="col-md-5 d-flex align-items-end">
+                                <button type="submit" class="btn btn-secondary mx-2">Buscar</button>
+                                <NavLink href="/crear-tipoActivo" class="btn btn-success">Crear</NavLink>
                             </div>
                         </div>
                     </EditForm>
@@ -113,6 +79,43 @@
                                 }
                             </tbody>
                         </table>
+                    
+
+                    <!-- Paginación con scroll -->
+                    <div class="row justify-content-center mt-3">
+                        <nav aria-label="Page navigation example">
+                            <div class="pagination-container" style="overflow-x: auto; white-space: nowrap; width: 100%; max-width: 600px;">
+                                <ul class="pagination" style="display: inline-flex; flex-wrap: nowrap;">
+                                    <li class="page-item">
+                                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipAnte)">Anterior</NavLink>
+                                    </li>
+                                    @foreach (var item in paginations)
+                                    {
+                                        if (item.Skip != searchQuery.Skip)
+                                        {
+                                            <li class="page-item">
+                                                <NavLink class="page-link" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li class="page-item active">
+                                                <NavLink class="page-link active" @onclick="async () => await PaginationSearch(item.Skip)">@item.NumPage</NavLink>
+                                            </li>
+                                        }
+                                    }
+                                    <li class="page-item">
+                                        <NavLink class="page-link" @onclick="async () => await PaginationSearch(skipSi)">Siguiente</NavLink>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <!-- Total de registros -->
+                    <div class="row justify-content-center mt-3">
+                        <span>Total de registros: @searchResult.CountRow</span>
+                    </div>
                     }
                     else
                     {
