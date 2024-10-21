@@ -17,14 +17,14 @@
                         <EditForm Model="usuario" OnValidSubmit="Edit">
                             <DataAnnotationsValidator />
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="Nombre">Nombre:</label>
                                         <InputText class="form-control" @bind-Value="usuario.Nombre" />
                                         <ValidationMessage For="() => usuario.Nombre" />
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="Apellido">Apellido:</label>
                                         <InputText class="form-control" @bind-Value="usuario.Apellido" />
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-6">
                                     <div class="form-group">
                                         <label for="Email">Email:</label>
                                         <InputText class="form-control" @bind-Value="usuario.Email" />
@@ -71,8 +71,6 @@
                                         <ValidationMessage For="() => usuario.DUI" />
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-4">
                                     <div class="form-group">
                                         <label for="Codigo">Codigo:</label>
@@ -80,10 +78,13 @@
                                         <ValidationMessage For="() => usuario.Codigo" />
                                     </div>
                                 </div>
-                                <div class="col-4">
+                            </div>
+                            <div class="row">
+                                
+                                <div class="col-12">
                                     <div class="form-group">
                                         <label for="Direccion">Direccion:</label>
-                                        <InputText class="form-control" @bind-Value="usuario.Direccion" />
+                                        <InputTextArea class="form-control" @bind-Value="usuario.Direccion" />
                                         <ValidationMessage For="() => usuario.Direccion" />
                                     </div>
                                 </div>
@@ -117,23 +118,26 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary">Modificar</button>
+                                    <button type="submit" class="btn btn-primary me-2">Modificar</button>
+
                                     @if (CanModifyPassword()) // Verifica si el usuario puede modificar la contraseña
                                     {
-                                    <button type="button" class="btn btn-info" @onclick="TogglePasswordInput">
-                                        @if (showPasswordInput)
-                                        {
-                                            <span>No modificar Contraseña</span>
-                                        }
-                                        else
-                                        {
-                                            <span>Modificar Contraseña</span>
-                                        }
-                                    </button>
+                                        <button type="button" class="btn btn-info me-2" @onclick="TogglePasswordInput">
+                                            @if (showPasswordInput)
+                                            {
+                                                <span>No modificar Contraseña</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Modificar Contraseña</span>
+                                            }
+                                        </button>
                                     }
+
                                     <NavLink href="/lista-usuario" class="btn btn-secondary">Cancelar</NavLink>
                                 </div>
                             </div>
+
                         </EditForm>
                     }
                     else if (isSuccess)
