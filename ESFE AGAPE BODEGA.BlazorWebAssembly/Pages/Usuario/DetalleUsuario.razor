@@ -13,13 +13,13 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="Nombre">Nombre:</label>
                                     <input type="text" class="form-control" disabled @bind="usuario.Nombre" />
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-6">
                                 <div class="form-group">
                                     <label for="Apellido">Apellido:</label>
                                     <input type="text" class="form-control" disabled @bind="usuario.Apellido" />
@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-6   ">
                                 <div class="form-group">
                                     <label for="Email">Email:</label>
                                     <input type="text" class="form-control" disabled @bind="usuario.Email" />
@@ -59,18 +59,19 @@
                                     <input type="text" class="form-control" disabled @bind="usuario.DUI" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-4">
                                 <div class="form-group">
                                     <label for="Codigo">Codigo:</label>
                                     <input type="text" class="form-control" disabled @bind="usuario.Codigo" />
                                 </div>
                             </div>
-                            <div class="col-4">
+                        </div>
+                        <div class="row">
+                          
+                            <div class="col-12">
                                 <div class="form-group">
                                     <label for="Direccion">Direccion:</label>
-                                    <input type="text" class="form-control" disabled @bind="usuario.Direccion" />
+                                    <textarea type="text" class="form-control" disabled @bind="usuario.Direccion" ></textarea>
                                 </div>
                             </div>
                         </div>
