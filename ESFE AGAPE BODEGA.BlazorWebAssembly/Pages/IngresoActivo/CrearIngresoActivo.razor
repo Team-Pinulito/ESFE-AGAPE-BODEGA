@@ -23,6 +23,7 @@
 					{
 						<EditForm Model="ingresoActivo" OnValidSubmit="Create">
 							<DataAnnotationsValidator />
+						<input type="text" hidden value="@GetUserName(currentUserId)" />
 							<div class="row">
 								<div class="col-md-6">
 									<label for="Correlativo" class="form-label">Correlativo<span style="color:red;">*</span></label>
@@ -35,17 +36,13 @@
 									<ValidationMessage For="() => ingresoActivo.NumeroDocRelacionado" />
 								</div>
 							</div>
-							<div class="row mt-3">
-								<div class="col-md-4">
+							<div class="row ">
+								<div class="col-md-6">
 									<label for="FechaIngreso" class="form-label">Fecha de Ingreso<span style="color:red;">*</span></label>
 									<input type="datetime-local" class="form-control" id="FechaIngreso" @bind-value="ingresoActivo.FechaIngreso" />
 									<ValidationMessage For="() => ingresoActivo.FechaIngreso" />
 								</div>
-								<div class="col-md-4">
-										<label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
-										<input type="text" class="form-control" disabled value="@GetUserName(currentUserId)" />
-								</div>
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<label for="Total" class="form-label">Total</label>
 									<input type="number" class="form-control" disabled @bind="ingresoActivo.Total" />
 								</div>
