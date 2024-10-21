@@ -28,6 +28,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
             public string Direccion { get; set; }
             [Display(Name = "Rol")]
             public int RolId { get; set; }
+
+            public string RolNombre { get; set; }
         }
     }
 }
