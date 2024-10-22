@@ -20,7 +20,13 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 			return await applicationDbContext.correlativos.FindAsync(id);
 		}
 
-
+		public async Task<Correlativo> ObtenerUltimoCorrelativoPorEntidad(string entidad)
+		{
+			return await applicationDbContext.correlativos
+				.Where(c => c.Entidad == entidad)
+				.OrderByDescending(c => c.Id)
+				.FirstOrDefaultAsync();
+		}
 
 		public async Task<Correlativo> CrearCorrelativo(Correlativo nuevoCorrelativo)
 		{
