@@ -26,9 +26,9 @@
 						<input type="text" hidden value="@GetUserName(currentUserId)" />
 							<div class="row">
 								<div class="col-md-6">
-									<label for="Correlativo" class="form-label">Correlativo<span style="color:red;">*</span></label>
-									<InputText class="form-control" id="Correlativo" @bind-Value="ingresoActivo.Correlativo" />
-									<ValidationMessage For="() => ingresoActivo.Correlativo" />
+									<label for="Correlativo" class="form-label">Correlativo</label>
+									<input type="text" class="form-control" disabled @bind="ingresoActivo.Correlativo" />
+									
 								</div>
 								<div class="col-md-6">
 									<label for="NumeroDocRelacionado" class="form-label">Número Documento Relacionado<span style="color:red;">*</span></label>
@@ -104,7 +104,8 @@
 
 @code {
 	[Inject]
-	IngresoActivoService ingresoActivoService { get; set; }
+	IngresoActivoService 
+	ingresoActivoService { get; set; }
 
 	List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
 
@@ -124,6 +125,7 @@
 		// Set the UsuarioId property to the current user's ID
 		ingresoActivo.UsuarioId = currentUserId;
 
+		ingresoActivo.Correlativo = await ingresoActivoService.ObtenerSiguienteCorrelativo();
 	}
 	private async Task Create()
 	{
