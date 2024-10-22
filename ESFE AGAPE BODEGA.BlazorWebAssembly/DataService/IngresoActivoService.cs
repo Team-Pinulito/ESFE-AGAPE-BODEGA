@@ -1,4 +1,5 @@
-﻿using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
+﻿using ESFE_AGAPE_BODEGA.DTOs.CorrelativoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using System.Net.Http.Json;
@@ -13,8 +14,23 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         {
             _httpClient = httpClientFactory.CreateClient("BodegaAPI");
         }
+		public async Task<string> ObtenerSiguienteCorrelativo()
+		{
+			var response = await _httpClient.GetAsync("Correlativo/ultimo/IngresoActivo");
 
-        public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuario()
+			if (response.IsSuccessStatusCode)
+			{
+				var correlativo = await response.Content.ReadFromJsonAsync<CorrelativoDTO>();
+				if (correlativo != null)
+				{
+					int siguienteNumero = correlativo.Valor + 1;
+					return $"{correlativo.AliasInicial}-{siguienteNumero:000}";
+				}
+			}
+
+			return "ESFE-001"; // Valor inicial si no hay correlativos previos
+		}
+		public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuario()
         {
             var response = await _httpClient.GetAsync("Usuario");
             if (response.IsSuccessStatusCode)
