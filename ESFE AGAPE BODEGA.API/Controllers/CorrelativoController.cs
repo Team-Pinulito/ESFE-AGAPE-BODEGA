@@ -9,6 +9,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class CorrelativoController : ControllerBase
 	{
 		private readonly CorrelativoDAL _correlativoDAL;
