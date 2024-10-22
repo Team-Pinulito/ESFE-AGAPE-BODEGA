@@ -9,7 +9,6 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize]
 	public class CorrelativoController : ControllerBase
 	{
 		private readonly CorrelativoDAL _correlativoDAL;
@@ -78,6 +77,28 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 		{
 			await _correlativoDAL.EliminarCorrelativo(id);
 			return NoContent();
+		}
+
+		[HttpGet("ultimo/{entidad}")]
+		public async Task<ActionResult<CorrelativoDTO>> ObtenerUltimoCorrelativo(string entidad)
+		{
+			var correlativo = await _correlativoDAL.ObtenerUltimoCorrelativoPorEntidad(entidad);
+
+			if (correlativo == null)
+			{
+				return NotFound();
+			}
+
+			var correlativoDTO = new CorrelativoDTO
+			{
+				Id = correlativo.Id,
+				Valor = correlativo.Valor,
+				AliasInicial = correlativo.AliasInicial,
+				AliasFinal = correlativo.AliasFinal,
+				Entidad = correlativo.Entidad
+			};
+
+			return Ok(correlativoDTO);
 		}
 
 	}
