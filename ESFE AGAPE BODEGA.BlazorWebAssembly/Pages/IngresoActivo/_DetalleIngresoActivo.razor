@@ -4,6 +4,7 @@
 @using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
+@using System.Globalization
 
 <div class="row align-items-center">
     <div class="col-md-5">
@@ -13,9 +14,9 @@
         <ValidationMessage For="() => detalle.Cantidad" />
     </div>
     <div class="col-md-5">
-        <!-- Cantidad del Detalle -->
+        <!-- Precio del Detalle -->
         <label for="Precio" class="form-label">Precio</label>
-        <InputNumber class="form-control" id="Precio" @bind-Value="detalle.Precio" step="0.01" disabled="@(!isEditMode)" @oninput="OnPrecioChanged" />
+        <InputText class="form-control" id="Precio" @bind-Value="precioInput" @oninput="OnPrecioChanged" disabled="@(!isEditMode)" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46" />
         <ValidationMessage For="() => detalle.Precio" />
     </div>
    
@@ -39,15 +40,43 @@
     [Parameter] public bool isEditMode { get; set; }
     [Parameter] public EventCallback OnDetalleChanged { get; set; }
 
+    private bool cantidadError = false;
+    private bool precioError = false;
+
+    private string precioInput = "";
+
+    protected override void OnInitialized()
+    {
+        // Inicializar precioInput con el valor actual del precio en formato de cadena
+        precioInput = detalle.Precio.ToString(CultureInfo.InvariantCulture);
+    }
+
     private void OnCantidadChanged(ChangeEventArgs e)
     {
-        detalle.Cantidad = Convert.ToInt32(e.Value); // Actualiza la cantidad
-        OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
+        if (int.TryParse(e.Value.ToString(), out int cantidad))
+        {
+            detalle.Cantidad = cantidad;
+            OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
+        }
+        else
+        {
+            cantidadError = true;
+        }
     }
 
     private void OnPrecioChanged(ChangeEventArgs e)
     {
-        detalle.Precio = Convert.ToDecimal(e.Value); // Actualiza el precio
-        OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
+        precioInput = e.Value.ToString();
+        
+        // Intentar convertir el valor del precio a decimal
+        if (decimal.TryParse(precioInput, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal precio))
+        {
+            detalle.Precio = precio;
+            OnDetalleChanged.InvokeAsync(null); // Notifica al componente padre del cambio
+        }
+        else
+        {
+            precioError = true;
+        }
     }
 }
