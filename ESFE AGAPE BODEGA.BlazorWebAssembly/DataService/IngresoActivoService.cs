@@ -16,19 +16,41 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         }
 		public async Task<string> ObtenerSiguienteCorrelativo()
 		{
-			var response = await _httpClient.GetAsync("Correlativo/ultimo/IngresoActivo");
-
-			if (response.IsSuccessStatusCode)
+			try
 			{
-				var correlativo = await response.Content.ReadFromJsonAsync<CorrelativoDTO>();
-				if (correlativo != null)
+				// Obtener todos los ingresos activos
+				var response = await _httpClient.GetAsync("IngresoActivo");
+				if (response.IsSuccessStatusCode)
 				{
-					int siguienteNumero = correlativo.Valor + 1;
-					return $"{correlativo.AliasInicial}-{siguienteNumero:000}";
-				}
-			}
+					var ingresos = await response.Content.ReadFromJsonAsync<List<GetIdResultIngresoActivoDTO>>();
+					if (ingresos != null && ingresos.Any())
+					{
+						// Encontrar el número más alto actual
+						int maxNumero = 0;
+						foreach (var ingreso in ingresos)
+						{
+							if (string.IsNullOrEmpty(ingreso.Correlativo)) continue;
 
-			return "ESFE-001"; // Valor inicial si no hay correlativos previos
+							string[] partes = ingreso.Correlativo.Split('-');
+							if (partes.Length == 2 && int.TryParse(partes[1], out int numero))
+							{
+								maxNumero = Math.Max(maxNumero, numero);
+							}
+						}
+
+						// Incrementar el número más alto encontrado
+						return $"ESFE-{(maxNumero + 1):000}";
+					}
+				}
+
+				// Si no hay registros previos, empezar desde 001
+				return "ESFE-001";
+			}
+			catch
+			{
+				// En caso de error, devolver el valor inicial
+				return "ESFE-001";
+			}
 		}
 		public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuario()
         {
@@ -69,16 +91,16 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
         // Crear un nuevo IngresoActivo
         public async Task<int> CrearIngresoActivo(CrearIngresoActivoDTO crearIngresoActivoDTO)
         {
-            var response = await _httpClient.PostAsJsonAsync("IngresoActivo", crearIngresoActivoDTO);
+			var response = await _httpClient.PostAsJsonAsync("IngresoActivo", crearIngresoActivoDTO);
 
-            if (response.IsSuccessStatusCode)
+			if (response.IsSuccessStatusCode)
 			{
 				var result = await response.Content.ReadAsStringAsync();
 				return int.TryParse(result, out var id) ? id : 0;
 			}
 
-            return 0;
-        }
+			return 0;
+		}
 
         // Actualizar un IngresoActivo existente
         public async Task<int> ActualizarIngresoActivo(EditIngresoActivoDTO editIngresoActivoDTO)
