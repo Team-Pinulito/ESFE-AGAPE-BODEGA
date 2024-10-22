@@ -20,7 +20,7 @@
                         <EditForm Model="tipoActivo" OnValidSubmit="Create">
                             <DataAnnotationsValidator />
                             <div class="row">
-                                <div class="col-md-6    ">
+                                <div class="col-md-6">
                                     <label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
                                     <InputText class="form-control" id="Nombre" @bind-Value="tipoActivo.Nombre" />
                                     <ValidationMessage For="() => tipoActivo.Nombre" />
