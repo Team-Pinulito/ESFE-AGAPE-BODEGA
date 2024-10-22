@@ -25,11 +25,13 @@
                                     <InputText class="form-control" @bind-Value="bodega.Descripcion" />
                                     <ValidationMessage For="() => bodega.Descripcion" />
                                 </div>
+                                <div class="row col-4">
                                 <div class="col-md-6 mt-3">
-                                    <button type="submit" class="btn btn-primary w-100">Modificar</button>
+                                    <button type="submit" class="btn btn-primary me-2">Modificar</button>
                                 </div>
                                 <div class="col-md-6 mt-3">
-                                    <NavLink href="/lista-bodega" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                    <NavLink href="/lista-bodega" class="btn btn-secondary me-2">Cancelar</NavLink>
+                                    </div>
                                 </div>
                             </div>
                         </EditForm>
@@ -43,7 +45,7 @@
                     }
                     else if (isError)
                     {
-                        <p class="alert alert-error">Sucedió un error al intentar modificar.</p>
+                        <p class="alert alert-danger">Ocurrió un error al intentar modificar la bodega.</p>
                         <NavLink href="/lista-bodega" class="btn btn-danger">Aceptar</NavLink>
                     }
                 </div>

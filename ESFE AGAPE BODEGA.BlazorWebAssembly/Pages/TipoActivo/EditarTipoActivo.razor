@@ -27,16 +27,18 @@
                                     <ValidationMessage For="() => tipoActivo.Descripcion" />
                                 </div>
                             </div>
-                            <div class="row mt-4">
+                            <br />
+                            <div class="row col-4">
                                 <div class="col-md-6">
-                                    <button type="submit" class="btn btn-primary w-100" disabled="@isSubmitting">Guardar</button>
+                                    <button type="submit" class="btn btn-primary me-2" disabled="@isSubmitting">Guardar</button>
                                 </div>
                                 <div class="col-md-6">
-                                    <NavLink href="/lista-tipoActivo" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                    <NavLink href="/lista-tipoActivo" class="btn btn-secondary me-2">Cancelar</NavLink>
                                 </div>
                             </div>
                         </EditForm>
                     }
+
                     else if (isSuccess)
                     {
                         tipoActivo = new EditTipoActivoDTO();
