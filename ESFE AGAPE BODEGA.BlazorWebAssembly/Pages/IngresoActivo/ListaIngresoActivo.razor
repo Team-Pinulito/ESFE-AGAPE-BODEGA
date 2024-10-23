@@ -113,7 +113,7 @@
 										<td>@ingresoActivo.Correlativo</td>
 										<td>@ingresoActivo.NumeroDocRelacionado</td>
 										<td>@ingresoActivo.FechaIngreso.ToString("dd/MM/yyyy HH:mm")</td>
-										<td>@GetUsuarioName(ingresoActivo.UsuarioId)</td>
+										<td>@ingresoActivo.UsuarioNombre</td>
 										<td>@ingresoActivo.Total</td>
 										<td>
 											<table>
@@ -148,7 +148,8 @@
 	IngresoActivoService ingresoActivoService { get; set; }
 	[Inject]
 	NavigationManager navigation { get; set; }
-
+	[Inject]
+	UsuarioService usuarioService { get; set; }
 	// Declaración e inicialización de objetos y variables necesarias para la búsqueda y paginación
 	SearchResultIngresoActivoDTO searchResult = new SearchResultIngresoActivoDTO();
 	SearchQueryIngresoActivoDTO searchQuery = new SearchQueryIngresoActivoDTO { Take = 10 }; // Cantidad de registros por página
@@ -158,13 +159,17 @@
 
 	bool isLoading = false; // Estado de carga
 							// Método para realizar una búsqueda de IngresoActivo
-	List<GetIdResultUsuarioDTO.UsuarioDTO> usuarios = new List<GetIdResultUsuarioDTO.UsuarioDTO>();
 	private async Task Search()
 	{
 		isLoading = true;
 		try
 		{
 			searchResult = await ingresoActivoService.Buscar(searchQuery);
+			foreach (var ingreso in searchResult.Data)
+			{
+				var usuario = await usuarioService.ObtenerUsuario(ingreso.UsuarioId);
+				ingreso.UsuarioNombre= usuario?.Nombre ?? "Desconocido"; // Asignar nombre del rol
+			}
 		}
 		finally
 		{
@@ -181,16 +186,11 @@
 
 		// Realizar la búsqueda inicial
 		await Search();
-		usuarios = await ingresoActivoService.ObtenerUsuario();
 		// Actualizar la paginación
 		UpdatePagination();
 	}
 
-	private string GetUsuarioName(int usuarioId)
-	{
-		var usuario = usuarios.FirstOrDefault(r => r.Id == usuarioId);
-		return usuario != null ? usuario.Nombre : "Desconocido";
-	}
+	
 	// Método para realizar la búsqueda cuando se envía el formulario de búsqueda
 	private async Task SubmitSearch()
 	{

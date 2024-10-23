@@ -17,7 +17,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
         public string NumeroDocRelacionado { get; set; }
         public decimal Total { get; set; }
 
-        public UsuarioDTO Usuario { get; set; }
-        public List<DetalleIngresoActivoDTO> DetalleIngresoActivos { get; set; }
+
+
+		public List<DetalleIngresoActivoDTO> DetalleIngresoActivos { get; set; }
     }
 }

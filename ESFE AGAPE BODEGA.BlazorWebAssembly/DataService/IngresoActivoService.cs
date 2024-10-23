@@ -1,7 +1,7 @@
-﻿using ESFE_AGAPE_BODEGA.DTOs.CorrelativoDTOs;
-using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
+﻿using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.SolicitudActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -24,6 +24,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 				// Obtener todos los correlativos de ambos servicios
 				var ingresosResponse = await _httpClient.GetAsync("IngresoActivo");
 				var paquetesResponse = await _httpClient.GetAsync("PaqueteActivo");
+				var solicitudResponse = await _httpClient.GetAsync("SolicitudActivo");
 
 				int maxNumero = 0;
 
@@ -61,6 +62,24 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 					}
 				}
 
+
+				if (solicitudResponse.IsSuccessStatusCode)
+				{
+					var solicitudes = await solicitudResponse.Content.ReadFromJsonAsync<List<GetIdResultSolicitudActivoDTO>>();
+					if (solicitudes != null)
+					{
+						foreach (var solictud in solicitudes)
+						{
+							if (string.IsNullOrEmpty(solictud.Correlativo)) continue;
+							string[] partes = solictud.Correlativo.Split('-');
+							if (partes.Length == 2 && int.TryParse(partes[1], out int numero))
+							{
+								maxNumero = Math.Max(maxNumero, numero);
+							}
+						}
+					}
+				}
+
 				// Incrementar el número más alto encontrado
 				return $"ESFE-{(maxNumero + 1):000}";
 			}
@@ -69,28 +88,7 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 				return "ESFE-001";
 			}
 		}
-		public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuario()
-        {
-            var response = await _httpClient.GetAsync("Usuario");
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<List<GetIdResultUsuarioDTO.UsuarioDTO>>();
-                return result ?? new List<GetIdResultUsuarioDTO.UsuarioDTO>();
-            }
-            return new List<GetIdResultUsuarioDTO.UsuarioDTO>();
-        }
-
-        public async Task<List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>> ObtenerInventarioActivo()
-        {
-            var response = await _httpClient.GetAsync("InventarioActivo");
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>>();
-                return result ?? new List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>();
-            }
-            return new List<GetIdResultInventarioActivoDTO.InventarioActivoDTO>();
-        }
-
+	
         // Obtener un IngresoActivo por su ID
         public async Task<GetIdResultIngresoActivoDTO> ObtenerIngresoActivoPorId(int id)
         {

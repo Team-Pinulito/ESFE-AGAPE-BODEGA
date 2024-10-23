@@ -28,6 +28,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 
 			public decimal Total { get; set; }
 
+			public string UsuarioNombre { get; set; }
+
 
 			public List<DetalleIngresoActivoDTO> DetalleIngresoActivoDTO { get; set; }
 		}
