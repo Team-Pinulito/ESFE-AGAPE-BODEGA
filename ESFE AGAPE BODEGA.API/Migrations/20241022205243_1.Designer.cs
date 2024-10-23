@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ESFE_AGAPE_BODEGA.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240920201545_1")]
+    [Migration("20241022205243_1")]
     partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,7 +92,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.Property<int>("IngresoActivoId")
                         .HasColumnType("int");
 
-                    b.Property<int>("InventarioActivoId")
+                    b.Property<int?>("InventarioActivoId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Precio")
@@ -194,6 +194,34 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.ToTable("bodegas");
                 });
 
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Correlativo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AliasFinal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AliasInicial")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Entidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Valor")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("correlativos");
+                });
+
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.DetallePaqueteActivo", b =>
                 {
                     b.Property<int>("Id")
@@ -249,7 +277,9 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("PaqueteActivoId");
 
-                    b.ToTable("DetalleSolicitudActivo");
+                    b.HasIndex("SolicitudActivoId");
+
+                    b.ToTable("detalleSolicitudActivos");
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Estante", b =>
@@ -304,6 +334,36 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.ToTable("inventarioActivos");
                 });
 
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.KardexActivo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaMovimiento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InventarioActivoId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Saldo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("TipoMovimiento")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventarioActivoId");
+
+                    b.ToTable("kardexActivos");
+                });
+
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.PaqueteActivo", b =>
                 {
                     b.Property<int>("Id")
@@ -344,6 +404,57 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("roles");
+                });
+
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.SolicitudActivo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comentario")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Correlativo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaEntrega")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaEntregaEsperada")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaRecepcion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaRecepcionEsperada")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioIdBodegueroEntregaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioIdBodegueroRecibeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.HasIndex("UsuarioIdBodegueroEntregaId");
+
+                    b.HasIndex("UsuarioIdBodegueroRecibeId");
+
+                    b.ToTable("solicitudActivos");
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.TipoActivo", b =>
@@ -454,26 +565,22 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
             modelBuilder.Entity("Bodega_Api_Esfe_Agape.Models.EN.DetalleIngresoActivo", b =>
                 {
                     b.HasOne("Bodega_Api_Esfe_Agape.Models.EN.IngresoActivo", "ingresoActivo")
-                        .WithMany()
+                        .WithMany("DetalleIngresoActivos")
                         .HasForeignKey("IngresoActivoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.InventarioActivo", "inventarioActivo")
+                    b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.InventarioActivo", null)
                         .WithMany("DetalleIngresoActivos")
-                        .HasForeignKey("InventarioActivoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InventarioActivoId");
 
                     b.Navigation("ingresoActivo");
-
-                    b.Navigation("inventarioActivo");
                 });
 
             modelBuilder.Entity("Bodega_Api_Esfe_Agape.Models.EN.IngresoActivo", b =>
                 {
                     b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.Usuario", "usuario")
-                        .WithMany()
+                        .WithMany("IngresoActivos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -525,9 +632,17 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.SolicitudActivo", "SolicitudActivo")
+                        .WithMany("DetalleSolicitudActivos")
+                        .HasForeignKey("SolicitudActivoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Activo");
 
                     b.Navigation("PaqueteActivo");
+
+                    b.Navigation("SolicitudActivo");
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Estante", b =>
@@ -560,6 +675,44 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.Navigation("Estante");
                 });
 
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.KardexActivo", b =>
+                {
+                    b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.InventarioActivo", "InventarioActivo")
+                        .WithMany()
+                        .HasForeignKey("InventarioActivoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InventarioActivo");
+                });
+
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.SolicitudActivo", b =>
+                {
+                    b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.Usuario", "Usuario")
+                        .WithMany("SolicitudActivos")
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.Usuario", "UsuarioBodegueroEntrega")
+                        .WithMany("BodegasEntregaSolicitudes")
+                        .HasForeignKey("UsuarioIdBodegueroEntregaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.Usuario", "UsuarioBodegueroRecibe")
+                        .WithMany("BodegaRecibeSolicitudes")
+                        .HasForeignKey("UsuarioIdBodegueroRecibeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+
+                    b.Navigation("UsuarioBodegueroEntrega");
+
+                    b.Navigation("UsuarioBodegueroRecibe");
+                });
+
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Usuario", b =>
                 {
                     b.HasOne("ESFE_AGAPE_BODEGA.API.Models.Entitys.Rol", "Rol")
@@ -578,6 +731,11 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.Navigation("detallePaqueteActivos");
 
                     b.Navigation("detalleSolicitudActivos");
+                });
+
+            modelBuilder.Entity("Bodega_Api_Esfe_Agape.Models.EN.IngresoActivo", b =>
+                {
+                    b.Navigation("DetalleIngresoActivos");
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Bodega", b =>
@@ -609,9 +767,25 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     b.Navigation("Usuarios");
                 });
 
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.SolicitudActivo", b =>
+                {
+                    b.Navigation("DetalleSolicitudActivos");
+                });
+
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.TipoActivo", b =>
                 {
                     b.Navigation("activo");
+                });
+
+            modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Usuario", b =>
+                {
+                    b.Navigation("BodegaRecibeSolicitudes");
+
+                    b.Navigation("BodegasEntregaSolicitudes");
+
+                    b.Navigation("IngresoActivos");
+
+                    b.Navigation("SolicitudActivos");
                 });
 #pragma warning restore 612, 618
         }
