@@ -88,7 +88,17 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 				return "ESFE-001";
 			}
 		}
-	
+		public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuario()
+        {
+            var response = await _httpClient.GetAsync("Usuario");
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<List<GetIdResultUsuarioDTO.UsuarioDTO>>();
+                return result ?? new List<GetIdResultUsuarioDTO.UsuarioDTO>();
+            }
+            return new List<GetIdResultUsuarioDTO.UsuarioDTO>();
+        }
+
         // Obtener un IngresoActivo por su ID
         public async Task<GetIdResultIngresoActivoDTO> ObtenerIngresoActivoPorId(int id)
         {
