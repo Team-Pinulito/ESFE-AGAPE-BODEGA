@@ -21,28 +21,11 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 			try
 			{
 				// Obtener todos los correlativos de ambos servicios
-				var solicitudResponse = await _httpClient.GetAsync("SolicitudActivo");
-				var ingresosResponse = await _httpClient.GetAsync("IngresoActivo");
 				var paquetesResponse = await _httpClient.GetAsync("PaqueteActivo"); 					
 
 				int maxNumero = 0;
 
-				if (ingresosResponse.IsSuccessStatusCode)
-				{
-					var ingresos = await ingresosResponse.Content.ReadFromJsonAsync<List<GetIdResultIngresoActivoDTO>>();
-					if (ingresos != null)
-					{
-						foreach (var ingreso in ingresos)
-						{
-							if (string.IsNullOrEmpty(ingreso.Correlativo)) continue;
-							string[] partes = ingreso.Correlativo.Split('-');
-							if (partes.Length == 2 && int.TryParse(partes[1], out int numero))
-							{
-								maxNumero = Math.Max(maxNumero, numero);
-							}
-						}
-					}
-				}
+				
 
 				if (paquetesResponse.IsSuccessStatusCode)
 				{
@@ -61,28 +44,13 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 					}
 				}
 
-				if (solicitudResponse.IsSuccessStatusCode)
-				{
-					var solicitudes = await solicitudResponse.Content.ReadFromJsonAsync<List<GetIdResultSolicitudActivoDTO>>();
-					if (solicitudes != null)
-					{
-						foreach (var solictud in solicitudes)
-						{
-							if (string.IsNullOrEmpty(solictud.Correlativo)) continue;
-							string[] partes = solictud.Correlativo.Split('-');
-							if (partes.Length == 2 && int.TryParse(partes[1], out int numero))
-							{
-								maxNumero = Math.Max(maxNumero, numero);
-							}
-						}
-					}
-				}
+				
 				// Incrementar el número más alto encontrado
-				return $"ESFE-{(maxNumero + 1):000}";
+				return $"PA-{(maxNumero + 1):000}";
 			}
 			catch
 			{
-				return "ESFE-001";
+				return "PA-001";
 			}
 		}
 

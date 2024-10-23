@@ -102,7 +102,7 @@
 									<tr>
 										<td>@estante.Nombre</td>
 										<td>@estante.Descripcion</td>
-										<td>@GetBodegaName(estante.BodegaId)</td>
+										<td>@estante.BodegaNombre</td>
 										<td>
 											<table>
 												<tr>
@@ -137,7 +137,8 @@
 	EstanteService estanteService { get; set; }
 	[Inject]
 	NavigationManager navigation { get; set; }
-
+	[Inject]
+	BodegaService bodegaService { get; set; }
 	// Declaración e inicialización de objetos y variables
 	SearchResultEstanteDTO searchResult = new SearchResultEstanteDTO();
 	SearchQueryEstanteDTO searchQuery = new SearchQueryEstanteDTO { Take = 10 };
@@ -147,7 +148,6 @@
 
 	bool isLoading = false; // Estado de carga
 
-	List<SearchResultBodegaDTO.BodegaDTO> bodegas = new List<SearchResultBodegaDTO.BodegaDTO>();
 
 	// Método para realizar una búsqueda
 	private async Task Search()
@@ -156,6 +156,11 @@
 		try
 		{
 			searchResult = await estanteService.Search(searchQuery);
+			foreach (var estante in searchResult.Data)
+			{
+				var bodega = await bodegaService.ObtenerBodega(estante.BodegaId);
+				estante.BodegaNombre = bodega?.Nombre ?? "Desconocido"; // Asignar nombre del rol
+			}
 		}
 		finally
 		{
@@ -180,17 +185,13 @@
 		await Search();
 
 		// Obtener los boddegas
-		bodegas = await estanteService.ObtenerBodegas();
+		
 		// Actualizar la paginación
 		UpdatePagination();
 	}
 
 	// Método para obtener el nombre del rol por su ID
-	private string GetBodegaName(int bodegaId)
-	{
-		var bodega = bodegas.FirstOrDefault(r => r.Id == bodegaId);
-		return bodega != null ? bodega.Nombre : "Desconocido";
-	}
+	
 
 	// Método para realizar una búsqueda después de una acción de búsqueda
 	private async Task SubmitSearch()

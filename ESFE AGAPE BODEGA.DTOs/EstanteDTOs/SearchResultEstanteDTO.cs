@@ -23,6 +23,9 @@ namespace ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs
 
 			[Display(Name = "Bodega")]
 			public int BodegaId { get; set; }
+
+			public string BodegaNombre { get; set; }
+
 		}
 	}
 }
