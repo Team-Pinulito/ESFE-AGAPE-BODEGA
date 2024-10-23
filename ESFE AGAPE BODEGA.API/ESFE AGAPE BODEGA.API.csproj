@@ -24,4 +24,8 @@
     <ProjectReference Include="..\ESFE AGAPE BODEGA.DTOs\ESFE AGAPE BODEGA.DTOs.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

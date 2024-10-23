@@ -24,6 +24,22 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "correlativos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Valor = table.Column<int>(type: "int", nullable: false),
+                    AliasInicial = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AliasFinal = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Entidad = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_correlativos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "paqueteActivos",
                 columns: table => new
                 {
@@ -191,6 +207,46 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "solicitudActivos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    UsuarioIdBodegueroEntregaId = table.Column<int>(type: "int", nullable: false),
+                    UsuarioIdBodegueroRecibeId = table.Column<int>(type: "int", nullable: false),
+                    Correlativo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaEntrega = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaRecepcion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaEntregaEsperada = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaRecepcionEsperada = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Comentario = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_solicitudActivos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_solicitudActivos_usuarios_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_solicitudActivos_usuarios_UsuarioIdBodegueroEntregaId",
+                        column: x => x.UsuarioIdBodegueroEntregaId,
+                        principalTable: "usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_solicitudActivos_usuarios_UsuarioIdBodegueroRecibeId",
+                        column: x => x.UsuarioIdBodegueroRecibeId,
+                        principalTable: "usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "detallePaqueteActivos",
                 columns: table => new
                 {
@@ -218,35 +274,6 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DetalleSolicitudActivo",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SolicitudActivoId = table.Column<int>(type: "int", nullable: false),
-                    ActivoId = table.Column<int>(type: "int", nullable: false),
-                    PaqueteActivoId = table.Column<int>(type: "int", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<byte>(type: "tinyint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DetalleSolicitudActivo", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DetalleSolicitudActivo_activos_ActivoId",
-                        column: x => x.ActivoId,
-                        principalTable: "activos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DetalleSolicitudActivo_paqueteActivos_PaqueteActivoId",
-                        column: x => x.PaqueteActivoId,
-                        principalTable: "paqueteActivos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "inventarioActivos",
                 columns: table => new
                 {
@@ -263,14 +290,47 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                         name: "FK_inventarioActivos_activos_ActivoId",
                         column: x => x.ActivoId,
                         principalTable: "activos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_inventarioActivos_estantes_EstanteId",
                         column: x => x.EstanteId,
                         principalTable: "estantes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "detalleSolicitudActivos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolicitudActivoId = table.Column<int>(type: "int", nullable: false),
+                    ActivoId = table.Column<int>(type: "int", nullable: false),
+                    PaqueteActivoId = table.Column<int>(type: "int", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<byte>(type: "tinyint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_detalleSolicitudActivos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_detalleSolicitudActivos_activos_ActivoId",
+                        column: x => x.ActivoId,
+                        principalTable: "activos",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_detalleSolicitudActivos_paqueteActivos_PaqueteActivoId",
+                        column: x => x.PaqueteActivoId,
+                        principalTable: "paqueteActivos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_detalleSolicitudActivos_solicitudActivos_SolicitudActivoId",
+                        column: x => x.SolicitudActivoId,
+                        principalTable: "solicitudActivos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -304,9 +364,9 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IngresoActivoId = table.Column<int>(type: "int", nullable: false),
-                    InventarioActivoId = table.Column<int>(type: "int", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
-                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    InventarioActivoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -319,6 +379,28 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_detalleIngresos_inventarioActivos_InventarioActivoId",
+                        column: x => x.InventarioActivoId,
+                        principalTable: "inventarioActivos",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "kardexActivos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InventarioActivoId = table.Column<int>(type: "int", nullable: false),
+                    FechaMovimiento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    TipoMovimiento = table.Column<byte>(type: "tinyint", nullable: false),
+                    Saldo = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_kardexActivos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_kardexActivos_inventarioActivos_InventarioActivoId",
                         column: x => x.InventarioActivoId,
                         principalTable: "inventarioActivos",
                         principalColumn: "Id",
@@ -366,14 +448,19 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                 column: "PaqueteActivoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetalleSolicitudActivo_ActivoId",
-                table: "DetalleSolicitudActivo",
+                name: "IX_detalleSolicitudActivos_ActivoId",
+                table: "detalleSolicitudActivos",
                 column: "ActivoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DetalleSolicitudActivo_PaqueteActivoId",
-                table: "DetalleSolicitudActivo",
+                name: "IX_detalleSolicitudActivos_PaqueteActivoId",
+                table: "detalleSolicitudActivos",
                 column: "PaqueteActivoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_detalleSolicitudActivos_SolicitudActivoId",
+                table: "detalleSolicitudActivos",
+                column: "SolicitudActivoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_estantes_BodegaId",
@@ -396,6 +483,26 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                 column: "EstanteId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_kardexActivos_InventarioActivoId",
+                table: "kardexActivos",
+                column: "InventarioActivoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_solicitudActivos_UsuarioId",
+                table: "solicitudActivos",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_solicitudActivos_UsuarioIdBodegueroEntregaId",
+                table: "solicitudActivos",
+                column: "UsuarioIdBodegueroEntregaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_solicitudActivos_UsuarioIdBodegueroRecibeId",
+                table: "solicitudActivos",
+                column: "UsuarioIdBodegueroRecibeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_usuarios_RolId",
                 table: "usuarios",
                 column: "RolId");
@@ -407,13 +514,19 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                 name: "AjusteInventarioInventarioActivo");
 
             migrationBuilder.DropTable(
+                name: "correlativos");
+
+            migrationBuilder.DropTable(
                 name: "detalleIngresos");
 
             migrationBuilder.DropTable(
                 name: "detallePaqueteActivos");
 
             migrationBuilder.DropTable(
-                name: "DetalleSolicitudActivo");
+                name: "detalleSolicitudActivos");
+
+            migrationBuilder.DropTable(
+                name: "kardexActivos");
 
             migrationBuilder.DropTable(
                 name: "ajusteInventarios");
@@ -422,10 +535,13 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
                 name: "ingresoactivos");
 
             migrationBuilder.DropTable(
-                name: "inventarioActivos");
+                name: "paqueteActivos");
 
             migrationBuilder.DropTable(
-                name: "paqueteActivos");
+                name: "solicitudActivos");
+
+            migrationBuilder.DropTable(
+                name: "inventarioActivos");
 
             migrationBuilder.DropTable(
                 name: "usuarios");
