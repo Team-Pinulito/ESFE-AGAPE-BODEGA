@@ -6,47 +6,117 @@
 @using Microsoft.AspNetCore.Components
 
 <div class="row align-items-center">
-    <div class="col-md-5">
-        <!-- Selección de Activo -->
-        <label for="Nombre" class="form-label">Activo</label>
-        <select class="form-control" @bind="detalle.ActivoId" required>
-            <option value="0">Seleccione un activo</option>
-            @foreach (var activo in activos)
-            {
-                <option value="@activo.Id">@activo.Nombre</option>
-            }
-        </select>
-        <ValidationMessage For="() => detalle.ActivoId" />
-    </div>
+	<div class="col-md-5">
+		<!-- Selección de Activo -->
+		<label for="Nombre" class="form-label">Activo</label>
+		<div class="autocomplete-wrapper">
+			<input type="text"
+				   class="form-control"
+				   @bind-value="searchText"
+				   @bind-value:event="oninput"
+				   @onfocus="() => showSuggestions = true"
+				   placeholder="Buscar activo..."
+				   required />
+			@if (showSuggestions && filteredActivos.Any())
+			{
+				<div class="autocomplete-dropdown">
+					@foreach (var activo in filteredActivos)
+					{
+						<div class="autocomplete-item" @onclick="() => SelectActivo(activo)">
+							@activo.Nombre
+						</div>
+					}
+				</div>
+			}
+		</div>
+		<ValidationMessage For="() => detalle.ActivoId" />
+	</div>
 
-    <div class="col-md-4">
-        <!-- Cantidad del Detalle -->
-        <label for="Cantidad" class="form-label">Cantidad</label>
-        <InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad"/>
-        <ValidationMessage For="() => detalle.Cantidad" />
-    </div>
+	<div class="col-md-4">
+		<!-- Cantidad del Detalle -->
+		<label for="Cantidad" class="form-label">Cantidad</label>
+		<InputNumber class="form-control" id="Cantidad" @bind-Value="detalle.Cantidad" />
+		<ValidationMessage For="() => detalle.Cantidad" />
+	</div>
 
-    <div class="col-md-3 text-end">
-        <!-- Botón Eliminar -->
-        <button type="button" class="btn btn-danger mt-4" @onclick="EliminarDetalle" style="display: flex; align-items: center;">
-            <!-- SVG del icono -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
-                <path d="M21.063 15H13v2h9v-2zM4 7h11v2H4zm0 4h11v2H4zm0 4h7v2H4z"></path>
-            </svg>
-        </button>
-    </div>
+	<div class="col-md-3 text-end">
+		<!-- Botón Eliminar -->
+		<button type="button" class="btn btn-danger mt-4" @onclick="EliminarDetalle" style="display: flex; align-items: center;">
+			<!-- SVG del icono -->
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(255, 255, 255, 1);">
+				<path d="M21.063 15H13v2h9v-2zM4 7h11v2H4zm0 4h11v2H4zm0 4h7v2H4z"></path>
+			</svg>
+		</button>
+	</div>
 </div>
+
+<style>
+	.autocomplete-wrapper {
+		position: relative;
+	}
+
+	.autocomplete-dropdown {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		background: white;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		max-height: 200px;
+		overflow-y: auto;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	}
+
+	.autocomplete-item {
+		padding: 8px 12px;
+		cursor: pointer;
+	}
+
+		.autocomplete-item:hover {
+			background-color: #f8f9fa;
+		}
+</style>
+
 @code {
-    [Parameter] public CrearDetallePaqueteActivoDTO detalle { get; set; } 
-    [Parameter] public DetallePaqueteActivoDTO detalles { get; set; }
+	[Parameter] public CrearDetallePaqueteActivoDTO detalle { get; set; }
 
 
-    [Parameter] public List<SearchResultActivoDTO.ActivoDTO> activos { get; set; }
+	[Parameter] public List<SearchResultActivoDTO.ActivoDTO> activos { get; set; }
 
 
-   
-    
-    [Parameter] public EventCallback EliminarDetalle { get; set; }
 
-   
+
+	[Parameter] public EventCallback EliminarDetalle { get; set; }
+
+	private string searchText = "";
+	private bool showSuggestions = false;
+
+	private List<SearchResultActivoDTO.ActivoDTO> filteredActivos =>
+		string.IsNullOrWhiteSpace(searchText)
+			? new List<SearchResultActivoDTO.ActivoDTO>()
+			: activos
+				.Where(a => a.Nombre.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+				.ToList();
+
+	private void SelectActivo(SearchResultActivoDTO.ActivoDTO activo)
+	{
+		detalle.ActivoId = activo.Id;
+		searchText = activo.Nombre;
+		showSuggestions = false;
+		StateHasChanged();
+	}
+
+	protected override void OnInitialized()
+	{
+		if (detalle.ActivoId > 0)
+		{
+			var selectedActivo = activos.FirstOrDefault(a => a.Id == detalle.ActivoId);
+			if (selectedActivo != null)
+			{
+				searchText = selectedActivo.Nombre;
+			}
+		}
+	}
 }
