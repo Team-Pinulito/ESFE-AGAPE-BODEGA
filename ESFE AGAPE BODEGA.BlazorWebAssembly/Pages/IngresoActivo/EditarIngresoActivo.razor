@@ -30,23 +30,15 @@
 									<ValidationMessage For="() => ingresoActivo.NumeroDocRelacionado" />
 								</div>
 
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<label for="FechaIngreso" class="form-label">Fecha de Ingreso<span style="color:red;">*</span></label>
 									<input type="datetime-local" class="form-control" id="FechaIngreso" @bind-value="ingresoActivo.FechaIngreso" />
 									<ValidationMessage For="() => ingresoActivo.FechaIngreso" />
 								</div>
-								<div class="col-md-4">
-									<label for="Nombre" class="form-label">Usuario<span style="color:red;">*</span></label>
-									<select class="form-control" @bind="ingresoActivo.UsuarioId" required>
-										<option value="">Seleccione un usuario</option>
-										@foreach (var usuario in usuarios)
-										{
-											<option value="@usuario.Id">@usuario.Nombre</option>
-										}
-									</select>
-									<ValidationMessage For="() => ingresoActivo.UsuarioId" />
+								<div style="display: none;">
+									<InputNumber @bind-Value="ingresoActivo.UsuarioId" />
 								</div>
-								<div class="col-md-4">
+								<div class="col-md-6">
 									<label for="Total" class="form-label">Total</label>
 									<input type="number" class="form-control" disabled @bind="ingresoActivo.Total" />
 								</div>
