@@ -28,26 +28,51 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 				var maximoValorGlobal = await applicationDbContext.correlativos
 					.MaxAsync(c => (int?)c.Valor) ?? 0;
 
+				Correlativo nuevoCorrelativo;
+
 				if (ultimoCorrelativo == null)
 				{
 					// Si no existe correlativo para esta entidad, usar el siguiente al máximo global
-					ultimoCorrelativo = new Correlativo
+					nuevoCorrelativo = new Correlativo
 					{
 						Valor = maximoValorGlobal + 1,
 						AliasInicial = "ESFE",
 						AliasFinal = "000",
 						Entidad = entidad
 					};
-					applicationDbContext.correlativos.Add(ultimoCorrelativo);
 				}
 				else
 				{
-					// Si existe, incrementar el valor máximo actual
-					ultimoCorrelativo.Valor = Math.Max(maximoValorGlobal + 1, ultimoCorrelativo.Valor + 1);
+					// Verificar si existe un registro con el mismo valor de correlativo pero con una entidad diferente
+					bool existeCorrelativoDuplicado = await applicationDbContext.correlativos
+						.AnyAsync(c => c.Valor == ultimoCorrelativo.Valor && c.Entidad != entidad);
+
+					if (existeCorrelativoDuplicado)
+					{
+						// Si existe un duplicado, usar el siguiente al máximo global
+						nuevoCorrelativo = new Correlativo
+						{
+							Valor = maximoValorGlobal + 1,
+							AliasInicial = "ESFE",
+							AliasFinal = "000",
+							Entidad = entidad
+						};
+					}
+					else
+					{
+						// Si no hay duplicado, incrementar el valor máximo actual
+						nuevoCorrelativo = new Correlativo
+						{
+							Valor = Math.Max(maximoValorGlobal + 1, ultimoCorrelativo.Valor + 1),
+							AliasInicial = "ESFE",
+							AliasFinal = "000",
+							Entidad = entidad
+						};
+					}
 				}
 
-				await applicationDbContext.SaveChangesAsync();
-				return $"{ultimoCorrelativo.AliasInicial}-{ultimoCorrelativo.Valor:D3}";
+				var correlativo = $"{nuevoCorrelativo.AliasInicial}-{nuevoCorrelativo.Valor:D3}";
+				return correlativo.Replace("--", "-");
 			}
 			catch
 			{
