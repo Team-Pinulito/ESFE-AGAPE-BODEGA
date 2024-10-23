@@ -26,7 +26,6 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
         public DbSet<SolicitudActivo> solicitudActivos { get; set; }
         public DbSet<DetalleSolicitudActivo> detalleSolicitudActivos { get; set; }
         public DbSet<KardexActivo> kardexActivos { get; set; }
-		public DbSet<Correlativo> correlativos { get; set; }
 
 
 
