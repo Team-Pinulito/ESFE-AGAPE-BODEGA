@@ -25,22 +25,15 @@
                                 <label for="NumeroDocRelacionado" class="form-label">Número de Documento Relacionado</label>
                                 <input type="text" class="form-control" disabled @bind="ingresoActivo.NumeroDocRelacionado" />
                             </div>
-                            <div class="col-md-4 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <label for="FechaIngreso" class="form-label">Fecha de Ingreso</label>
                                 <input type="datetime-local" class="form-control" disabled @bind="ingresoActivo.FechaIngreso" />
                             </div>
 
-                            <div class="col-md-4 mt-3">
-                                <label for="UsuarioId" class="form-label">Usuario ID</label>
-                                <select class="form-control" disabled @bind="ingresoActivo.UsuarioId" required>
-                                    <option value="">Seleccione una usuario</option>
-                                    @foreach (var usuario in usuarios)
-                                    {
-                                        <option value="@usuario.Id">@usuario.Nombre</option>
-                                    }
-                                </select>
+                            <div style="display: none;">
+                                <InputNumber @bind-Value="ingresoActivo.UsuarioId" />
                             </div>
-                            <div class="col-md-4 mt-3">
+                            <div class="col-md-6 mt-3">
                                 <label for="Total" class="form-label">Total</label>
                                 <input type="text" class="form-control" disabled @bind="ingresoActivo.Total" />
                             </div>
