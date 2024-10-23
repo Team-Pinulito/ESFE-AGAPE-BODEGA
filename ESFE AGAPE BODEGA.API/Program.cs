@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
         builder => builder
-            .WithOrigins("https://localhost:7293") // Cambia esto al origen de tu aplicación
+            .WithOrigins("https://localhost:7293", "https://esfebodega.netlify.app") // Cambia esto al origen de tu aplicación
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
