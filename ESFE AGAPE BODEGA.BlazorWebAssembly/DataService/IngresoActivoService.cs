@@ -1,57 +1,31 @@
 ﻿using ESFE_AGAPE_BODEGA.DTOs.CorrelativoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
+using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 {
     public class IngresoActivoService
     {
-        private readonly HttpClient _httpClient;
-
-        public IngresoActivoService(IHttpClientFactory httpClientFactory)
-        {
-            _httpClient = httpClientFactory.CreateClient("BodegaAPI");
-        }
-		public async Task<string> ObtenerSiguienteCorrelativo()
+		private readonly HttpClient _httpClient;
+		public IngresoActivoService(IHttpClientFactory httpClientFactory)
 		{
-			try
-			{
-				// Obtener todos los ingresos activos
-				var response = await _httpClient.GetAsync("IngresoActivo");
-				if (response.IsSuccessStatusCode)
-				{
-					var ingresos = await response.Content.ReadFromJsonAsync<List<GetIdResultIngresoActivoDTO>>();
-					if (ingresos != null && ingresos.Any())
-					{
-						// Encontrar el número más alto actual
-						int maxNumero = 0;
-						foreach (var ingreso in ingresos)
-						{
-							if (string.IsNullOrEmpty(ingreso.Correlativo)) continue;
-
-							string[] partes = ingreso.Correlativo.Split('-');
-							if (partes.Length == 2 && int.TryParse(partes[1], out int numero))
-							{
-								maxNumero = Math.Max(maxNumero, numero);
-							}
-						}
-
-						// Incrementar el número más alto encontrado
-						return $"ESFE-{(maxNumero + 1):000}";
-					}
-				}
-
-				// Si no hay registros previos, empezar desde 001
-				return "ESFE-001";
-			}
-			catch
-			{
-				// En caso de error, devolver el valor inicial
-				return "ESFE-001";
-			}
+			_httpClient = httpClientFactory.CreateClient("BodegaAPI");
 		}
+
+		public async Task<string> ObtenerCorrelativo()
+		{
+			var response = await _httpClient.GetAsync("Correlativo/siguiente/IngresoActivo");
+			if (response.IsSuccessStatusCode)
+			{
+				return await response.Content.ReadAsStringAsync();
+			}
+			return string.Empty;
+		}
+
 		public async Task<List<GetIdResultUsuarioDTO.UsuarioDTO>> ObtenerUsuario()
         {
             var response = await _httpClient.GetAsync("Usuario");

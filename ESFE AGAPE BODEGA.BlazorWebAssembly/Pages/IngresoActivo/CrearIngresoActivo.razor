@@ -125,7 +125,7 @@
 		// Set the UsuarioId property to the current user's ID
 		ingresoActivo.UsuarioId = currentUserId;
 
-		ingresoActivo.Correlativo = await ingresoActivoService.ObtenerSiguienteCorrelativo();
+		ingresoActivo.Correlativo = await ingresoActivoService.ObtenerCorrelativo();
 	}
 	private async Task Create()
 	{

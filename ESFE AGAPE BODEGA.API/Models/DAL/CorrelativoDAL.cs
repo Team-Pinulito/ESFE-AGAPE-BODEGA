@@ -14,38 +14,47 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 			this.applicationDbContext = applicationDbContext;
 		}
 
-
-		public async Task<Correlativo> ObtenerCorrelativoPorId(int id)
+		public async Task<string> ObtenerSiguienteCorrelativo(string entidad)
 		{
-			return await applicationDbContext.correlativos.FindAsync(id);
-		}
-
-		public async Task<Correlativo> ObtenerUltimoCorrelativoPorEntidad(string entidad)
-		{
-			return await applicationDbContext.correlativos
-				.Where(c => c.Entidad == entidad)
-				.OrderByDescending(c => c.Id)
-				.FirstOrDefaultAsync();
-		}
-
-		public async Task<Correlativo> CrearCorrelativo(Correlativo nuevoCorrelativo)
-		{
-			applicationDbContext.correlativos.Add(nuevoCorrelativo);
-			await applicationDbContext.SaveChangesAsync();
-			return nuevoCorrelativo;
-		}
-
-	
-
-		public async Task EliminarCorrelativo(int id)
-		{
-			var correlativo = await applicationDbContext.correlativos.FindAsync(id);
-			if (correlativo != null)
+			try
 			{
-				applicationDbContext.correlativos.Remove(correlativo);
+				// Obtener el máximo valor actual para la entidad
+				var ultimoCorrelativo = await applicationDbContext.correlativos
+					.Where(c => c.Entidad == entidad)
+					.OrderByDescending(c => c.Valor)
+					.FirstOrDefaultAsync();
+
+				// Obtener el máximo valor de todas las entidades
+				var maximoValorGlobal = await applicationDbContext.correlativos
+					.MaxAsync(c => (int?)c.Valor) ?? 0;
+
+				if (ultimoCorrelativo == null)
+				{
+					// Si no existe correlativo para esta entidad, usar el siguiente al máximo global
+					ultimoCorrelativo = new Correlativo
+					{
+						Valor = maximoValorGlobal + 1,
+						AliasInicial = "ESFE",
+						AliasFinal = "000",
+						Entidad = entidad
+					};
+					applicationDbContext.correlativos.Add(ultimoCorrelativo);
+				}
+				else
+				{
+					// Si existe, incrementar el valor máximo actual
+					ultimoCorrelativo.Valor = Math.Max(maximoValorGlobal + 1, ultimoCorrelativo.Valor + 1);
+				}
+
 				await applicationDbContext.SaveChangesAsync();
+				return $"{ultimoCorrelativo.AliasInicial}-{ultimoCorrelativo.Valor:D3}";
+			}
+			catch
+			{
+				return "ESFE-001";
 			}
 		}
+
 	}
 }
 

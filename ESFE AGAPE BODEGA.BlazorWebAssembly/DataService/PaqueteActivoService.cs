@@ -1,4 +1,5 @@
 ﻿using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.PaqueteActivoDTOs;
 using System.Net.Http.Json;
 
@@ -6,13 +7,25 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 {
     public class PaqueteActivoService
     {
-        private readonly HttpClient _httpClient;
+		private readonly HttpClient _httpClient;
 
-        public PaqueteActivoService(IHttpClientFactory httpClientFactory)
-        {
-            _httpClient = httpClientFactory.CreateClient("BodegaAPI");
-        }
-        public async Task<List<SearchResultActivoDTO.ActivoDTO>> ObtenerActivos()
+		public PaqueteActivoService(IHttpClientFactory httpClientFactory)
+		{
+			_httpClient = httpClientFactory.CreateClient("BodegaAPI");
+		}
+
+
+		public async Task<string> ObtenerCorrelativo()
+		{
+			var response = await _httpClient.GetAsync("Correlativo/siguiente/PaqueteActivo");
+			if (response.IsSuccessStatusCode)
+			{
+				return await response.Content.ReadAsStringAsync();
+			}
+			return string.Empty;
+		}
+
+		public async Task<List<SearchResultActivoDTO.ActivoDTO>> ObtenerActivos()
         {
             var response = await _httpClient.GetAsync("Activo");
             if (response.IsSuccessStatusCode)

@@ -23,9 +23,9 @@
 							<DataAnnotationsValidator />
 							<div class="row">
 								<div class="col-md-6">
-									<label for="Correlativo" class="form-label">Correlativo<span style="color:red;">*</span></label>
-									<InputText class="form-control" id="Correlativo" @bind-Value="paqueteActivo.Correlativo" />
-									<ValidationMessage For="() => paqueteActivo.Correlativo" />
+									<label for="Correlativo" class="form-label">Correlativo</label>
+									<input type="text" class="form-control" disabled @bind="paqueteActivo.Correlativo" />
+
 								</div>
 								<div class="col-md-6">
 									<label for="Nombre" class="form-label">Nombre<span style="color:red;">*</span></label>
@@ -96,6 +96,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		activos = await paqueteActivoService.ObtenerActivos();
+		paqueteActivo.Correlativo = await paqueteActivoService.ObtenerCorrelativo();
 	}
 
 	private async Task Create()

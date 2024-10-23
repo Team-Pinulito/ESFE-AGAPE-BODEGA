@@ -19,87 +19,25 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
 			_correlativoDAL = correlativoDAL;
 		}
 
-		
 
-		//obtener por id
-		[HttpGet("{id}")]
-		public async Task<ActionResult<CorrelativoDTO>> ObtenerCorrelativo(int id)
+
+
+		[HttpGet("siguiente/{entidad}")]
+		public async Task<ActionResult<string>> ObtenerSiguienteCorrelativo(string entidad)
 		{
-			var correlativo = await _correlativoDAL.ObtenerCorrelativoPorId(id);
-
-			if (correlativo == null)
+			try
 			{
-				return NotFound();  // Devuelve un NotFoundResult
+				var correlativo = await _correlativoDAL.ObtenerSiguienteCorrelativo(entidad);
+
+				if (correlativo == null)
+					return NotFound($"No se pudo generar el correlativo para la entidad: {entidad}");
+
+				return Ok(correlativo);
 			}
-
-			var bodegaDTO = new CorrelativoDTO
+			catch (Exception ex)
 			{
-				Id = correlativo.Id,
-				Valor = correlativo.Valor,
-				AliasInicial = correlativo.AliasInicial,
-				AliasFinal = correlativo.AliasFinal,
-				Entidad = correlativo.Entidad
-			};
-
-			return Ok(bodegaDTO);  // Devuelve el objeto envuelto en un OkResult
-		}
-
-
-
-		
-
-		[HttpPost]
-		public async Task<ActionResult<CorrelativoDTO>> CrearCorrelativo(CrearCorrelativoDTO crearCorrelativoDTO)
-		{
-			var nuevoCorrelativo = new Correlativo
-			{
-				Valor = crearCorrelativoDTO.Valor,
-				AliasInicial = crearCorrelativoDTO.AliasInicial,
-				AliasFinal = crearCorrelativoDTO.AliasFinal,
-				Entidad = crearCorrelativoDTO.Entidad
-			};
-
-			var correlativoCreado = await _correlativoDAL.CrearCorrelativo(nuevoCorrelativo);
-
-			var correlativoDTO = new CorrelativoDTO
-			{
-				Id = correlativoCreado.Id,
-				Valor = correlativoCreado.Valor,
-				AliasInicial = correlativoCreado.AliasInicial,
-				AliasFinal = correlativoCreado.AliasFinal,
-				Entidad = correlativoCreado.Entidad
-			};
-
-			return CreatedAtAction(nameof(ObtenerCorrelativo), new { id = correlativoDTO.Id }, correlativoDTO);
-		}
-
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> EliminarCorrelativo(int id)
-		{
-			await _correlativoDAL.EliminarCorrelativo(id);
-			return NoContent();
-		}
-
-		[HttpGet("ultimo/{entidad}")]
-		public async Task<ActionResult<CorrelativoDTO>> ObtenerUltimoCorrelativo(string entidad)
-		{
-			var correlativo = await _correlativoDAL.ObtenerUltimoCorrelativoPorEntidad(entidad);
-
-			if (correlativo == null)
-			{
-				return NotFound();
+				return BadRequest($"Error al obtener el correlativo: {ex.Message}");
 			}
-
-			var correlativoDTO = new CorrelativoDTO
-			{
-				Id = correlativo.Id,
-				Valor = correlativo.Valor,
-				AliasInicial = correlativo.AliasInicial,
-				AliasFinal = correlativo.AliasFinal,
-				Entidad = correlativo.Entidad
-			};
-
-			return Ok(correlativoDTO);
 		}
 
 	}
