@@ -1,5 +1,6 @@
 ﻿@page "/crear-ingresoActivo"
 
+@inject IJSRuntime JS
 @using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
@@ -75,7 +76,10 @@
 							
 							<div class="row mt-4">
 								<div class="col-md-6">
-									<button type="submit" class="btn btn-primary w-100">Guardar</button>
+									<button type="submit" class="btn btn-primary w-100"
+											disabled="@(!ingresoActivo.TieneDetalles())">
+										Guardar
+									</button>
 								</div>
 								<div class="col-md-6">
 									<NavLink href="/lista-ingresoActivo" class="btn btn-secondary w-100">Cancelar</NavLink>
@@ -129,6 +133,13 @@
 	}
 	private async Task Create()
 	{
+		// Validar que existan detalles
+        if (!ingresoActivo.TieneDetalles())
+        {
+			await JS.InvokeVoidAsync("alert", "Debe agregar al menos un detalle antes de guardar el ingreso.");
+            return;
+        }
+
 		if (!ValidarDetalles())
 		{
 			isError = true;
