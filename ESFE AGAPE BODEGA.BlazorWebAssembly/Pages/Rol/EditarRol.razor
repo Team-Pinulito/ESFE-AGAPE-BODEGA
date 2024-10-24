@@ -20,16 +20,19 @@
                                         <InputText class="form-control" @bind-Value="rol.Nombre" />
                                         <ValidationMessage For="() => rol.Nombre" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                         <label for="Descripcion">Descripcion:</label>
-                                        <InputText class="form-control" @bind-Value="rol.Descripcion" />
+                                        <InputTextArea class="form-control" @bind-Value="rol.Descripcion" />
                                         <ValidationMessage For="() => rol.Descripcion" />
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <button type="submit" class="btn btn-primary w-100">Modificar</button>
+                            </div>
+                            <br />
+                            <div class="row col-4">
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary me-2">Guardar</button>
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <NavLink href="/lista-rol" class="btn btn-secondary w-100">Cancelar</NavLink>
+                                <div class="col-md-6">
+                                    <NavLink href="/lista-tipoActivo" class="btn btn-secondary me-2">Cancelar</NavLink>
                                 </div>
                             </div>
                         </EditForm>
