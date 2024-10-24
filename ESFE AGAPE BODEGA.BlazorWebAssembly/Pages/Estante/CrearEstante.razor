@@ -43,11 +43,12 @@
                                     <InputTextArea class="form-control" id="Descripcion" @bind-Value="estante.Descripcion" />
                                     <ValidationMessage For="() => estante.Descripcion" />
                                 </div>
-                                <div class="col-md-6 mt-3">
-                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <NavLink href="/lista-estante" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <NavLink href="/lista-estante" class="btn btn-secondary">Cancelar</NavLink>
                                 </div>
                             </div>
                         </EditForm>
