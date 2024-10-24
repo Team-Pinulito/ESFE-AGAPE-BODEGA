@@ -67,6 +67,7 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
             usuarioExistente.Codigo = usuario.Codigo; // Ejemplo de otro campo
             usuarioExistente.Direccion = usuario.Direccion; // Ejemplo de otro campo
             usuarioExistente.RolId = usuario.RolId; // Ejemplo de otro campo
+            usuarioExistente.Estatus = usuario.Estatus;
 
             applicationDbContext.usuarios.Update(usuarioExistente);
             return await applicationDbContext.SaveChangesAsync();

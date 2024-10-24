@@ -31,52 +31,63 @@ namespace ESFE_AGAPE_BODEGA.API.Models.DAL
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<PaqueteActivo>()
-            .HasMany(p => p.DetallePaqueteActivos)
-            .WithOne(d => d.PaqueteActivo)
-            .HasForeignKey(d => d.PaqueteActivoId)
-            .OnDelete(DeleteBehavior.Cascade); // Aquí habilitas la eliminación en cascada
-                                               // Relación 1-a-muchos entre Usuario y SolicitudActivo (quien hace la solicitud)
-                                               // Relación 1-a-muchos entre Usuario y SolicitudActivo (quien hace la solicitud)
-            modelBuilder.Entity<SolicitudActivo>()
-                .HasOne(s => s.Usuario)
-                .WithMany(u => u.SolicitudActivos) // Asegúrate de tener esta colección en Usuario
-                .HasForeignKey(s => s.UsuarioId)
-                .OnDelete(DeleteBehavior.Cascade); // Restringe la eliminación en cascada
+			// Relación 1 a muchos entre PaqueteActivo y DetallePaqueteActivo
+			modelBuilder.Entity<PaqueteActivo>()
+				.HasMany(p => p.DetallePaqueteActivos)
+				.WithOne(d => d.PaqueteActivo)
+				.HasForeignKey(d => d.PaqueteActivoId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<SolicitudActivo>()
-                .HasMany(s => s.DetalleSolicitudActivos)
-                .WithOne(d => d.SolicitudActivo)
-                .HasForeignKey(d => d.SolicitudActivoId)
-                .OnDelete(DeleteBehavior.Cascade);
+			// Relación 1 a muchos entre IngresoActivo y DetalleIngresoActivo
+			modelBuilder.Entity<IngresoActivo>()
+				.HasMany(p => p.DetalleIngresoActivos)
+				.WithOne(d => d.ingresoActivo)
+				.HasForeignKey(d => d.IngresoActivoId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-            // Relación 1-a-1 entre UsuarioBodegueroEntrega y SolicitudActivo
-            modelBuilder.Entity<SolicitudActivo>()
-                .HasOne(s => s.UsuarioBodegueroEntrega)
-                .WithMany(u => u.BodegasEntregaSolicitudes)
-                .HasForeignKey(s => s.UsuarioIdBodegueroEntregaId)
-                .OnDelete(DeleteBehavior.Restrict); // Evitar eliminación en cascada
+			// Relación 1 a muchos entre SolicitudActivo y Usuario
+			modelBuilder.Entity<SolicitudActivo>()
+				.HasOne(s => s.Usuario)
+				.WithMany(u => u.SolicitudActivos)
+				.HasForeignKey(s => s.UsuarioId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-            // Relación 1-a-1 entre UsuarioBodegueroRecibe y SolicitudActivo
-            modelBuilder.Entity<SolicitudActivo>()
-                .HasOne(s => s.UsuarioBodegueroRecibe)
-                .WithMany(u => u.BodegaRecibeSolicitudes)
-                .HasForeignKey(s => s.UsuarioIdBodegueroRecibeId)
-                .OnDelete(DeleteBehavior.Restrict); // Evitar e
+			// Relación 1 a muchos entre SolicitudActivo y DetalleSolicitudActivo
+			modelBuilder.Entity<SolicitudActivo>()
+				.HasMany(s => s.DetalleSolicitudActivos)
+				.WithOne(d => d.SolicitudActivo)
+				.HasForeignKey(d => d.SolicitudActivoId)
+				.OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<IngresoActivo>()
-               .HasMany(i => i.DetalleIngresoActivos)
-               .WithOne(d => d.ingresoActivo)
-               .HasForeignKey(d => d.IngresoActivoId)
-               .OnDelete(DeleteBehavior.Cascade);
+			// Relación 1 a 1 entre UsuarioBodegueroEntrega y SolicitudActivo
+			modelBuilder.Entity<SolicitudActivo>()
+				.HasOne(s => s.UsuarioBodegueroEntrega)
+				.WithMany(u => u.BodegasEntregaSolicitudes)
+				.HasForeignKey(s => s.UsuarioIdBodegueroEntregaId)
+				.OnDelete(DeleteBehavior.Restrict); // Evitar eliminación en cascada
 
-            modelBuilder.Entity<DetalleIngresoActivo>()
-                .HasOne(d => d.ingresoActivo)
-                .WithMany(i => i.DetalleIngresoActivos)
-                .HasForeignKey(d => d.IngresoActivoId);
+			// Relación 1 a 1 entre UsuarioBodegueroRecibe y SolicitudActivo
+			modelBuilder.Entity<SolicitudActivo>()
+				.HasOne(s => s.UsuarioBodegueroRecibe)
+				.WithMany(u => u.BodegaRecibeSolicitudes)
+				.HasForeignKey(s => s.UsuarioIdBodegueroRecibeId)
+				.OnDelete(DeleteBehavior.Restrict); // Evitar eliminación en cascada
 
-           
-        }
-    }
+			// Relación entre Activo y DetalleIngresoActivo
+			modelBuilder.Entity<DetalleIngresoActivo>()
+				.HasOne(d => d.Activo)
+				.WithMany(a => a.detalleIngresoActivos)
+				.HasForeignKey(d => d.ActivoId)
+				.OnDelete(DeleteBehavior.Cascade);
+
+			// Relación entre Activo y InventarioActivo
+			
+
+			// Más configuraciones según sea necesario...
+		}
+
+
+
+	}
+    
 }

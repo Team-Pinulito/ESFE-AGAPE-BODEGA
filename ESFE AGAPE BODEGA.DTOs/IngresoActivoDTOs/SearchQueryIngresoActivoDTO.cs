@@ -12,9 +12,11 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 
         [Display(Name = "Correlativo")]
         public string? Correlativo_Like { get; set; }
-
         [Display(Name = "Fecha Ingreso")]
         public DateTime? Fecha_Like { get; set; }
+        
+        [Display(Name = "NumeroDocRelacionado")]
+        public string? NumeroDocRelacionado_Like { get; set; }
 
         [Display(Name = "Pagina")]
         public int Skip { get; set; }

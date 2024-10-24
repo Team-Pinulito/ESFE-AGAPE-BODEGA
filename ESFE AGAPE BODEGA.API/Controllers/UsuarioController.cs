@@ -36,8 +36,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Password = r.Password,
                 Codigo = r.Codigo,
                 Direccion = r.Direccion,
-                RolId = r.RolId
-            }).ToList();
+                RolId = r.RolId,
+				Estatus = r.Estatus
+			}).ToList();
 
             return usuarioDto;
         }
@@ -87,7 +88,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                     Password = item.Password,
                     Codigo = item.Codigo,
                     Direccion = item.Direccion,
-                    RolId = item.RolId
+                    RolId = item.RolId,
+                    Estatus = item.Estatus
                 });
             }
 
@@ -117,7 +119,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Password = usuario.Password,
                 Codigo = usuario.Codigo,
                 Direccion = usuario.Direccion,
-                RolId = usuario.RolId
+                RolId = usuario.RolId,
+                Estatus = usuario.Estatus
             };
 
             return usuarioDto;
@@ -137,7 +140,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Password = crearUsuarioDTO.Password,
                 Codigo = crearUsuarioDTO.Codigo,
                 Direccion = crearUsuarioDTO.Direccion,
-                RolId = crearUsuarioDTO.RolId
+                RolId = crearUsuarioDTO.RolId,
+                Estatus = crearUsuarioDTO.Estatus
             };
 
             var result = await _usuarioDAL.CrearUsuario(usuario);
@@ -172,7 +176,8 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 Password = editUsuarioDTO.Password,
                 Codigo = editUsuarioDTO.Codigo,
                 Direccion = editUsuarioDTO.Direccion,
-                RolId = editUsuarioDTO.RolId
+                RolId = editUsuarioDTO.RolId,
+                Estatus = editUsuarioDTO.Estatus
             };
 
             var result = await _usuarioDAL.ActualizarUsuario(usuario);

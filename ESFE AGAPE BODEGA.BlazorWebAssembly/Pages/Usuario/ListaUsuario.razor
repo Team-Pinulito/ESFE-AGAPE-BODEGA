@@ -36,6 +36,7 @@
                              <div class="col-md-5 d-flex align-items-end">
                                 <button type="submit" class="btn btn-secondary mx-2">Buscar</button>
                                 <NavLink href="/crear-usuario" class="btn btn-success">Crear</NavLink>
+                                <button type="submit" class="btn btn-secondary mx-2">Importar</button>
                             </div>
                         </div>
                     </EditForm>
@@ -58,6 +59,7 @@
                                     <th>Apellido</th>
                                     <th>DUI</th>
                                     <th>Rol</th>
+                                    <th>Estatus</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -69,6 +71,7 @@
                                         <td>@usuario.Apellido</td>
                                         <td>@usuario.DUI</td>
                                         <td>@usuario.RolNombre</td>
+                                        <td>Activo</td>
                                         <td>
                                             <button class="btn btn-dark" @onclick="() => GoEdit(usuario.Id)">Editar</button>
                                             <button class="btn btn-info" @onclick="() => GoDetails(usuario.Id)">Ver</button>

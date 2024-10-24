@@ -1,4 +1,7 @@
-﻿using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
+﻿using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.BodegaDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.EstanteDTOs;
+using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs;
 using System.Net.Http.Json;
 
@@ -12,7 +15,36 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 			_httpClient = httpClientFactory.CreateClient("BodegaAPI");
 		}
 
-
+		public async Task<List<SearchResultActivoDTO.ActivoDTO>> ObtenerActivos()
+		{
+			var response = await _httpClient.GetAsync("Activo");
+			if (response.IsSuccessStatusCode)
+			{
+				var result = await response.Content.ReadFromJsonAsync<List<SearchResultActivoDTO.ActivoDTO>>();
+				return result ?? new List<SearchResultActivoDTO.ActivoDTO>();
+			}
+			return new List<SearchResultActivoDTO.ActivoDTO>();
+		}
+		public async Task<List<SearchResultBodegaDTO.BodegaDTO>> ObtenerBodegas()
+		{
+			var response = await _httpClient.GetAsync("Bodega");
+			if (response.IsSuccessStatusCode)
+			{
+				var result = await response.Content.ReadFromJsonAsync<List<SearchResultBodegaDTO.BodegaDTO>>();
+				return result ?? new List<SearchResultBodegaDTO.BodegaDTO>();
+			}
+			return new List<SearchResultBodegaDTO.BodegaDTO>();
+		}
+		public async Task<List<SearchResultEstanteDTO.EstanteDTO>> ObtenerEstantes()
+		{
+			var response = await _httpClient.GetAsync("Estante");
+			if (response.IsSuccessStatusCode)
+			{
+				var result = await response.Content.ReadFromJsonAsync<List<SearchResultEstanteDTO.EstanteDTO>>();
+				return result ?? new List<SearchResultEstanteDTO.EstanteDTO>();
+			}
+			return new List<SearchResultEstanteDTO.EstanteDTO>();
+		}
 		public async Task<string> ObtenerCorrelativo()
 		{
 			try

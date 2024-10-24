@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bodega_Api_Esfe_Agape.Models.EN;
 using ESFE_AGAPE_BODEGA.API.Models.DAL;
+using ESFE_AGAPE_BODEGA.API.Models.Entitys;
 using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs;
 using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -62,7 +63,11 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 DetalleIngresoActivos = crearIngresoActivoDTO.CrearDetalleIngresoActivos.Select(detalle => new DetalleIngresoActivo
                 {
                     Cantidad = detalle.Cantidad,
-                    Precio = detalle.Precio
+                    Precio = detalle.Precio,
+                    ActivoId = detalle.ActivoId,
+                    BodegaId = detalle.BodegaId,
+                    EstanteId = detalle.EstanteId
+
                 }).ToList()
             };
 
@@ -88,6 +93,7 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
             {
                 
                 Correlativo = ingresoActivoDTO.Correlativo_Like ?? string.Empty,
+                NumeroDocRelacionado = ingresoActivoDTO.NumeroDocRelacionado_Like ?? string.Empty,
                 FechaIngreso = ingresoActivoDTO.Fecha_Like ?? default(DateTime)
             };
 
@@ -128,6 +134,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                         Id = detalle.Id,
                         Cantidad = detalle.Cantidad,
                         Precio = detalle.Precio,
+                        ActivoId = detalle.ActivoId,
+                        BodegaId = detalle.BodegaId,
+                        EstanteId = detalle.EstanteId,
                     }).ToList() ?? new List<DetalleIngresoActivoDTO>() // Manejo de nulidad
                 });
             }
@@ -161,6 +170,9 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                     Id = detalle.Id,
                     Cantidad = detalle.Cantidad,
                     Precio = detalle.Precio,
+                    ActivoId = detalle.ActivoId,
+                    BodegaId = detalle.BodegaId,
+                    EstanteId = detalle.EstanteId
                 }).ToList() // Mapear los detalles a DetallePaqueteActivoDTO
             };
 
@@ -190,13 +202,19 @@ namespace ESFE_AGAPE_BODEGA.API.Controllers
                 {
                     existingDetalle.Cantidad = detalle.Cantidad;
                     existingDetalle.Precio = detalle.Precio;
+                    existingDetalle.ActivoId = detalle.ActivoId;
+                    existingDetalle.BodegaId = detalle.BodegaId;
+                    existingDetalle.EstanteId = detalle.EstanteId;
                 }
                 else
                 {
                     existingIngresoActivo.DetalleIngresoActivos.Add(new DetalleIngresoActivo
                     {
                         Cantidad = detalle.Cantidad,
-                        Precio = detalle.Precio
+                        Precio = detalle.Precio,
+                        ActivoId = detalle.ActivoId,
+                        BodegaId = detalle.BodegaId,
+                        EstanteId = detalle.EstanteId
                     });
                 }
             }
