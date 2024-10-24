@@ -97,7 +97,11 @@
 					}
 					else if (isError)
 					{
-						<p class="alert alert-danger">Ocurrió un error al intentar modificar el ingreso activo.</p>
+						<p class="alert alert-danger">
+							@(ingresoActivo.TieneDetalles()
+														? "Ocurrió un error al intentar modificar el ingreso activo."
+														: "No se puede guardar un ingreso activo sin detalles.")
+						</p>
 						<NavLink href="/lista-ingresoActivo" class="btn btn-danger">Aceptar</NavLink>
 					}
 				</div>
@@ -149,6 +153,13 @@
 		isSubmitting = true;
 		try
 		{
+			if (!ingresoActivo.TieneDetalles())
+			{
+				isError = true;
+				isSuccess = false;
+				return;
+			}
+
 			int result = await ingresoActivoService.ActualizarIngresoActivo(ingresoActivo);
 			isSuccess = result != 0;
 			isError = !isSuccess;
