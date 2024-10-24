@@ -45,5 +45,8 @@ namespace ESFE_AGAPE_BODEGA.DTOs.UsuarioDTOs
         [Display(Name = "Rol")]
         public int RolId { get; set; }
 
-    }
+        [Required(ErrorMessage ="el campo es obligatorio")]
+		public bool Estatus { get; set; }
+
+	}
 }
