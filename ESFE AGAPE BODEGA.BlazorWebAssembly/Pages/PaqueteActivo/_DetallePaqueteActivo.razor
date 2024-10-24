@@ -11,21 +11,37 @@
         <label for="Nombre" class="form-label">Activo</label>
         <div class="autocomplete-wrapper">
             <input type="text"
-                   class="form-control"
+                   class="form-control @(showSuggestions ? "suggestions-open" : "")"
                    @bind-value="searchText"
                    @bind-value:event="oninput"
-                   @onfocus="() => showSuggestions = true"
+                   @onfocus="HandleFocus"
+                   @onblur="HandleBlur"
                    placeholder="Buscar activo..."
                    disabled="@(!isEditMode)"
                    required />
-            @if (showSuggestions && filteredActivos.Any() && isEditMode)
+            @if (activos == null)
             {
-                <div class="autocomplete-dropdown">
-                    @foreach (var activo in filteredActivos)
+                <div class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            }
+            else if (showSuggestions && !string.IsNullOrWhiteSpace(searchText) && isEditMode)
+            {
+                <div class="autocomplete-dropdown @(filteredActivos.Any() ? "" : "no-results")">
+                    @if (filteredActivos.Any())
                     {
-                        <div class="autocomplete-item" @onclick="() => SelectActivo(activo)">
-                            @activo.Nombre
-                        </div>
+                        @foreach (var activo in filteredActivos)
+                        {
+                            <div class="autocomplete-item" @onclick="() => SelectActivo(activo)">
+                                @activo.Nombre
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="autocomplete-item">No se encontraron activos</div>
                     }
                 </div>
             }
@@ -55,32 +71,68 @@
 </div>
 
 <style>
-	.autocomplete-wrapper {
-		position: relative;
-	}
+    .autocomplete-wrapper {
+        position: relative;
+    }
 
-	.autocomplete-dropdown {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		right: 0;
-		z-index: 1000;
-		background: white;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		max-height: 200px;
-		overflow-y: auto;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-	}
+    .autocomplete-dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        animation: slide-down 0.2s ease-in-out;
+    }
 
-	.autocomplete-item {
-		padding: 8px 12px;
-		cursor: pointer;
-	}
+    .no-results {
+        padding: 0.5rem;
+    }
 
-		.autocomplete-item:hover {
-			background-color: #f8f9fa;
-		}
+    .autocomplete-item {
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        border-left: 3px solid transparent;
+    }
+
+        .autocomplete-item:hover {
+            background-color: #e9ecef;
+            border-left: 3px solid #0d6efd;
+            padding-left: 15px;
+            color: #0d6efd;
+            font-weight: 500;
+        }
+
+    .loading-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .suggestions-open {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    @@keyframes slide-down {
+        0% {
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
 </style>
 
 @code {
@@ -89,8 +141,10 @@
     [Parameter] public EventCallback EliminarDetalle { get; set; }
     [Parameter] public bool isEditMode { get; set; }
 
+
     private string searchText = "";
     private bool showSuggestions = false;
+    private bool isFocused = false;
 
     private List<SearchResultActivoDTO.ActivoDTO> filteredActivos =>
         string.IsNullOrWhiteSpace(searchText)
@@ -105,6 +159,25 @@
         searchText = activo.Nombre;
         showSuggestions = false;
         StateHasChanged();
+    }
+
+    private async Task HandleFocus()
+    {
+        isFocused = true;
+        showSuggestions = true;
+        await Task.Delay(100);
+        StateHasChanged();
+    }
+
+    private async Task HandleBlur()
+    {
+        isFocused = false;
+        await Task.Delay(200);
+        if (!isFocused)
+        {
+            showSuggestions = false;
+            StateHasChanged();
+        }
     }
 
     protected override void OnInitialized()
