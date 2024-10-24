@@ -151,12 +151,14 @@
         try
         {
             searchResult = await usuarioService.Search(searchQuery);
-            // Obtener el nombre del rol para cada usuario
-            foreach (var usuario in searchResult.Data)
+            // Obtener el nombre del rol para cada usuario en paralelo
+            var rolTasks = searchResult.Data.Select(async usuario =>
             {
                 var rol = await rolService.ObtenerRol(usuario.RolId);
                 usuario.RolNombre = rol?.Nombre ?? "Desconocido"; // Asignar nombre del rol
-            }
+            });
+            // Espera a que todas las tareas se completen
+            await Task.WhenAll(rolTasks);
         }
         finally
         {
