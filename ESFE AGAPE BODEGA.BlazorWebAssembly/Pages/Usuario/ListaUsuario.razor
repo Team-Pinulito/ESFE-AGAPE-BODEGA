@@ -36,7 +36,6 @@
                              <div class="col-md-5 d-flex align-items-end">
                                 <button type="submit" class="btn btn-secondary mx-2">Buscar</button>
                                 <NavLink href="/crear-usuario" class="btn btn-success">Crear</NavLink>
-                                <button type="submit" class="btn btn-secondary mx-2">Importar</button>
                             </div>
                         </div>
                     </EditForm>
@@ -59,7 +58,6 @@
                                     <th>Apellido</th>
                                     <th>DUI</th>
                                     <th>Rol</th>
-                                    <th>Estatus</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -71,7 +69,6 @@
                                         <td>@usuario.Apellido</td>
                                         <td>@usuario.DUI</td>
                                         <td>@usuario.RolNombre</td>
-                                        <td>Activo</td>
                                         <td>
                                             <button class="btn btn-dark" @onclick="() => GoEdit(usuario.Id)">Editar</button>
                                             <button class="btn btn-info" @onclick="() => GoDetails(usuario.Id)">Ver</button>
@@ -154,14 +151,20 @@
         try
         {
             searchResult = await usuarioService.Search(searchQuery);
-            // Obtener el nombre del rol para cada usuario en paralelo
+          // Actualiza la lista de usuarios
+        if (searchResult.Data != null)
+        {
+            // Asigna nombres de roles en paralelo
             var rolTasks = searchResult.Data.Select(async usuario =>
             {
                 var rol = await rolService.ObtenerRol(usuario.RolId);
                 usuario.RolNombre = rol?.Nombre ?? "Desconocido"; // Asignar nombre del rol
+                StateHasChanged(); // Notifica a Blazor que el estado ha cambiado
             });
-            // Espera a que todas las tareas se completen
-            await Task.WhenAll(rolTasks);
+
+            // Inicia las tareas para obtener los roles
+            _ = Task.WhenAll(rolTasks); // Ignoramos la espera aquí
+        }
         }
         finally
         {
