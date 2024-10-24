@@ -18,6 +18,9 @@ namespace ESFE_AGAPE_BODEGA.API.Models.Entitys
 
 		public ICollection<InventarioActivo> InventarioActivos { get; set; }
 
-		public Bodega Bodega { get; set; } 
+        public ICollection<DetalleIngresoActivo> detalleIngresoActivos { get; set; }
+
+
+        public Bodega Bodega { get; set; } 
 	}
 }

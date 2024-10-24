@@ -1,8 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
 @using ESFE_AGAPE_BODEGA.DTOs.DetalleInresoActivoDTOs
-@using ESFE_AGAPE_BODEGA.DTOs.InventarioActivoDTOs
 @using ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
+@using ESFE_AGAPE_BODEGA.DTOs.ActivoDTOs
 
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components
@@ -10,6 +10,47 @@
 
 <div class="row align-items-center">
 	<DataAnnotationsValidator />
+	<div class="col-md-5">
+		<!-- Selección de Activo -->
+		<label for="Nombre" class="form-label">Activo</label>
+		<div class="autocomplete-wrapper">
+			<input type="text"
+				   class="form-control @(showSuggestions ? "suggestions-open" : "")"
+				   @bind-value="searchText"
+				   @bind-value:event="oninput"
+				   @onfocus="HandleFocus"
+				   @onblur="HandleBlur"
+				   placeholder="Buscar activo..."
+				   required />
+			@if (activos == null)
+			{
+				<div class="loading-spinner">
+					<div class="spinner-border text-primary" role="status">
+						<span class="visually-hidden">Cargando...</span>
+					</div>
+				</div>
+			}
+			else if (showSuggestions && !string.IsNullOrWhiteSpace(searchText))
+			{
+				<div class="autocomplete-dropdown @(filteredActivos.Any() ? "" : "no-results")">
+					@if (filteredActivos.Any())
+					{
+						@foreach (var activo in filteredActivos)
+						{
+							<div class="autocomplete-item" @onclick="() => SelectActivo(activo)">
+								@activo.Nombre
+							</div>
+						}
+					}
+					else
+					{
+						<div class="autocomplete-item">No se encontraron activos</div>
+					}
+				</div>
+			}
+		</div>
+		<ValidationMessage For="() => detalle.ActivoId" />
+	</div>
 	<div class="col-md-5">
 		<!-- Cantidad del Detalle -->
 		<label for="Cantidad" class="form-label">Cantidad</label>
@@ -33,9 +74,74 @@
 		</button>
 	</div>
 </div>
+<style>
+	.autocomplete-wrapper {
+		position: relative;
+	}
 
+	.autocomplete-dropdown {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 0;
+		right: 0;
+		z-index: 1000;
+		background: white;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		max-height: 200px;
+		overflow-y: auto;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		animation: slide-down 0.2s ease-in-out;
+	}
+
+	.no-results {
+		padding: 0.5rem;
+	}
+
+	.autocomplete-item {
+		padding: 8px 12px;
+		cursor: pointer;
+		transition: all 0.2s ease-in-out;
+		border-left: 3px solid transparent;
+	}
+
+		.autocomplete-item:hover {
+			background-color: #e9ecef;
+			border-left: 3px solid #0d6efd;
+			padding-left: 15px;
+			color: #0d6efd;
+			font-weight: 500;
+		}
+
+	.loading-spinner {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 1;
+	}
+
+	.suggestions-open {
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	@@keyframes slide-down {
+		0% {
+			transform: translateY(-10px);
+			opacity: 0;
+		}
+
+		100% {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+</style>
 @code {
 	[Parameter] public CrearDetalleIngresoActivoDTO detalle { get; set; }
+
+	[Parameter] public List<SearchResultActivoDTO.ActivoDTO> activos { get; set; }
 
 
 	[Parameter] public EventCallback EliminarDetalle { get; set; }
@@ -48,12 +154,57 @@
 
 	private string precioInput = "";
 
+	private string searchText = "";
+	private bool showSuggestions = false;
+	private bool isFocused = false;
 
+	private List<SearchResultActivoDTO.ActivoDTO> filteredActivos =>
+		string.IsNullOrWhiteSpace(searchText)
+			? new List<SearchResultActivoDTO.ActivoDTO>()
+			: activos
+				.Where(a => a.Nombre.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+				.ToList();
+
+	private void SelectActivo(SearchResultActivoDTO.ActivoDTO activo)
+	{
+		detalle.ActivoId = activo.Id;
+		searchText = activo.Nombre;
+		showSuggestions = false;
+		StateHasChanged();
+	}
+
+	private async Task HandleFocus()
+	{
+		isFocused = true;
+		showSuggestions = true;
+		await Task.Delay(100); // Pequeño delay para asegurar que el estado se actualice
+		StateHasChanged();
+	}
+
+	private async Task HandleBlur()
+	{
+		isFocused = false;
+		await Task.Delay(200); // Delay para permitir que se complete el click en las sugerencias
+		if (!isFocused)
+		{
+			showSuggestions = false;
+			StateHasChanged();
+		}
+	}
 
 
 	protected override void OnInitialized()
 	{
 		precioInput = detalle.Precio.ToString(CultureInfo.InvariantCulture);
+
+		if (detalle.ActivoId > 0)
+		{
+			var selectedActivo = activos.FirstOrDefault(a => a.Id == detalle.ActivoId);
+			if (selectedActivo != null)
+			{
+				searchText = selectedActivo.Nombre;
+			}
+		}
 	}
 
 	private void OnCantidadChanged(ChangeEventArgs e)

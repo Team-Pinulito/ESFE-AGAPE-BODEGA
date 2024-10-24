@@ -16,20 +16,26 @@
 				<div class="card-body">
 					<EditForm Model="searchQuery" OnValidSubmit="SubmitSearch">
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-3">
 
 								<label for="Correlativo">Correlativo:</label>
 								<InputText class="form-control" @bind-Value="searchQuery.Correlativo_Like" />
 
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-3">
+
+								<label for="Correlativo">Número Documento Relacionado:</label>
+								<InputText class="form-control" @bind-Value="searchQuery.NumeroDocRelacionado_Like" />
+
+							</div>
+							<div class="col-md-3">
 
 								<label for="FechaIngreso">Fecha Ingreso:</label>
 								<InputDate class="form-control" @bind-Value="searchQuery.Fecha_Like" />
 
 							</div>
 
-							<div class="col-md-4">
+							<div class="col-md-3">
 
 								<label for="Take">CantReg X Pagina</label>
 								<select class="form-control" @bind="searchQuery.Take">

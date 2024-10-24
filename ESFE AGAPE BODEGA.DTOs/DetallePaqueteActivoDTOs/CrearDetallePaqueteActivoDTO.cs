@@ -11,7 +11,7 @@ namespace ESFE_AGAPE_BODEGA.DTOs.DetallePaqueteActivoDTOs
 	{
 
 		[Display(Name = "Activo")]
-		[Required(ErrorMessage = "El campo ActivoId es obligatorio.")]
+		[Required(ErrorMessage = "El campo Activo es obligatorio.")]
 		public int ActivoId { get; set; }
 
 		[Required(ErrorMessage = "El campo Cantidad es obligatorio.")]

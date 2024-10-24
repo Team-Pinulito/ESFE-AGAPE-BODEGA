@@ -34,7 +34,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("InventarioActivosId");
 
-                    b.ToTable("AjusteInventarioInventarioActivo");
+                    b.ToTable("AjusteInventarioInventarioActivo", (string)null);
                 });
 
             modelBuilder.Entity("Bodega_Api_Esfe_Agape.Models.EN.Activo", b =>
@@ -73,7 +73,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("TipoActivoId");
 
-                    b.ToTable("activos");
+                    b.ToTable("activos", (string)null);
                 });
 
             modelBuilder.Entity("Bodega_Api_Esfe_Agape.Models.EN.DetalleIngresoActivo", b =>
@@ -102,7 +102,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("InventarioActivoId");
 
-                    b.ToTable("detalleIngresos");
+                    b.ToTable("detalleIngresos", (string)null);
                 });
 
             modelBuilder.Entity("Bodega_Api_Esfe_Agape.Models.EN.IngresoActivo", b =>
@@ -134,7 +134,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("ingresoactivos");
+                    b.ToTable("ingresoactivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.AjusteInventario", b =>
@@ -168,7 +168,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("ajusteInventarios");
+                    b.ToTable("ajusteInventarios", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Bodega", b =>
@@ -189,7 +189,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("bodegas");
+                    b.ToTable("bodegas", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Correlativo", b =>
@@ -217,7 +217,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("correlativos");
+                    b.ToTable("correlativos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.DetallePaqueteActivo", b =>
@@ -243,7 +243,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("PaqueteActivoId");
 
-                    b.ToTable("detallePaqueteActivos");
+                    b.ToTable("detallePaqueteActivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.DetalleSolicitudActivo", b =>
@@ -277,7 +277,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("SolicitudActivoId");
 
-                    b.ToTable("detalleSolicitudActivos");
+                    b.ToTable("detalleSolicitudActivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Estante", b =>
@@ -303,7 +303,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("BodegaId");
 
-                    b.ToTable("estantes");
+                    b.ToTable("estantes", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.InventarioActivo", b =>
@@ -329,7 +329,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("EstanteId");
 
-                    b.ToTable("inventarioActivos");
+                    b.ToTable("inventarioActivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.KardexActivo", b =>
@@ -359,7 +359,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("InventarioActivoId");
 
-                    b.ToTable("kardexActivos");
+                    b.ToTable("kardexActivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.PaqueteActivo", b =>
@@ -380,7 +380,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("paqueteActivos");
+                    b.ToTable("paqueteActivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Rol", b =>
@@ -401,7 +401,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("roles");
+                    b.ToTable("roles", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.SolicitudActivo", b =>
@@ -452,7 +452,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("UsuarioIdBodegueroRecibeId");
 
-                    b.ToTable("solicitudActivos");
+                    b.ToTable("solicitudActivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.TipoActivo", b =>
@@ -473,7 +473,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tipoActivos");
+                    b.ToTable("tipoActivos", (string)null);
                 });
 
             modelBuilder.Entity("ESFE_AGAPE_BODEGA.API.Models.Entitys.Usuario", b =>
@@ -523,7 +523,7 @@ namespace ESFE_AGAPE_BODEGA.API.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("usuarios");
+                    b.ToTable("usuarios", (string)null);
                 });
 
             modelBuilder.Entity("AjusteInventarioInventarioActivo", b =>

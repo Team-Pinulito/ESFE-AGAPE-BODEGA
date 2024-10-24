@@ -22,8 +22,9 @@ namespace ESFE_AGAPE_BODEGA.DTOs.IngresoActivoDTOs
 		public EditIngresoActivoDTO()
 		{
 			Correlativo = string.Empty;
+            NumeroDocRelacionado = string.Empty;
 
-		}
+        }
 
 		public int Id { get; set; }
 
