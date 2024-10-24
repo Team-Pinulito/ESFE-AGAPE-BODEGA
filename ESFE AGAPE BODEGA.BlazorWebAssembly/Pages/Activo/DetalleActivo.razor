@@ -18,10 +18,6 @@
 							<input type="text" class="form-control" disabled @bind="activo.Nombre" />
 						</div>
 						<div class="col-md-4">
-							<label for="Descripcion" class="form-label">Descripcion</label>
-							<textarea type="text" disabled class="form-control" @bind="activo.Descripcion" />
-						</div>
-						<div class="col-md-4">
 							<label for="Nombre" class="form-label">Estante</label>
 							<select class="form-control" disabled @bind="activo.EstanteId" required>
 								<option value="">Seleccione un estante</option>
@@ -41,6 +37,11 @@
 								}
 							</select>
 						</div>
+						<div class="col-md-12">
+							<label for="Descripcion" class="form-label">Descripcion</label>
+							<textarea type="text" disabled class="form-control" @bind="activo.Descripcion" />
+						</div>
+						
 						<div class="col-md-4">
 							<label for="Codigo" class="form-label">Código</label>
 							<input type="text" class="form-control" disabled @bind="activo.Codigo" />
@@ -50,7 +51,7 @@
 							<input type="text" class="form-control" disabled @bind="activo.CodigoBarra" />
 						</div>
 						<div class="col-md-12 mt-3">
-							<NavLink href="/lista-activo" class="btn btn-secondary w-100">Volver</NavLink>
+							<NavLink href="/lista-activo" class="btn btn-secondary me-2">Volver</NavLink>
 						</div>
 					</div>
 					

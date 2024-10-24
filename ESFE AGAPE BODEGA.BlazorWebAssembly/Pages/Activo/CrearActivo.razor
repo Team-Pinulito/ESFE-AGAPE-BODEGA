@@ -28,11 +28,6 @@
                                     <ValidationMessage For="() => activo.Nombre" />
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="Descripcion" class="form-label">Descripción<span style="color:red;">*</span></label>
-                                    <InputTextArea class="form-control" id="Descripcion" @bind-Value="activo.Descripcion" />
-                                    <ValidationMessage For="() => activo.Descripcion" />
-                                </div>
-                                <div class="col-md-4">
                                     <label for="Estante" class="form-label">Estante<span style="color:red;">*</span></label>
                                     <select class="form-control" @bind="activo.EstanteId" required>
                                         <option value="">Seleccione un estante</option>
@@ -54,6 +49,12 @@
                                     </select>
                                     <ValidationMessage For="() => activo.TipoActivoId" />
                                 </div>
+                                <div class="col-md-12">
+                                    <label for="Descripcion" class="form-label">Descripción<span style="color:red;">*</span></label>
+                                    <InputTextArea class="form-control" id="Descripcion" @bind-Value="activo.Descripcion" />
+                                    <ValidationMessage For="() => activo.Descripcion" />
+                                </div>
+                               
                                 <div class="col-md-4">
                                     <label for="Codigo" class="form-label">Código<span style="color:red;">*</span></label>
                                     <InputText class="form-control" id="Codigo" @bind-Value="activo.Codigo" />
@@ -65,12 +66,12 @@
                                     <InputText class="form-control" id="CodigoBarra" @bind-Value="activo.CodigoBarra" />
                                     <ValidationMessage For="() => activo.CodigoBarra" />
                                 </div>
-                             
-                                <div class="col-md-6 mt-3">
-                                    <button type="submit" class="btn btn-primary w-100">Guardar</button>
-                                </div>
-                                <div class="col-md-6 mt-3">
-                                    <NavLink href="/lista-activo" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <NavLink href="/lista-activo" class="btn btn-secondary">Cancelar</NavLink>
                                 </div>
                             </div>
                         </EditForm>
