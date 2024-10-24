@@ -19,13 +19,15 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="Descripcion">Descripcion:</label>
-                                <input type="text" class="form-control" disabled @bind="rol.Descripcion" />
+                                <textarea type="text" class="form-control" disabled @bind="rol.Descripcion" />
                             </div>
-                            <div class="col-md-6 mt-3">
-                                <button class="btn btn-danger w-100" @onclick="async () => await Delete()">Eliminar</button>
-                            </div>
-                            <div class="col-md-6 mt-3">
-                                <NavLink href="/lista-rol" class="btn btn-secondary w-100">Cancelar</NavLink>
+                            <div class="row col-4">
+                                <div class="col-md-6 mt-3">
+                                    <button class="btn btn-danger me-2" @onclick="async () => await Delete()">Eliminar</button>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <NavLink href="/lista-rol" class="btn btn-secondary me-2">Cancelar</NavLink>
+                                </div>
                             </div>
                         </div>
                     }
