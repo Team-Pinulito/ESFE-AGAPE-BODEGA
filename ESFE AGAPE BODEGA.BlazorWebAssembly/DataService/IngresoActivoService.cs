@@ -96,6 +96,12 @@ namespace ESFE_AGAPE_BODEGA.BlazorWebAssembly.DataService
 		// Actualizar un IngresoActivo existente
 		public async Task<int> ActualizarIngresoActivo(EditIngresoActivoDTO editIngresoActivoDTO)
 		{
+			// Validación adicional antes de hacer la llamada a la API
+			if (!editIngresoActivoDTO.TieneDetalles())
+			{
+				return 0;
+			}
+
 			var response = await _httpClient.PutAsJsonAsync($"IngresoActivo/{editIngresoActivoDTO.Id}", editIngresoActivoDTO);
 
 			if (response.IsSuccessStatusCode)
